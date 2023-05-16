@@ -12,7 +12,6 @@ router.post("/enviarCorreoNuevaPass",usuarios.enviarCorreoNuevaPass)
 router.post("/cambiarContrasenia",usuarios.cambiarContrasenia)
 
 
-
 export {
     router
 }
