@@ -12,7 +12,7 @@ const registro = async (email, nombre, pass) => {
     return "Usuario registrado correctamente";
   } catch (error) {
     console.log(error);
-    throw new Error("Error al registrar usuario");
+    throw new Error(error);
   }
 };
 
@@ -40,7 +40,7 @@ const login = async (email, pass) => {
     }
   } catch (error) {
     console.log(error);
-    throw new Error(error.message);
+    throw new Error(error);
   }
 };
 
@@ -52,7 +52,7 @@ const login = async (email, pass) => {
       return usuario;
     } catch (error) {
       console.log(error);
-      throw new Error("Error en la Edicion");
+      throw new Error(error);
     }
   };
 

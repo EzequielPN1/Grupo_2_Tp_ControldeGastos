@@ -71,7 +71,7 @@ export default{
         type="password"
         class="form-control"
         id="exampleInputPassword1"
-      />
+        required/>
     </div  >
     <div class="d-flex justify-content-between align-items-center">
     <button type="submit" class="btn btn-primary" >Entrar</button>

@@ -5,13 +5,11 @@ import mailer from './mailer.js';
 
 const secretKey = 'secreto';
 
-/*
-      // Generar token
-      const generateToken = (email) => {
-        const token = jwt.sign({ userId:email }, secretKey, { expiresIn: '20s' });
-       return token;
-  };
-*/
+// Generar token
+const generateToken = (id, tiempoExpiracion) => {
+  const token = jwt.sign({ userId: id }, secretKey, { expiresIn: tiempoExpiracion });
+  return token;
+};
 
 
 
@@ -23,7 +21,7 @@ const registro = (req, res) => {
   usuarios.registro(email, nombre, pass)
     .then(() => {
 
-      const token = jwt.sign({ userId: email }, 'secreto', { expiresIn: '1h' });
+      const token = generateToken(email,'1hs')
       mailer.enviarCorreoConfirmacion(token,email)
       res.status(200).send("Usuario registrado correctamente");
     })
@@ -42,7 +40,7 @@ const login = (req, res) => {
 
   usuarios.login(email, pass)
     .then(usuario => {
-      const token = jwt.sign({ userId: email }, secretKey, { expiresIn: '20s' });
+      const token = generateToken(email,'20s')
       usuario.token = token;
       res.status(200).json(usuario);
     })
@@ -71,13 +69,13 @@ try{
 
   usuarios.editarUsuario(nombre,email)
     .then((usuario) => {
-      const token = jwt.sign({ userId:email }, secretKey, { expiresIn: '20s' });
+      const token = generateToken(email,'20s')
       usuario.token = token
       res.status(200).json(usuario);
     })
     .catch(error => {
       console.log(error);
-      res.status(500).send("Error al editar usuario");
+      res.status(500).send(error.message);
     });
 }catch{
   res.status(500).send("Error el tiempo de la pagina ha expirado");

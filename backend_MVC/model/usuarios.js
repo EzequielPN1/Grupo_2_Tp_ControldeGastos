@@ -2,20 +2,19 @@ import  {db}  from './coneccionBD.js'
 
 
 
-  const registro = (email, nombre, pass) => {
-    return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO usuarios (email, nombre, pass) VALUES (?, ?, ?)`;
-      db.run(sql, [email, nombre, pass], function (err) {
-        if (err) {
-          console.log(err);
-          reject("Error al registrar usuario");
-        } else {
-          resolve("Usuario registrado correctamente");
-        }
-      });
+const registro = (email, nombre, pass) => {
+  return new Promise((resolve, reject) => {
+    const sql = `INSERT INTO usuarios (email, nombre, pass) VALUES (?, ?, ?)`;
+    db.run(sql, [email, nombre, pass], function (err) {
+      if (err) {
+        console.log(err);
+        reject("Error al registrar usuario");
+      } else {
+        resolve("Usuario registrado correctamente");
+      }
     });
-  };
-
+  });
+};
 
 
 
@@ -41,12 +40,12 @@ import  {db}  from './coneccionBD.js'
       db.run(sql, [nombre, email], function(err) {
         if (err) {
           console.log(err);
-          reject("Error en la autenticación");
+          reject("Error usuario no encontrado");
         } else {
           db.get(`SELECT * FROM usuarios WHERE email = ?`, [email], (err, row) => {
             if (err) {
               console.log(err);
-              reject("Error en la autenticación");
+              reject("Error en la edicion del usuario");
             } else {
               resolve(row);
             }

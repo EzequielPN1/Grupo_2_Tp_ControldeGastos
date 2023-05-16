@@ -32,13 +32,9 @@ export default {
                     this.usuario = response.data;             
                     vue.$router.push("/Home");
                   })
-                .catch(error => {    
-                  if (error.response && error.response.status === 500) {
-                     alert("Error: El tiempo de la página ha expirado");
-                  } else {
-                     alert("Error: No se pudo editar el usuario. " + error.message);
-                  }
-                 vue.$router.push("/Login");
+                .catch(error => {                  
+                     alert(error.response.data);          
+                    vue.$router.push("/Login");
                  });
     },
   },
