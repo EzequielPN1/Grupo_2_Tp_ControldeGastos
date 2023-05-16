@@ -21,7 +21,7 @@ const registro = (req, res) => {
   usuarios.registro(email, nombre, pass)
     .then(() => {
 
-      const token = generateToken(email,'1hs')
+      const token = generateToken(email,'1h')
       mailer.enviarCorreoConfirmacion(token,email)
       res.status(200).send("Usuario registrado correctamente");
     })
@@ -46,15 +46,7 @@ const login = (req, res) => {
     })
     .catch(error => {
       console.log(error);
-      if (error.message === "Usuario no encontrado") {
-                 res.status(404).send("El correo no está registrado.");
-      } else if (error.message === "Cuenta no confirmada") {
-                 res.status(401).send("La cuenta no está confirmada.");
-      } else if (error.message === "Contraseña incorrecta") {        
-                 res.status(401).send("Contraseña incorrecta.");                
-      } else {
-                res.status(500).send("Error interno del servidor.");
-      }
+           res.status(500).send(error.message);
     });
 };
 

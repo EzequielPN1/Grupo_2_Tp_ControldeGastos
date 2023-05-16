@@ -31,20 +31,7 @@ export default{
     })
     .catch(function (error) {
       console.log(error);
-      if (error.response) {
-        // Si se recibió una respuesta del servidor con un código de estado
-        if (error.response.status === 404) {
-          alert("El correo no está registrado.");
-        } else if (error.response.status === 401) {
-          if (error.response.data === "Contraseña incorrecta.") {
-            alert("Contraseña incorrecta.");
-          } else {
-            alert("La cuenta no está confirmada.");
-          }         
-        } else {
-          alert("Error en la autenticación.");
-        }
-      } 
+      alert(error.response.data);
     });
 },
   },
