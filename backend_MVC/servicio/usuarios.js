@@ -13,12 +13,9 @@ class Servicio {
     try {
       const salt = await bcrypt.genSalt(10); // generamos el salt de forma asincrónica
       const hash = await bcrypt.hash(pass, salt); // generamos el hash de forma asincrónica
-
       const respuesta = await this.model.registro(email, nombre, hash); // registramos el usuario con el hash
-
       return respuesta;
     } catch (error) {
-      console.log(error);
       throw new Error(error);
     }
   };
@@ -46,7 +43,6 @@ class Servicio {
         throw new Error("Contraseña incorrecta");
       }
     } catch (error) {
-      console.log(error);
       throw new Error(error);
     }
   };
@@ -58,7 +54,6 @@ class Servicio {
       console.log(usuario);
       return usuario;
     } catch (error) {
-      console.log(error);
       throw new Error(error);
     }
   };
@@ -69,7 +64,6 @@ class Servicio {
       await this.model.confirmarRegistro(email)
       console.log('Registro del email ' + email + ' confirmado correctamente');
     } catch (error) {
-      console.log(error);
       throw new Error("Error al confirmar el registro");
     }
   }

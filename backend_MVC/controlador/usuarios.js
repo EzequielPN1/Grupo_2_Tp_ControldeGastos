@@ -34,7 +34,7 @@ class Controlador {
 
       res.status(200).send(respuesta);
     } catch (error) {
-      console.error(error);
+      console.log(error.message)
       res.status(500).send(error.message);
     }
   };
@@ -51,7 +51,7 @@ class Controlador {
 
       res.status(200).json(usuario);
     } catch (error) {
-      console.error(error);
+      console.log(error.message)
       res.status(500).send(error.message);
     }
   };

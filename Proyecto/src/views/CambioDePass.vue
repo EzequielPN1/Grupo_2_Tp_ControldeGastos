@@ -27,7 +27,7 @@ export default {
       } catch (error) {
         console.error(error);
         alert(error.response.data);
-        vue.$router.push("/");
+        window.close();
       }
     }
 
