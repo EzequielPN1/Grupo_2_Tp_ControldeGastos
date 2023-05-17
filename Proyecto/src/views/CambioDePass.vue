@@ -27,11 +27,7 @@ methods: {
     })
     .catch(error => {
       console.error(error);
-      if (error.response.status === 404) {
-        alert('El correo no está registrado.');
-      } else {
-        alert('Error al cambiar la contraseña');
-      }
+      alert(error.response.data);
     });
 }
 

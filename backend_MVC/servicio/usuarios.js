@@ -73,11 +73,7 @@ const cambiarContrasenia = async (email, nuevaPass) => {
     const hash = await bcrypt.hash(nuevaPass, salt);
     await usuarios.cambiarContrasenia(email, hash);
   } catch (error) {
-    if (error === "El correo electrónico no está registrado") {
-      throw new Error("Error email no registrado");
-    } else {
-      throw new Error("Error al cambiar la contraseñia");
-    }
+      throw new Error(error);
   }
 };
 

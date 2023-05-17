@@ -125,12 +125,9 @@ const cambiarContrasenia = (req, res) => {
     })
     .catch((error) => {
       console.log(error.message)
-      if (error.message === "Error email no registrado") {
-        res.status(404).send("El correo no está registrado.");
-      } else {
         console.log(error); 
-        res.status(500).send("Ocurrió un error en el servidor.");
-      }
+        res.status(500).send(error.message);
+      
     });
 };
 
