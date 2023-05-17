@@ -85,7 +85,8 @@ class Controlador {
 
       if (email === emailDecodificado) {
         await this.servicio.confirmarRegistro(emailDecodificado);
-        res.send('<h1>Registro confirmado</h1>');
+        res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Registro confirmado!</h1></div>');
+
       } else {
         res.send('Email no válido');
       }

@@ -1,52 +1,49 @@
 <script>
 import { userService } from "../Services/userService.js"
-  export default {
-    data() {
-  return {
-    nuevaContrasenia: '',
-    email: '',
-    vue:this,
-  };
-},
-created() {
-  this.email = this.getEmailFromUrl();
-},
-methods: {
-
-  getEmailFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('email') || '';
+export default {
+  data() {
+    return {
+      nuevaContrasenia: '',
+      email: '',
+      vue: this,
+    };
   },
+  created() {
+    this.email = this.getEmailFromUrl();
+  },
+  methods: {
 
-  cambiarContrasenia(vue) {
-  userService.cambiarContrasenia(this.email, this.nuevaContrasenia)
-    .then(response => {
-      console.log(response);
-      alert('Contraseña cambiada exitosamente');
-      window.close();
-    })
-    .catch(error => {
-      console.error(error);
-      alert(error.response.data);
-      vue.$router.push("/");
-    });
-}
+    getEmailFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('email') || '';
+    },
 
+    async cambiarContrasenia(vue) {
+      try {
+        const response = await userService.cambiarContrasenia(this.email, this.nuevaContrasenia);
+        console.log(response);
+        alert('Contraseña cambiada exitosamente');
+        window.close();
+      } catch (error) {
+        console.error(error);
+        alert(error.response.data);
+        vue.$router.push("/");
+      }
     }
-  };
-  </script>
+
+
+  }
+};
+</script>
 
 
 
 <template>
-    <div>
-      <form @submit.prevent="cambiarContrasenia(vue)">
-        <label>Nueva contraseña:</label>
-        <input type="password" v-model="nuevaContrasenia"
-         class="form-control"
-         id="exampleInputPassword1" 
-         required>
-        <button type="submit" class="btn btn-primary"  >Cambiar contraseña</button>
-      </form>
-    </div>
-  </template>
+  <div>
+    <form @submit.prevent="cambiarContrasenia(vue)">
+      <label>Nueva contraseña:</label>
+      <input type="password" v-model="nuevaContrasenia" class="form-control" id="exampleInputPassword1" required>
+      <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
+    </form>
+  </div>
+</template>

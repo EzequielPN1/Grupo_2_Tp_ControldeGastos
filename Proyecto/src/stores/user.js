@@ -5,23 +5,26 @@ export const useUserStore = defineStore("user", {
   state: () => {
     return {
       usuario: {
-        email:"",
+        email: "",
         nombre: "",
-        pass:"",
+        pass: "",
         token: "",
       },
-  
+
     };
   },
   actions: {
-     editarUsuario(usuario){
-      userService.editarUsuario(usuario)
-       .then(response => this.usuario = response.usuario)
-       .catch(err => alert("El usuario no pudo actualizarse: error ->"+err))
-     },
+    async editarUsuario(usuario) {
+      try {
+        const response = await userService.editarUsuario(usuario);
+        this.usuario = response.usuario;
+      } catch (error) {
+        alert("El usuario no pudo actualizarse. Error: " + error);
+      }
+    }
   },
 
 
- 
+
 
 });

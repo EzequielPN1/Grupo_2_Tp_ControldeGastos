@@ -5,12 +5,10 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    
-    <RouterView /> 
+
+    <RouterView />
 
   </header>
-
- 
 </template>
 
 
