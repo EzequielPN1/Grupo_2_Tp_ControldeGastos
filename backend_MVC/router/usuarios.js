@@ -1,17 +1,30 @@
 import express from "express";
-import usuarios from '../controlador/usuarios.js'
+import ControladorUsuario from '../controlador/usuarios.js'
 
 
-const router = express.Router()
+class Router {
 
-router.post("/register",usuarios.registro)
-router.post("/login", usuarios.login)
-router.post("/editarUsuario",usuarios.editarUsuario)
-router.get("/confirmar",usuarios.confirmar)
-router.post("/enviarCorreoNuevaPass",usuarios.enviarCorreoNuevaPass)
-router.post("/cambiarContrasenia",usuarios.cambiarContrasenia)
+    constructor() {
+        this.router = express.Router()
+        this.controlador = new ControladorUsuario()
+    }
 
 
-export {
-    router
+    start() {
+        this.router.post("/register", this.controlador.registro)
+        this.router.post("/login", this.controlador.login)
+        this.router.post("/editarUsuario", this.controlador.editarUsuario)
+        this.router.get("/confirmar", this.controlador.confirmar)
+        this.router.post("/enviarCorreoNuevaPass", this.controlador.enviarCorreoNuevaPass)
+        this.router.post("/cambiarContrasenia", this.controlador.cambiarContrasenia)
+
+        return this.router
+    }
+
+
+
 }
+
+
+
+export default Router

@@ -23,11 +23,12 @@ methods: {
     .then(response => {
       console.log(response);
       alert('Contraseña cambiada exitosamente');
-      vue.$router.push("/Login");
+      window.close();
     })
     .catch(error => {
       console.error(error);
       alert(error.response.data);
+      vue.$router.push("/");
     });
 }
 

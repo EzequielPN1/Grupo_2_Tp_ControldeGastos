@@ -19,7 +19,7 @@ import { userService } from "../Services/userService.js"
           registerUser(vue) {
                 userService.register(this.usuario)
                 .then(response => {   
-                  console.log(response) 
+                  alert(response.data)
                     vue.$router.push("/");
                   })
                 .catch(error => {    
