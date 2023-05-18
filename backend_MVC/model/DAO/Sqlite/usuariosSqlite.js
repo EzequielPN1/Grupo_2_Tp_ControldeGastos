@@ -1,20 +1,23 @@
-import ConeccionSqlite from './coneccionSqlite.js'
+import ConeccionSqlite from '../Sqlite/coneccionSqlite.js'
 
 
 class usuarioSqlite {
 
   constructor() {
-    this.bd = new ConeccionSqlite().coneccion
+    this.bd = ConeccionSqlite.coneccion
   }
 
 
-  registro = (email, nombre, pass) => {
+  registro = (email, nombre, pass) => { //--------
     return new Promise((resolve, reject) => {
       const sql = `INSERT INTO usuarios (email, nombre, pass) VALUES (?, ?, ?)`;
       this.bd.run(sql, [email, nombre, pass], function (err) {
         if (err) {
-          console.log(err);
-          reject("Error al registrar usuario");
+          if(err.message === "SQLITE_CONSTRAINT: UNIQUE constraint failed: usuarios.email" ){
+            reject("Error el mail "+  email + " ya fue ingresado");
+          }else{
+            reject("Error al registrar usuario " + err.message);
+          }
         } else {
           resolve("Usuario registrado correctamente");
         }
@@ -26,9 +29,8 @@ class usuarioSqlite {
   login = (email) => {
     return new Promise((resolve, reject) => {
       const sql = `SELECT * FROM usuarios WHERE email = ?`;
-      this.bd.get(sql, [email], (err, row) => {
-        if (err) {
-          console.log(err);
+     const row = this.bd.get(sql, [email], (err, row) => {
+        if (row === undefined) {
           reject("Error mail no registrado");
         } else {
           resolve(row);

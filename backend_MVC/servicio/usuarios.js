@@ -1,12 +1,12 @@
-import ModelUsuario from "../model/usuariosSqlite.js"
+import ModelFactory from "../model/DAO/usuariosFactory.js"
 import bcrypt from 'bcrypt'; //libreria para importar el hash y salt
-
+import config from "../config.js";
 
 
 class Servicio {
 
   constructor() {
-    this.model = new ModelUsuario()
+    this.model = ModelFactory.get(config.MODO_PERSISTENCIA)
   }
 
   registro = async (email, nombre, pass) => {
@@ -21,16 +21,9 @@ class Servicio {
   };
 
 
-
-
   login = async (email, pass) => {
     try {
       const usuario = await this.model.login(email); // Obtener el usuario de la base de datos
-
-      if (!usuario) {
-        throw new Error("Usuario no encontrado");
-      }
-
       const match = await bcrypt.compare(pass, usuario.pass); // Comparar la contraseña ingresada con el hash almacenado
       if (match) {
         if (usuario.registro == 0) {
