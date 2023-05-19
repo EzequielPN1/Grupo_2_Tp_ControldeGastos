@@ -5,11 +5,13 @@ export default {
     return {
       nuevaContrasenia: '',
       email: '',
+      token:'',
       vue: this,
     };
   },
   created() {
     this.email = this.getEmailFromUrl();
+    this.token = this.getTokenFromUrl();
   },
   methods: {
 
@@ -17,12 +19,16 @@ export default {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('email') || '';
     },
+    getTokenFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('token') || '';
+    },
 
-    async cambiarContrasenia(vue) {
+    async cambiarContrasenia() {
       try {
-        const response = await userService.cambiarContrasenia(this.email, this.nuevaContrasenia);
+        const response = await userService.cambiarContrasenia(this.email,this.token,this.nuevaContrasenia);
         console.log(response);
-        alert('Contraseña cambiada exitosamente');
+        alert(response.data);
         window.close();
       } catch (error) {
         console.error(error);
@@ -40,7 +46,7 @@ export default {
 
 <template>
   <div>
-    <form @submit.prevent="cambiarContrasenia(vue)">
+    <form @submit.prevent="cambiarContrasenia()">
       <label>Nueva contraseña:</label>
       <input type="password" v-model="nuevaContrasenia" class="form-control" id="exampleInputPassword1" required>
       <button type="submit" class="btn btn-primary">Cambiar contraseña</button>

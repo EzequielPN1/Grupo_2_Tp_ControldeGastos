@@ -15,7 +15,7 @@ export const userService = {
   enviarCorreoNuevaPass(email) {
     return apiClient.post('/enviarCorreoNuevaPass', { email: email });
   },
-  cambiarContrasenia(email, newPassword) {
-    return apiClient.post('/cambiarContrasenia', { email: email, newPassword: newPassword });
+  cambiarContrasenia(email,token, newPassword) {
+    return apiClient.post('/cambiarContrasenia', { email: email,token:token, newPassword: newPassword });
   },
 }

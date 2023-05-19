@@ -29,7 +29,7 @@ class Servicio {
         if (usuario.registro == 0) {
           throw new Error("Cuenta no confirmada");
         } else {
-          console.log("Inicio de sesión exitoso");
+          console.log("Inicio de sesión exitoso de " + email);
           return usuario;
         }
       } else {

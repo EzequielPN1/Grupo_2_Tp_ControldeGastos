@@ -23,7 +23,7 @@ export default {
         vue.$router.push("/");
       } catch (error) {
         console.log(error);
-        alert(`Error: El correo ${this.usuario.email} ya ha sido registrado`);
+        alert(error.response.data);
       }
     }
 

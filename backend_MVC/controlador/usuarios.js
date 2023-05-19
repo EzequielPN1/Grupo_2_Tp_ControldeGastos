@@ -4,12 +4,7 @@ import Autentificador from './autentificador.js'
 import Correo from './correo.js';
 
 
-const secretKey = 'secreto';
-// Generar token
-const generateToken = (id, tiempoExpiracion) => {
-  const token = jwt.sign({ userId: id }, secretKey, { expiresIn: tiempoExpiracion });
-  return token;
-};
+
 
 
 class Controlador {
@@ -29,9 +24,9 @@ class Controlador {
 
       const respuesta = await this.servicio.registro(email, nombre, pass);
 
-      const token = generateToken(email, '1h');
+      const token = this.autentificador.generateTokenTiempo(email, '1h');
       await this.correo.enviarCorreoConfirmacion(token, email);
-
+      console.log("Usuario a confirmar registro " + email)
       res.status(200).send(respuesta);
     } catch (error) {
       console.log(error.message)
@@ -44,11 +39,9 @@ class Controlador {
     try {
       const email = req.body.email;
       const pass = req.body.pass;
-
       const usuario = await this.servicio.login(email, pass);
-      const token = generateToken(email, '20s');
+      const token = this.autentificador.generateTokenTiempo(email, '20s');
       usuario.token = token;
-
       res.status(200).json(usuario);
     } catch (error) {
       console.log(error.message)
@@ -65,12 +58,14 @@ class Controlador {
       await this.autentificador.autentificarToken(req.body.token);
 
       const usuario = await this.servicio.editarUsuario(nombre, email);
-      const token = generateToken(email, '20s');
+      const token = this.autentificador.generateTokenTiempo(email, '20s');
       usuario.token = token;
+      console.log("Usuario "+ email +" editado correctamente")
       res.status(200).json(usuario);
 
     } catch (error) {
-      res.status(401).send('Tiempo de espera ha expirado');
+      console.error(error.message);
+      res.status(500).send(error.message);
     }
   }
 
@@ -80,7 +75,7 @@ class Controlador {
       const email = req.query.email;
       const token = req.query.token;
 
-      const decodedToken = jwt.verify(token, secretKey);
+      const decodedToken = this.autentificador.decodificarToken(token)
       const emailDecodificado = decodedToken.userId;
 
       if (email === emailDecodificado) {
@@ -91,8 +86,8 @@ class Controlador {
         res.send('Email no válido');
       }
     } catch (error) {
-      console.error('Error al verificar el token:', error);
-      res.status(500).send('Error al verificar el token');
+      console.error(error.message);
+      res.status(500).send(error.message);
     }
   };
 
@@ -100,8 +95,9 @@ class Controlador {
   enviarCorreoNuevaPass = async (req, res) => {
     try {
       const email = req.body.email;
-      console.log("solicitud cambio de pass enviado a "+email);
-      await this.correo.enviarCorreoCambioPass(email);  
+      const token = this.autentificador.generateTokenTiempo(email, '10m');
+      await this.correo.enviarCorreoCambioPass(email,token);  
+      console.log("solicitud cambio de pass enviado a "+ email);
       res.status(200).json();
     } catch (error) {
       console.error('Error al enviar el correo:', error);
@@ -114,11 +110,14 @@ class Controlador {
     try {
       const email = req.body.email;
       const nuevaPass = req.body.newPassword;
+      const token = req.body.token;
+      //chequear Token
+      console.log("Token " + token)
+      await this.autentificador.autentificarToken(token);
       await this.servicio.cambiarContrasenia(email, nuevaPass);
       console.log("contraseña del email " + email +" modificada")
-      res.status(200).json();
+      res.status(200).json('Contraseña cambiada exitosamente');
     } catch (error) {
-      console.log(error.message);
       res.status(500).send(error.message);
     }
   };

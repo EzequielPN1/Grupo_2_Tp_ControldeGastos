@@ -8,99 +8,88 @@ class usuarioSqlite {
   }
 
 
-  registro = (email, nombre, pass) => { //--------
-    return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO usuarios (email, nombre, pass) VALUES (?, ?, ?)`;
-      this.bd.run(sql, [email, nombre, pass], function (err) {
-        if (err) {
-          if(err.message === "SQLITE_CONSTRAINT: UNIQUE constraint failed: usuarios.email" ){
-            reject("Error el mail "+  email + " ya fue ingresado");
-          }else{
-            reject("Error al registrar usuario " + err.message);
-          }
-        } else {
-          resolve("Usuario registrado correctamente");
-        }
-      });
-    });
+  registro = async (email, nombre, pass) => {
+    try {
+      const insertSql = `INSERT INTO usuarios (email, nombre, pass) VALUES (?, ?, ?)`;
+      await ConeccionSqlite.runQuery(insertSql, [email, nombre, pass]);
+      return "Usuario registrado correctamente";
+    } catch (error) {
+      if (error.includes("UNIQUE constraint failed: usuarios.email")) {
+        throw new Error("Error, el correo " + email + " ya fue ingresado");
+      } else {
+        throw new Error("Error al registrar usuario: " + error);
+      }
+    }
   };
 
 
-  login = (email) => {
-    return new Promise((resolve, reject) => {
-      const sql = `SELECT * FROM usuarios WHERE email = ?`;
-     const row = this.bd.get(sql, [email], (err, row) => {
-        if (row === undefined) {
-          reject("Error mail no registrado");
-        } else {
-          resolve(row);
-        }
-      });
-    });
+  login = async (email) => {
+    try {
+      const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
+      const row = await ConeccionSqlite.getRow(selectSql, [email]);
+  
+      if (!row) {
+        throw new Error("Error, " + email + " no está registrado");
+      }
+  
+      return row;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   };
-
-
-
-  editarUsuario = (email, nombre) => {
-    return new Promise((resolve, reject) => {
-      const sql = `UPDATE usuarios SET nombre = ? WHERE email = ?`;
-      this.bd.run(sql, [nombre, email], (err) => {
-        if (err) {
-          console.log(err);
-          reject("Error usuario no encontrado");
-        } else {
-          this.bd.get(`SELECT * FROM usuarios WHERE email = ?`, [email], (err, row) => {
-            if (err) {
-              console.log(err);
-              reject("Error en la edicion del usuario");
-            } else {
-              resolve(row);
-            }
-          });
-        }
-      });
-    });
-  };
+  
 
 
 
 
-  confirmarRegistro = (email) => {
-    return new Promise((resolve, reject) => {
-      const sql = `UPDATE usuarios SET registro = 1 WHERE email = ?`;
-      this.bd.run(sql, [email], function (err) {
-        if (err) {
-          console.log(err);
-          reject("Error en la confirmación");
-        } else {
-          resolve();
-        }
-      });
-    });
-  };
+editarUsuario = async (email, nombre) => {
+  try {
+    const updateSql = `UPDATE usuarios SET nombre = ? WHERE email = ?`;
+    await ConeccionSqlite.runQuery(updateSql, [nombre, email]);
+
+    const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
+    const row = await ConeccionSqlite.getRow(selectSql, [email]);
+
+    return row;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error al editar al usuario: " + error.message);
+  }
+};
 
 
 
-  cambiarContrasenia = (email, nuevaPass) => {
-    return new Promise((resolve, reject) => {
-      const checkEmailSQL = 'SELECT COUNT(*) as count FROM usuarios WHERE email = ?';
-      this.bd.get(checkEmailSQL, [email], (err, row) => {
-        if (row.count === 0) {
-          reject("El correo electrónico no está registrado");
-        } else {
-          const updatePasswordSQL = 'UPDATE usuarios SET pass = ? WHERE email = ?';
-          this.bd.run(updatePasswordSQL, [nuevaPass, email], function (err) {
-            if (err) {
-              console.log(err);
-              reject("Error en el cambio de contraseña");
-            } else {
-              resolve();
-            }
-          });
-        }
-      });
-    });
-  };
+confirmarRegistro = async (email) => {
+  try {
+    const updateSql = `UPDATE usuarios SET registro = 1 WHERE email = ?`;
+    await ConeccionSqlite.runQuery(updateSql, [email]);
+    return;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error en la confirmación");
+  }
+};
+
+
+
+cambiarContrasenia = async (email, nuevaPass) => {
+  try {
+    const checkEmailSQL = 'SELECT COUNT(*) as count FROM usuarios WHERE email = ?';
+    const emailCount = await ConeccionSqlite.getRow(checkEmailSQL, [email]);
+
+    if (emailCount.count === 0) {
+      throw new Error("El correo electrónico no está registrado");
+    }else{
+      const updatePasswordSQL = 'UPDATE usuarios SET pass = ? WHERE email = ?';
+      await ConeccionSqlite.runQuery(updatePasswordSQL, [nuevaPass, email]);
+    }
+
+    return;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 
 
 }

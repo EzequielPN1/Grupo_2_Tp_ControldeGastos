@@ -40,14 +40,15 @@ async  enviarCorreoConfirmacion(token, email) {
 }
 
 
-async  enviarCorreoCambioPass(email) {
+async  enviarCorreoCambioPass(email,token) {
   const mensaje = {
     from: 'ventaDeTicketsPN1@gmail.com',
     to: 'ventaDeTicketsPN1@gmail.com',
     subject: 'Cambio de Pass',
     html: `
+    <p>"Token generado de cambio de pass: ${token}, email: ${email}"</p>
       <p>Para cambiar tu contraseña, haz clic en el siguiente enlace:</p>
-      <a href="http://localhost:5173/cambioDePass?email=${encodeURIComponent(email)}">Cambiar contraseña</a>
+      <a href="http://localhost:5173/cambioDePass?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}">Cambiar contraseña</a>
     `,
   };
 
