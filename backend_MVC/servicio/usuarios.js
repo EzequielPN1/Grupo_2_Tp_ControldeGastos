@@ -1,96 +1,92 @@
-import usuarios from "../model/usuarios.js"
+import ModelFactory from "../model/DAO/usuariosFactory.js"
 import bcrypt from 'bcrypt'; //libreria para importar el hash y salt
+import config from "../config.js";
 
 
-const registro = async (email, nombre, pass) => {
-  try {
-    const salt = await bcrypt.genSalt(10); // generamos el salt de forma asincrónica
-    const hash = await bcrypt.hash(pass, salt); // generamos el hash de forma asincrónica
+class Servicio {
 
-    await usuarios.registro(email, nombre, hash); // registramos el usuario con el hash
-
-    return "Usuario registrado correctamente";
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error al registrar usuario");
+  constructor() {
+    this.model = ModelFactory.get(config.MODO_PERSISTENCIA)
   }
-};
 
-
-
-   
-const login = async (email, pass) => {
-  try {
-    const usuario = await usuarios.login(email); // Obtener el usuario de la base de datos
-
-    if (!usuario) {
-      throw new Error("Usuario no encontrado");
-    }
-    
-    const match = await bcrypt.compare(pass, usuario.pass); // Comparar la contraseña ingresada con el hash almacenado
-    if (match) {
-       if(usuario.registro == 0){
-        throw new Error("Cuenta no confirmada");
-       }else{
-        console.log("Inicio de sesión exitoso");
-        return usuario;
-       }
-    } else {
-      throw new Error("Contraseña incorrecta");
-    }
-  } catch (error) {
-    console.log(error);
-    throw new Error(error.message);
-  }
-};
-
-   
-   const editarUsuario = async (email, nombre) => {
+  registro = async (email, nombre, pass) => {
     try {
-      const usuario = await usuarios.editarUsuario(nombre,email)
-      console.log(usuario);
-      return usuario;
+      const salt = await bcrypt.genSalt(10); // generamos el salt de forma asincrónica
+      const hash = await bcrypt.hash(pass, salt); // generamos el hash de forma asincrónica
+      const respuesta = await this.model.registro(email, nombre, hash); // registramos el usuario con el hash
+      return respuesta;
     } catch (error) {
-      console.log(error);
-      throw new Error("Error en la Edicion");
+      throw new Error(error);
     }
   };
 
 
-const confirmarRegistro = async (email) => {
-  try {
-    await usuarios.confirmarRegistro(email)
-    console.log('Registro confirmado correctamente');   
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error al confirmar el registro");
-  }
-}
+  login = async (email, pass) => {
+    try {
+      const usuario = await this.model.login(email); // Obtener el usuario de la base de datos
+      const match = await bcrypt.compare(pass, usuario.pass); // Comparar la contraseña ingresada con el hash almacenado
+      if (match) {
+        if (usuario.registro == 0) {
+          throw new Error("Cuenta no confirmada");
+        } else {
+          console.log("Inicio de sesión exitoso de " + email);
+          return usuario;
+        }
+      } else {
+        throw new Error("Contraseña incorrecta");
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
 
-const cambiarContrasenia = async (email, nuevaPass) => {
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(nuevaPass, salt);
-    await usuarios.cambiarContrasenia(email, hash);
-  } catch (error) {
-    if (error === "El correo electrónico no está registrado") {
-      throw new Error("Error email no registrado");
-    } else {
-      throw new Error("Error al cambiar la contraseñia");
+
+  editarUsuario = async (email, nombre) => {
+    try {
+      const usuario = await this.model.editarUsuario(nombre, email)
+      console.log(usuario);
+      return usuario;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+
+  confirmarRegistro = async (email) => {
+    try {
+      await this.model.confirmarRegistro(email)
+      console.log('Registro del email ' + email + ' confirmado correctamente');
+    } catch (error) {
+      throw new Error("Error al confirmar el registro");
     }
   }
-};
+
+  esValido = async (email) => {
+    try {
+      await this.model.login(email); // Obtener el usuario de la base de datos
+    } catch (error) {
+      throw new Error(error);
+    }
+
+  }
 
 
 
 
-   export default {
-     registro,
-     login,
-     editarUsuario,
-     confirmarRegistro,
-     cambiarContrasenia
-   };
+  cambiarContrasenia = async (email, nuevaPass) => {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(nuevaPass, salt);
+      await this.model.cambiarContrasenia(email, hash);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+}
+
+
+export default Servicio
 
 
 
