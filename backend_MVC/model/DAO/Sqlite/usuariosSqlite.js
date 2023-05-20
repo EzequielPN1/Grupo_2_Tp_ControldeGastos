@@ -8,10 +8,10 @@ class usuarioSqlite {
   }
 
 
-  registro = async (email, nombre, pass) => {
+  registro = async (email, nombre, pass,apellido,fechaNac,dni) => {
     try {
-      const insertSql = `INSERT INTO usuarios (email, nombre, pass) VALUES (?, ?, ?)`;
-      await ConeccionSqlite.runQuery(insertSql, [email, nombre, pass]);
+      const insertSql = `INSERT INTO usuarios (email, nombre, pass,apellido,fecha_nacimiento,dni) VALUES (?, ?, ?, ?, ?, ? )`;
+      await ConeccionSqlite.runQuery(insertSql, [email, nombre, pass,apellido,fechaNac,dni]);
       return "Usuario registrado correctamente";
     } catch (error) {
       if (error.includes("UNIQUE constraint failed: usuarios.email")) {

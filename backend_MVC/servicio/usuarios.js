@@ -1,7 +1,7 @@
 import ModelFactory from "../model/DAO/usuariosFactory.js"
 import bcrypt from 'bcrypt'; //libreria para importar el hash y salt
 import config from "../config.js";
-
+import CalculadorEdad from "../servicio/calculadorEdad.js"
 
 class Servicio {
 
@@ -9,11 +9,18 @@ class Servicio {
     this.model = ModelFactory.get(config.MODO_PERSISTENCIA)
   }
 
-  registro = async (email, nombre, pass) => {
+  registro = async (email, nombre, pass,apellido,fechaNac,dni) => {
     try {
+
+      let edad = CalculadorEdad.calcularEdad(fechaNac)
+  
+      if(edad < 18){
+        throw new Error("Edad no valida para registrarse");
+      }
+
       const salt = await bcrypt.genSalt(10); // generamos el salt de forma asincrónica
       const hash = await bcrypt.hash(pass, salt); // generamos el hash de forma asincrónica
-      const respuesta = await this.model.registro(email, nombre, hash); // registramos el usuario con el hash
+      const respuesta = await this.model.registro(email, nombre, hash,apellido,fechaNac,dni); // registramos el usuario con el hash
       return respuesta;
     } catch (error) {
       throw new Error(error);

@@ -1,5 +1,4 @@
 import ServicioUsuarios from "../servicio/usuarios.js"
-import jwt from 'jsonwebtoken';
 import Autentificador from './autentificador.js'
 import Correo from './correo.js';
 
@@ -18,12 +17,13 @@ class Controlador {
 
   registro = async (req, res) => {
     try {
-      const email = req.body.email;
       const nombre = req.body.nombre;
+      const apellido = req.body.apellido;
+      const email = req.body.email;
+      const fechaNac = req.body.fechaNacimiento;
+      const dni = req.body.dni;
       const pass = req.body.pass;
-
-      const respuesta = await this.servicio.registro(email, nombre, pass);
-
+      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNac,dni);
       const token = this.autentificador.generateTokenTiempo(email, '1h');
       await this.correo.enviarCorreoConfirmacion(token, email);
       console.log("Usuario a confirmar registro " + email)

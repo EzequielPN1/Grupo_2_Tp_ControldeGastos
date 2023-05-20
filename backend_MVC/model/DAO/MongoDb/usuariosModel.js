@@ -15,18 +15,24 @@ class UsuarioMongoDb {
         }
     }
 
-    async registro(email, nombre, pass) {
+    async registro(email, nombre, pass,apellido,fechaNac,dni) {
         try {
             // Verificar si el correo electrónico ya existe en la base de datos
             const existingUser = await this.usuariosCollection.findOne({ email: email });
             if (existingUser) {
                 throw new Error(`Error, el correo ${email} ya fue ingresado`);
             }
-
+            
+            if (!email || !nombre || !pass) {
+                throw new Error('El email, nombre y pass son campos requeridos');
+              }
             // Insertar el nuevo usuario en la colección
             const newUser = {
                 email: email,
                 nombre: nombre,
+                apellido:apellido,
+                fechaNac:fechaNac,
+                dni:dni,
                 pass: pass,
                 registro: false
             };
