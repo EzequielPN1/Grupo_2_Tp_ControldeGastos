@@ -29,7 +29,7 @@ class usuarioSqlite {
       const row = await ConeccionSqlite.getRow(selectSql, [email]);
   
       if (!row) {
-        throw new Error("Error, " + email + " no está registrado");
+        throw new Error("El " + email + " no está registrado");
       }
   
       return row;
@@ -77,13 +77,10 @@ cambiarContrasenia = async (email, nuevaPass) => {
     const checkEmailSQL = 'SELECT COUNT(*) as count FROM usuarios WHERE email = ?';
     const emailCount = await ConeccionSqlite.getRow(checkEmailSQL, [email]);
 
-    if (emailCount.count === 0) {
-      throw new Error("El correo electrónico no está registrado");
-    }else{
+    if (emailCount.count != 0) {
       const updatePasswordSQL = 'UPDATE usuarios SET pass = ? WHERE email = ?';
       await ConeccionSqlite.runQuery(updatePasswordSQL, [nuevaPass, email]);
     }
-
     return;
   } catch (error) {
     throw new Error(error);

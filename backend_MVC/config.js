@@ -1,5 +1,8 @@
 const PORT = 3001
-const MODO_PERSISTENCIA = 'SQLite'
+const SQLITE ='SQLite'
+const MONGO_DB = 'mongoDb'
+const MODO_PERSISTENCIA = MONGO_DB
+
 
 export default {
     PORT,

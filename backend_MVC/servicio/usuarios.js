@@ -61,6 +61,18 @@ class Servicio {
     }
   }
 
+  esValido = async (email) => {
+    try {
+      await this.model.login(email); // Obtener el usuario de la base de datos
+    } catch (error) {
+      throw new Error(error);
+    }
+
+  }
+
+
+
+
   cambiarContrasenia = async (email, nuevaPass) => {
     try {
       const salt = await bcrypt.genSalt(10);

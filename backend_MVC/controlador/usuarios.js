@@ -95,13 +95,14 @@ class Controlador {
   enviarCorreoNuevaPass = async (req, res) => {
     try {
       const email = req.body.email;
+      await this.servicio.esValido(email);
       const token = this.autentificador.generateTokenTiempo(email, '10m');
       await this.correo.enviarCorreoCambioPass(email,token);  
       console.log("solicitud cambio de pass enviado a "+ email);
       res.status(200).json();
     } catch (error) {
-      console.error('Error al enviar el correo:', error);
-      res.status(500).send('Error al enviar el correo');
+      console.error('Error al enviar el correo:'+ error.message);
+      res.status(500).send(error.message);
     }
   };
 

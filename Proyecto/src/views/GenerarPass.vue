@@ -16,7 +16,7 @@ export default {
         alert('Se ha enviado un correo para generar una nueva contraseña');
         vue.$router.push("/");
       } catch (error) {
-        console.error(error);
+        alert(error.response.data);
       }
     }
 
@@ -30,7 +30,10 @@ export default {
     <form @submit.prevent="enviarCorreoNuevaPass(vue)">
       <label for="email">Ingrese su correo electrónico para reestablecer su Contraseña:</label>
       <input type="email" v-model="email" class="form-control" id="exampleInputPassword1" required />
+      <div class="d-flex justify-content-between align-items-center">
       <button type="submit" class="btn btn-primary">Enviar correo</button>
+      <RouterLink to="/"><button class="btn btn-secondary">Volver</button></RouterLink>
+    </div>
     </form>
   </div>
 </template>

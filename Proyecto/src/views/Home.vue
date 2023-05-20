@@ -31,7 +31,13 @@ export default {
     }
 
 
-  }
+  },
+  created() {
+    if (this.usuario.nombre === '') {
+      this.salir(),
+      this.$router.push('/');
+    }
+  },
 
 };
 
