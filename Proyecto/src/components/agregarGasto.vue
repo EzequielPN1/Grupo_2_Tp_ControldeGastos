@@ -6,6 +6,7 @@
                     title: "",
                     amount: 0,
                     types: ["Comida", "Social", "Vivienda"], // se debe cambiar cuando tengamos tipos guardados por usuario
+                    date: "",
                     description: ""
                 }
             }
@@ -39,11 +40,24 @@
         id="amount"
       />
     </div>
-    <select class="form-select" aria-label="Default select example">
+    <label for="date">Fecha</label>
+    <input id="date" type="date" v-model="spent.date">
+    <label for="category">Categoria</label>
+    <select id="category" class="form-select" aria-label="Default select example">
         <option v-for="type in spent.types" :key="type">
             {{ type }}
         </option>
     </select>
+    <div class="form-group">
+      <label for="description">Descripción</label>
+      <input
+        v-model="spent.description"
+        type="text"
+        class="form-control"
+        id="description"
+      />
+    </div>
+
     <button type="submit" class="btn btn-primary" >Guardar Gasto</button>
   </form>
     
