@@ -18,4 +18,7 @@ export const userService = {
   cambiarContrasenia(email,token, newPassword) {
     return apiClient.post('/cambiarContrasenia', { email: email,token:token, newPassword: newPassword });
   },
+  eliminarCuenta(pass,token,email) {
+    return apiClient.delete('/eliminarCuenta', { data: { pass, token, email } });
+  },
 }

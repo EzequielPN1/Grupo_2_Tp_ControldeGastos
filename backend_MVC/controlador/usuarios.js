@@ -127,6 +127,24 @@ class Controlador {
   };
 
   
+  eliminarCuenta = async (req, res) => {
+    try {  
+      const pass = req.body.pass;
+      const token = req.body.token;
+      const email = req.body.email;
+      await this.autentificador.autentificarToken(token);
+      await this.servicio.eliminarCuenta(pass,email);
+      console.log("Cuenta eliminada  con el email "+ email)
+      res.status(200).json("Cuenta eliminada  con el email "+ email);
+    } catch (error) {
+      console.log("Nose elimino")
+      res.status(500).send(error.message);
+    }
+  };
+
+
+
+  
 };
 
 

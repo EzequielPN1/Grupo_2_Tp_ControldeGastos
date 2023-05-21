@@ -24,7 +24,11 @@ export default {
   methods: {
     salir() {
       this.usuario.nombre = '';
+      this.usuario.apellido='';
       this.usuario.email = '';
+      this.usuario.dni='';
+      this.usuario.fechaNacimiento='';
+      this.usuario.saldo=0;
       this.usuario.pass = '';
       this.usuario.token = '';
       this.$router.push('/');
@@ -57,7 +61,7 @@ export default {
         <h2 v-if="usuario.nombre != ''" class="pr-4">{{ usuario.nombre }}</h2>
       </li>
       <li>
-        <RouterLink to="/EditarPerfil">Editar Perfil</RouterLink>
+        <RouterLink to="/MiPerfil">Mi Perfil</RouterLink>
       </li>
       <li><a href="#">Opción 1</a></li>
       <li><a href="#">Opción 2</a></li>

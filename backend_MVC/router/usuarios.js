@@ -17,6 +17,7 @@ class Router {
         this.router.get("/confirmar", this.controlador.confirmar)
         this.router.post("/enviarCorreoNuevaPass", this.controlador.enviarCorreoNuevaPass)
         this.router.post("/cambiarContrasenia", this.controlador.cambiarContrasenia)
+        this.router.delete("/eliminarCuenta",this.controlador.eliminarCuenta)
 
         return this.router
     }

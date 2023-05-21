@@ -14,11 +14,11 @@ export default {
   },
   data() {
     return {
-      usuarioModificable :
+      usuarioModificable:
       {
         nombre: '',
-        apellido:'',
-        saldo:0.0,
+        apellido: '',
+        saldo: 0.0,
       },
 
       vue: this,
@@ -26,11 +26,11 @@ export default {
   },
   methods: {
 
-    async guardarPerfil(usuarioModificable,vue) {
+    async guardarPerfil(usuarioModificable, vue) {
       const usuarioEditado = {
-        nombre : this.usuarioModificable.nombre !== '' ? this.usuarioModificable.nombre : this.usuario.nombre,
-        apellido :this.usuarioModificable.apellido !== '' ? this.usuarioModificable.apellido : this.usuario.apellido,
-        saldo:this.usuarioModificable.saldo !== 0 ? this.usuarioModificable.saldo : this.usuario.saldo,
+        nombre: this.usuarioModificable.nombre !== '' ? this.usuarioModificable.nombre : this.usuario.nombre,
+        apellido: this.usuarioModificable.apellido !== '' ? this.usuarioModificable.apellido : this.usuario.apellido,
+        saldo: Number(this.usuarioModificable.saldo) + Number(this.usuario.saldo),
         email: this.usuario.email,
         token: this.usuario.token
       };
@@ -50,33 +50,40 @@ export default {
 </script>
 
 
-
 <template>
   <div class="edit-profile">
     <div>
       <h2>Editar Perfil</h2>
       <form @submit.prevent="guardarPerfil(usuarioModificable, vue)">
-        <div>
-          <label>Nombre:</label>
-          <input type="text" v-model="usuarioModificable.nombre" >
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" v-model="usuarioModificable.nombre">
         </div>
-        <div>
-          <label>Apellido:</label>
-          <input type="text" v-model="usuarioModificable.apellido" >
+        <div class="form-group">
+          <label for="apellido">Apellido:</label>
+          <input type="text" id="apellido" v-model="usuarioModificable.apellido">
         </div>
-        <div>
-          <label>Saldo:</label>
-          <input type="text" v-model="usuarioModificable.saldo" >
+        <div class="form-group">
+          <label for="saldo">Depositar saldo:</label>
+          <input type="text" id="saldo" v-model="usuarioModificable.saldo">
         </div>
-        <button type="submit">Guardar</button>
+        <button type="submit">Confirmar</button>
       </form>
     </div>
-  </div>
-  <div class="back-button-container">
-    <RouterLink to="/Home"><button class="btn btn-secondary">Volver</button></RouterLink>
+    <div class="button-container">
+      <div class="back-button-container">
+        <router-link to="/MiPerfil">
+          <button class="btn btn-secondary">Volver</button>
+        </router-link>
+      </div>
+      <div>
+        <router-link to="/EliminarCuenta">
+          <button class="btn btn-danger">Eliminar cuenta</button>
+        </router-link>
+      </div>
+    </div>
   </div>
 </template>
-
 
 <style>
 .edit-profile {
@@ -97,13 +104,16 @@ export default {
 
 .edit-profile form {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+}
+
+.edit-profile .form-group {
+  margin-bottom: 15px;
 }
 
 .edit-profile label {
   font-weight: bold;
   color: #555;
-  margin-bottom: 5px;
 }
 
 .edit-profile input[type="text"],
@@ -111,7 +121,6 @@ export default {
 .edit-profile input[type="password"],
 .edit-profile input[type="file"] {
   padding: 10px;
-  margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 3px;
   font-size: 14px;
@@ -119,8 +128,8 @@ export default {
 }
 
 .edit-profile button[type="submit"] {
-  padding: 10px 20px;
-  margin-top: 10px;
+  padding: 5px 50px;
+  margin-top: 30px;
   border: none;
   border-radius: 3px;
   background-color: #007bff;
@@ -134,15 +143,17 @@ export default {
   background-color: #0056b3;
 }
 
-.edit-profile img {
-  max-width: 100%;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 .back-button-container {
+  align-self: flex-start;
+}
+
+.button-container>div {
   display: flex;
-  justify-content: flex-end;
 }
 </style>

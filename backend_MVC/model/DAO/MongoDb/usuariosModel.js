@@ -107,6 +107,26 @@ class UsuarioMongoDb {
         }
     }
 
+
+    async eliminarCuenta(email){
+        try {
+          const usuario = await this.usuariosCollection.findOne({ email }); // Buscar el usuario por su correo electrónico en la colección de usuarios
+      
+          if (usuario) {
+            await this.usuariosCollection.deleteOne({ email }); // Eliminar el usuario de la colección
+            console.log(`La cuenta con el email ${email} ha sido borrada correctamente`);
+          } else {
+            throw new Error("Usuario no encontrado");
+          }
+        } catch (error) {
+          throw new Error(error);
+        }
+      };
+      
+
+
+
+
 }
 
 

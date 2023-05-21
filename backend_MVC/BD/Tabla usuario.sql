@@ -2,7 +2,7 @@ CREATE TABLE usuarios (
   email TEXT PRIMARY KEY,
   nombre TEXT NOT NULL,
   apellido TEXT,
-  fecha_nacimiento DATE,
+  fechaNac TEXT,
   dni INTEGER,
   saldo REAL,
   pass TEXT NOT NULL,

@@ -8,7 +8,7 @@ export const useUserStore = defineStore("user", {
         nombre: "",
         apellido:"",
         email: "",
-        fechaNacimiento:"",
+        fechaNac:"",
         dni:0,
         saldo:0.00,
         pass: "",
