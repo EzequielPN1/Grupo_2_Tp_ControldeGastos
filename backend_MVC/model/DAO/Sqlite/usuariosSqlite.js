@@ -8,10 +8,10 @@ class usuarioSqlite {
   }
 
 
-  registro = async (email, nombre, pass,apellido,fechaNac,dni) => {
+  registro = async (email, nombre, pass,apellido,fechaNac,dni,saldo) => {
     try {
-      const insertSql = `INSERT INTO usuarios (email, nombre, pass,apellido,fecha_nacimiento,dni) VALUES (?, ?, ?, ?, ?, ? )`;
-      await ConeccionSqlite.runQuery(insertSql, [email, nombre, pass,apellido,fechaNac,dni]);
+      const insertSql = `INSERT INTO usuarios (email, nombre, pass,apellido,fecha_nacimiento,dni,saldo) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+      await ConeccionSqlite.runQuery(insertSql, [email, nombre, pass,apellido,fechaNac,dni,saldo]);
       return "Usuario registrado correctamente";
     } catch (error) {
       if (error.includes("UNIQUE constraint failed: usuarios.email")) {
@@ -42,20 +42,21 @@ class usuarioSqlite {
 
 
 
-editarUsuario = async (email, nombre) => {
-  try {
-    const updateSql = `UPDATE usuarios SET nombre = ? WHERE email = ?`;
-    await ConeccionSqlite.runQuery(updateSql, [nombre, email]);
-
-    const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
-    const row = await ConeccionSqlite.getRow(selectSql, [email]);
-
-    return row;
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error al editar al usuario: " + error.message);
-  }
-};
+  editarUsuario = async (email, nombre, apellido, saldo) => {
+    try {
+      const updateSql = `UPDATE usuarios SET nombre = ?, apellido = ?, saldo = ? WHERE email = ?`;
+      await ConeccionSqlite.runQuery(updateSql, [nombre, apellido, saldo, email]);
+  
+      const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
+      const row = await ConeccionSqlite.getRow(selectSql, [email]);
+  
+      return row;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error al editar al usuario: " + error.message);
+    }
+  };
+  
 
 
 

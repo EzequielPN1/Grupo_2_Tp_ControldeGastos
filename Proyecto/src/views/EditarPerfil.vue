@@ -14,15 +14,23 @@ export default {
   },
   data() {
     return {
-      nombre: '',
+      usuarioModificable :
+      {
+        nombre: '',
+        apellido:'',
+        saldo:0.0,
+      },
+
       vue: this,
     };
   },
   methods: {
 
-    async guardarPerfil(nombre, vue) {
+    async guardarPerfil(usuarioModificable,vue) {
       const usuarioEditado = {
-        nombre: nombre,
+        nombre : this.usuarioModificable.nombre !== '' ? this.usuarioModificable.nombre : this.usuario.nombre,
+        apellido :this.usuarioModificable.apellido !== '' ? this.usuarioModificable.apellido : this.usuario.apellido,
+        saldo:this.usuarioModificable.saldo !== 0 ? this.usuarioModificable.saldo : this.usuario.saldo,
         email: this.usuario.email,
         token: this.usuario.token
       };
@@ -47,10 +55,18 @@ export default {
   <div class="edit-profile">
     <div>
       <h2>Editar Perfil</h2>
-      <form @submit.prevent="guardarPerfil(nombre, vue)">
+      <form @submit.prevent="guardarPerfil(usuarioModificable, vue)">
         <div>
           <label>Nombre:</label>
-          <input type="text" v-model="nombre" required>
+          <input type="text" v-model="usuarioModificable.nombre" >
+        </div>
+        <div>
+          <label>Apellido:</label>
+          <input type="text" v-model="usuarioModificable.apellido" >
+        </div>
+        <div>
+          <label>Saldo:</label>
+          <input type="text" v-model="usuarioModificable.saldo" >
         </div>
         <button type="submit">Guardar</button>
       </form>

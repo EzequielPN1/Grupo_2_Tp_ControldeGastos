@@ -15,7 +15,7 @@ class UsuarioMongoDb {
         }
     }
 
-    async registro(email, nombre, pass,apellido,fechaNac,dni) {
+    async registro(email, nombre, pass,apellido,fechaNac,dni,saldo) {
         try {
             // Verificar si el correo electrónico ya existe en la base de datos
             const existingUser = await this.usuariosCollection.findOne({ email: email });
@@ -33,6 +33,7 @@ class UsuarioMongoDb {
                 apellido:apellido,
                 fechaNac:fechaNac,
                 dni:dni,
+                saldo:saldo,
                 pass: pass,
                 registro: false
             };
@@ -73,20 +74,21 @@ class UsuarioMongoDb {
     }
 
 
-    async editarUsuario(email, nombre) {
+    async editarUsuario(email, nombre, apellido, saldo) {
         try {
-            // Actualizar el campo "nombre" del usuario
-            await this.usuariosCollection.updateOne({ email: email }, { $set: { nombre: nombre } });
-
-            // Obtener el usuario actualizado
-            const user = await this.usuariosCollection.findOne({ email: email });
-
-            return user;
+          // Actualizar los campos "nombre", "apellido" y "saldo" del usuario
+          await this.usuariosCollection.updateOne({ email: email }, { $set: { nombre: nombre, apellido: apellido, saldo: saldo } });
+      
+          // Obtener el usuario actualizado
+          const user = await this.usuariosCollection.findOne({ email: email });
+      
+          return user;
         } catch (error) {
-            console.log(error);
-            throw new Error("Error al editar al usuario: " + error.message);
+          console.log(error);
+          throw new Error("Error al editar al usuario: " + error.message);
         }
-    }
+      }
+      
 
     async cambiarContrasenia(email, nuevaPass) {
         try {

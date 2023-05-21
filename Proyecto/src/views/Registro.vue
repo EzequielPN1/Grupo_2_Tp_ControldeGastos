@@ -12,6 +12,7 @@ export default {
         email: "",
         dni: 0,
         fechaNacimiento:"",
+        saldo:0.00,
         pass: "",
         token: "",
       },
@@ -64,6 +65,10 @@ export default {
       <div class="form-group">
         <label>Dni</label>
         <input v-model="usuario.dni" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Saldo</label>
+        <input v-model="usuario.saldo" class="form-control" />
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Password</label>

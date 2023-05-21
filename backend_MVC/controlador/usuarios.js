@@ -22,8 +22,9 @@ class Controlador {
       const email = req.body.email;
       const fechaNac = req.body.fechaNacimiento;
       const dni = req.body.dni;
+      const saldo = req.body.saldo;
       const pass = req.body.pass;
-      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNac,dni);
+      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNac,dni,saldo);
       const token = this.autentificador.generateTokenTiempo(email, '1h');
       await this.correo.enviarCorreoConfirmacion(token, email);
       console.log("Usuario a confirmar registro " + email)
@@ -54,10 +55,12 @@ class Controlador {
     try {
       const email = req.body.email;
       const nombre = req.body.nombre;
+      const apellido = req.body.apellido;
+      const saldo = req.body.saldo;
 
       await this.autentificador.autentificarToken(req.body.token);
 
-      const usuario = await this.servicio.editarUsuario(nombre, email);
+      const usuario = await this.servicio.editarUsuario(nombre, email,apellido,saldo);
       const token = this.autentificador.generateTokenTiempo(email, '20s');
       usuario.token = token;
       console.log("Usuario "+ email +" editado correctamente")

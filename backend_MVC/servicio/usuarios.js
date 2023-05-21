@@ -9,7 +9,7 @@ class Servicio {
     this.model = ModelFactory.get(config.MODO_PERSISTENCIA)
   }
 
-  registro = async (email, nombre, pass,apellido,fechaNac,dni) => {
+  registro = async (email, nombre, pass,apellido,fechaNac,dni,saldo) => {
     try {
 
       let edad = CalculadorEdad.calcularEdad(fechaNac)
@@ -20,7 +20,7 @@ class Servicio {
 
       const salt = await bcrypt.genSalt(10); // generamos el salt de forma asincrónica
       const hash = await bcrypt.hash(pass, salt); // generamos el hash de forma asincrónica
-      const respuesta = await this.model.registro(email, nombre, hash,apellido,fechaNac,dni); // registramos el usuario con el hash
+      const respuesta = await this.model.registro(email, nombre, hash,apellido,fechaNac,dni,saldo); // registramos el usuario con el hash
       return respuesta;
     } catch (error) {
       throw new Error(error);
@@ -48,9 +48,9 @@ class Servicio {
   };
 
 
-  editarUsuario = async (email, nombre) => {
+  editarUsuario = async (email, nombre,apellido,saldo) => {
     try {
-      const usuario = await this.model.editarUsuario(nombre, email)
+      const usuario = await this.model.editarUsuario(nombre, email,apellido,saldo)
       console.log(usuario);
       return usuario;
     } catch (error) {
