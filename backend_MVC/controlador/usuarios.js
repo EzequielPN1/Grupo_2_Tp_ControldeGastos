@@ -1,161 +1,145 @@
-import usuarios from "../servicio/usuarios.js"
-import jwt from 'jsonwebtoken';
-import middleware from './middleware.js'
-import mailer from './mailer.js';
-
-const secretKey = 'secreto';
-
-/*
-      // Generar token
-      const generateToken = (email) => {
-        const token = jwt.sign({ userId:email }, secretKey, { expiresIn: '20s' });
-       return token;
-  };
-*/
-
-
-
-const registro = (req, res) => {
-  const email = req.body.email;
-  const nombre = req.body.nombre;
-  const pass = req.body.pass;
- 
-  usuarios.registro(email, nombre, pass)
-    .then(() => {
-
-      const token = jwt.sign({ userId: email }, 'secreto', { expiresIn: '1h' });
-      mailer.enviarCorreoConfirmacion(token,email)
-      res.status(200).send("Usuario registrado correctamente");
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).send("Error al registrar usuario");
-    });
-};
+import ServicioUsuarios from "../servicio/usuarios.js"
+import Autentificador from './autentificador.js'
+import Correo from './correo.js';
 
 
 
 
-const login = (req, res) => {
-  const email = req.body.email;
-  const pass = req.body.pass;
 
-  usuarios.login(email, pass)
-    .then(usuario => {
-      const token = jwt.sign({ userId: email }, secretKey, { expiresIn: '20s' });
-      usuario.token = token;
-      res.status(200).json(usuario);
-    })
-    .catch(error => {
-      console.log(error);
-      if (error.message === "Usuario no encontrado") {
-                 res.status(404).send("El correo no está registrado.");
-      } else if (error.message === "Cuenta no confirmada") {
-                 res.status(401).send("La cuenta no está confirmada.");
-      } else if (error.message === "Contraseña incorrecta") {        
-                 res.status(401).send("Contraseña incorrecta.");                
-      } else {
-                res.status(500).send("Error interno del servidor.");
-      }
-    });
-};
+class Controlador {
 
-
-
-const editarUsuario = (req, res) => {
-  const email = req.body.email;
-  const nombre = req.body.nombre;
-try{
-  
-  middleware.authenticateMiddleware(req.body.token) 
-
-  usuarios.editarUsuario(nombre,email)
-    .then((usuario) => {
-      const token = jwt.sign({ userId:email }, secretKey, { expiresIn: '20s' });
-      usuario.token = token
-      res.status(200).json(usuario);
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).send("Error al editar usuario");
-    });
-}catch{
-  res.status(500).send("Error el tiempo de la pagina ha expirado");
-}
-
-};
-
-
-const confirmar = (req,res) => {
-
-  const email = req.query.email;
-  const token = req.query.token;
-  
-
-  try {
-    const decodedToken = jwt.verify(token, secretKey);
-    // Si el token es válido, la variable decodedToken contendrá los datos descifrados del token
-    // Puedes extraer la información necesaria del token, como el correo electrónico, para continuar con la confirmación.
-    const emailDecodificado = decodedToken.userId;
-
-    if(email === emailDecodificado){
-     
-      res.send(`<h1>Registro confirmado</h1>`);
-      usuarios.confirmarRegistro(emailDecodificado)
-
-    }else{
-      res.send('Email no valido');
-    }
-
-  } catch (error) {
-    // Si el token no es válido o ha expirado, maneja el error apropiadamente.
-    console.error('Error al verificar el token:', error);
-    // Puedes devolver una respuesta de error al cliente o realizar otras acciones necesarias.
+  constructor() {
+    this.servicio = new ServicioUsuarios()
+    this.autentificador = new Autentificador()
+    this.correo = new Correo()
   }
 
-}
-
-const enviarCorreoNuevaPass = (req,res) => {
-  const email = req.body.email;
-  console.log(email)
-  mailer.enviarCorreoCambioPass(email)
-  res.status(200).json();
-}
+  inicio = async (req,res) => {
+    res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Servidor Control Gastos!</h1></div>');
+  }
 
 
-
-
-const cambiarContrasenia = (req, res) => {
-  const email = req.body.email;
-  const nuevaPass = req.body.newPassword;
-
-  usuarios.cambiarContrasenia(email, nuevaPass)
-    .then(() => {
-      res.status(200).json();
-    })
-    .catch((error) => {
+  registro = async (req, res) => {
+    try {
+      
+      const {nombre,apellido,email,fechaNacimiento,dni,saldo,pass} = req.body
+      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNacimiento,dni,saldo);
+      const token = this.autentificador.generateTokenTiempo(email, '1h');
+      await this.correo.enviarCorreoConfirmacion(token, email);
+      console.log("Usuario a confirmar registro " + email)
+      res.status(200).send(respuesta);
+    } catch (error) {
       console.log(error.message)
-      if (error.message === "Error email no registrado") {
-        res.status(404).send("El correo no está registrado.");
+      res.status(500).send(error.message);
+    }
+  };
+
+
+  login = async (req, res) => {
+    try {
+      const {email,pass} = req.body
+      const usuario = await this.servicio.login(email, pass);
+      const token = this.autentificador.generateTokenTiempo(email, '20s');
+      usuario.token = token;
+      res.status(200).json(usuario);
+    } catch (error) {
+      console.log(error.message)
+      res.status(500).send(error.message);
+    }
+  };
+
+
+  editarUsuario = async (req, res) => {
+    try {
+      const {email,nombre,apellido,saldo} =req.body
+      await this.autentificador.autentificarToken(req.body.token);
+
+      const usuario = await this.servicio.editarUsuario(nombre, email,apellido,saldo);
+      const token = this.autentificador.generateTokenTiempo(email, '20s');
+      usuario.token = token;
+      console.log("Usuario "+ email +" editado correctamente")
+      res.status(200).json(usuario);
+
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+
+
+  confirmar = async (req, res) => {
+    try {
+
+      const email = req.query.email;
+      const token = req.query.token;
+      const decodedToken = this.autentificador.decodificarToken(token)
+      const emailDecodificado = decodedToken.userId;
+
+      if (email === emailDecodificado) {
+        await this.servicio.confirmarRegistro(emailDecodificado);
+        res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Registro confirmado!</h1></div>');
+
       } else {
-        console.log(error); 
-        res.status(500).send("Ocurrió un error en el servidor.");
+        res.send('Email no válido');
       }
-    });
+    } catch (error) {
+      console.log("error conmfirmar")
+      console.error(error.message);
+      res.status(500).send(error.message);
+    }
+  };
+
+
+  enviarCorreoNuevaPass = async (req, res) => {
+    try {
+      const email = req.body.email;
+      await this.servicio.esValido(email);
+      const token = this.autentificador.generateTokenTiempo(email, '10m');
+      await this.correo.enviarCorreoCambioPass(email,token);  
+      console.log("solicitud cambio de pass enviado a "+ email);
+      res.status(200).json();
+    } catch (error) {
+      console.error('Error al enviar el correo:'+ error.message);
+      res.status(500).send(error.message);
+    }
+  };
+
+
+  cambiarContrasenia = async (req, res) => {
+    try {
+      const {email,newPassword,token} = req.body
+      //chequear Token
+      console.log("Token " + token)
+      await this.autentificador.autentificarToken(token);
+      await this.servicio.cambiarContrasenia(email, newPassword);
+      console.log("contraseña del email " + email +" modificada")
+      res.status(200).json('Contraseña cambiada exitosamente');
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  };
+
+  
+  eliminarCuenta = async (req, res) => {
+    try {  
+      const {pass,token,email} = req.body
+      await this.autentificador.autentificarToken(token);
+      await this.servicio.eliminarCuenta(pass,email);
+      console.log("Cuenta eliminada  con el email "+ email)
+      res.status(200).json("Cuenta eliminada  con el email "+ email);
+    } catch (error) {
+      console.log("Nose elimino")
+      res.status(500).send(error.message);
+    }
+  };
+
+
+
+  
 };
 
 
-
-
-export default {
-  registro,
-  login,
-  editarUsuario,
-  confirmar,
-  enviarCorreoNuevaPass,
-  cambiarContrasenia
-}
-
+export default Controlador
 
 
 
