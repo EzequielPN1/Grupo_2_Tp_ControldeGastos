@@ -1,5 +1,4 @@
 import ServicioUsuarios from "../servicio/usuarios.js"
-import jwt from 'jsonwebtoken';
 import Autentificador from './autentificador.js'
 import Correo from './correo.js';
 
@@ -15,15 +14,16 @@ class Controlador {
     this.correo = new Correo()
   }
 
+  inicio = async (req,res) => {
+    res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Servidor Control Gastos!</h1></div>');
+  }
+
 
   registro = async (req, res) => {
     try {
-      const email = req.body.email;
-      const nombre = req.body.nombre;
-      const pass = req.body.pass;
-
-      const respuesta = await this.servicio.registro(email, nombre, pass);
-
+      
+      const {nombre,apellido,email,fechaNacimiento,dni,saldo,pass} = req.body
+      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNacimiento,dni,saldo);
       const token = this.autentificador.generateTokenTiempo(email, '1h');
       await this.correo.enviarCorreoConfirmacion(token, email);
       console.log("Usuario a confirmar registro " + email)
@@ -37,8 +37,7 @@ class Controlador {
 
   login = async (req, res) => {
     try {
-      const email = req.body.email;
-      const pass = req.body.pass;
+      const {email,pass} = req.body
       const usuario = await this.servicio.login(email, pass);
       const token = this.autentificador.generateTokenTiempo(email, '20s');
       usuario.token = token;
@@ -52,12 +51,10 @@ class Controlador {
 
   editarUsuario = async (req, res) => {
     try {
-      const email = req.body.email;
-      const nombre = req.body.nombre;
-
+      const {email,nombre,apellido,saldo} =req.body
       await this.autentificador.autentificarToken(req.body.token);
 
-      const usuario = await this.servicio.editarUsuario(nombre, email);
+      const usuario = await this.servicio.editarUsuario(nombre, email,apellido,saldo);
       const token = this.autentificador.generateTokenTiempo(email, '20s');
       usuario.token = token;
       console.log("Usuario "+ email +" editado correctamente")
@@ -72,9 +69,9 @@ class Controlador {
 
   confirmar = async (req, res) => {
     try {
+
       const email = req.query.email;
       const token = req.query.token;
-
       const decodedToken = this.autentificador.decodificarToken(token)
       const emailDecodificado = decodedToken.userId;
 
@@ -86,6 +83,7 @@ class Controlador {
         res.send('Email no válido');
       }
     } catch (error) {
+      console.log("error conmfirmar")
       console.error(error.message);
       res.status(500).send(error.message);
     }
@@ -109,19 +107,33 @@ class Controlador {
 
   cambiarContrasenia = async (req, res) => {
     try {
-      const email = req.body.email;
-      const nuevaPass = req.body.newPassword;
-      const token = req.body.token;
+      const {email,newPassword,token} = req.body
       //chequear Token
       console.log("Token " + token)
       await this.autentificador.autentificarToken(token);
-      await this.servicio.cambiarContrasenia(email, nuevaPass);
+      await this.servicio.cambiarContrasenia(email, newPassword);
       console.log("contraseña del email " + email +" modificada")
       res.status(200).json('Contraseña cambiada exitosamente');
     } catch (error) {
       res.status(500).send(error.message);
     }
   };
+
+  
+  eliminarCuenta = async (req, res) => {
+    try {  
+      const {pass,token,email} = req.body
+      await this.autentificador.autentificarToken(token);
+      await this.servicio.eliminarCuenta(pass,email);
+      console.log("Cuenta eliminada  con el email "+ email)
+      res.status(200).json("Cuenta eliminada  con el email "+ email);
+    } catch (error) {
+      console.log("Nose elimino")
+      res.status(500).send(error.message);
+    }
+  };
+
+
 
   
 };

@@ -11,12 +11,15 @@ class Router {
 
 
     start() {
+        this.router.get("/",this.controlador.inicio)
         this.router.post("/register", this.controlador.registro)
         this.router.post("/login", this.controlador.login)
         this.router.post("/editarUsuario", this.controlador.editarUsuario)
         this.router.get("/confirmar", this.controlador.confirmar)
         this.router.post("/enviarCorreoNuevaPass", this.controlador.enviarCorreoNuevaPass)
         this.router.post("/cambiarContrasenia", this.controlador.cambiarContrasenia)
+        this.router.delete("/eliminarCuenta",this.controlador.eliminarCuenta)
+       
 
         return this.router
     }

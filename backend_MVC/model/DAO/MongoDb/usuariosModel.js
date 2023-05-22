@@ -15,18 +15,25 @@ class UsuarioMongoDb {
         }
     }
 
-    async registro(email, nombre, pass) {
+    async registro(email, nombre, pass,apellido,fechaNac,dni,saldo) {
         try {
             // Verificar si el correo electrónico ya existe en la base de datos
             const existingUser = await this.usuariosCollection.findOne({ email: email });
             if (existingUser) {
                 throw new Error(`Error, el correo ${email} ya fue ingresado`);
             }
-
+            
+            if (!email || !nombre || !pass) {
+                throw new Error('El email, nombre y pass son campos requeridos');
+              }
             // Insertar el nuevo usuario en la colección
             const newUser = {
                 email: email,
                 nombre: nombre,
+                apellido:apellido,
+                fechaNac:fechaNac,
+                dni:dni,
+                saldo:saldo,
                 pass: pass,
                 registro: false
             };
@@ -67,20 +74,21 @@ class UsuarioMongoDb {
     }
 
 
-    async editarUsuario(email, nombre) {
+    async editarUsuario(email, nombre, apellido, saldo) {
         try {
-            // Actualizar el campo "nombre" del usuario
-            await this.usuariosCollection.updateOne({ email: email }, { $set: { nombre: nombre } });
-
-            // Obtener el usuario actualizado
-            const user = await this.usuariosCollection.findOne({ email: email });
-
-            return user;
+          // Actualizar los campos "nombre", "apellido" y "saldo" del usuario
+          await this.usuariosCollection.updateOne({ email: email }, { $set: { nombre: nombre, apellido: apellido, saldo: saldo } });
+      
+          // Obtener el usuario actualizado
+          const user = await this.usuariosCollection.findOne({ email: email });
+      
+          return user;
         } catch (error) {
-            console.log(error);
-            throw new Error("Error al editar al usuario: " + error.message);
+          console.log(error);
+          throw new Error("Error al editar al usuario: " + error.message);
         }
-    }
+      }
+      
 
     async cambiarContrasenia(email, nuevaPass) {
         try {
@@ -98,6 +106,26 @@ class UsuarioMongoDb {
             throw new Error(error);
         }
     }
+
+
+    async eliminarCuenta(email){
+        try {
+          const usuario = await this.usuariosCollection.findOne({ email }); // Buscar el usuario por su correo electrónico en la colección de usuarios
+      
+          if (usuario) {
+            await this.usuariosCollection.deleteOne({ email }); // Eliminar el usuario de la colección
+            console.log(`La cuenta con el email ${email} ha sido borrada correctamente`);
+          } else {
+            throw new Error("Usuario no encontrado");
+          }
+        } catch (error) {
+          throw new Error(error);
+        }
+      };
+      
+
+
+
 
 }
 

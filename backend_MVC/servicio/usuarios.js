@@ -1,7 +1,7 @@
 import ModelFactory from "../model/DAO/usuariosFactory.js"
 import bcrypt from 'bcrypt'; //libreria para importar el hash y salt
 import config from "../config.js";
-
+import CalculadorEdad from "../servicio/calculadorEdad.js"
 
 class Servicio {
 
@@ -9,11 +9,18 @@ class Servicio {
     this.model = ModelFactory.get(config.MODO_PERSISTENCIA)
   }
 
-  registro = async (email, nombre, pass) => {
+  registro = async (email, nombre, pass, apellido, fechaNac, dni, saldo) => {
     try {
+
+      let edad = CalculadorEdad.calcularEdad(fechaNac)
+
+      if (edad < 18) {
+        throw new Error("Edad no valida para registrarse");
+      }
+
       const salt = await bcrypt.genSalt(10); // generamos el salt de forma asincrónica
       const hash = await bcrypt.hash(pass, salt); // generamos el hash de forma asincrónica
-      const respuesta = await this.model.registro(email, nombre, hash); // registramos el usuario con el hash
+      const respuesta = await this.model.registro(email, nombre, hash, apellido, fechaNac, dni, saldo); // registramos el usuario con el hash
       return respuesta;
     } catch (error) {
       throw new Error(error);
@@ -41,9 +48,9 @@ class Servicio {
   };
 
 
-  editarUsuario = async (email, nombre) => {
+  editarUsuario = async (email, nombre, apellido, saldo) => {
     try {
-      const usuario = await this.model.editarUsuario(nombre, email)
+      const usuario = await this.model.editarUsuario(nombre, email, apellido, saldo)
       console.log(usuario);
       return usuario;
     } catch (error) {
@@ -71,8 +78,6 @@ class Servicio {
   }
 
 
-
-
   cambiarContrasenia = async (email, nuevaPass) => {
     try {
       const salt = await bcrypt.genSalt(10);
@@ -82,6 +87,23 @@ class Servicio {
       throw new Error(error);
     }
   };
+
+  
+  eliminarCuenta = async (pass, email) => {
+    try {
+      const usuario = await this.model.login(email); // Obtener el usuario de la base de datos
+      const match = await bcrypt.compare(pass, usuario.pass); // Comparar la contraseña ingresada con el hash almacenado
+      if (match) {
+        await this.model.eliminarCuenta(email);
+      } else {
+        throw new Error("Contraseña invalida");
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+
 
 }
 

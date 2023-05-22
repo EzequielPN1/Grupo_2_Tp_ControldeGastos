@@ -14,15 +14,23 @@ export default {
   },
   data() {
     return {
-      nombre: '',
+      usuarioModificable:
+      {
+        nombre: '',
+        apellido: '',
+        saldo: 0.0,
+      },
+
       vue: this,
     };
   },
   methods: {
 
-    async guardarPerfil(nombre, vue) {
+    async guardarPerfil(vue) {
       const usuarioEditado = {
-        nombre: nombre,
+        nombre: this.usuarioModificable.nombre !== '' ? this.usuarioModificable.nombre : this.usuario.nombre,
+        apellido: this.usuarioModificable.apellido !== '' ? this.usuarioModificable.apellido : this.usuario.apellido,
+        saldo: Number(this.usuarioModificable.saldo) + Number(this.usuario.saldo),
         email: this.usuario.email,
         token: this.usuario.token
       };
@@ -42,91 +50,36 @@ export default {
 </script>
 
 
-
 <template>
   <div class="edit-profile">
     <div>
       <h2>Editar Perfil</h2>
-      <form @submit.prevent="guardarPerfil(nombre, vue)">
-        <div>
-          <label>Nombre:</label>
-          <input type="text" v-model="nombre" required>
+      <form @submit.prevent="guardarPerfil(vue)">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" v-model="usuarioModificable.nombre"  class="form-control" >
         </div>
-        <button type="submit">Guardar</button>
+        <div class="form-group">
+          <label for="apellido">Apellido:</label>
+          <input type="text" id="apellido" v-model="usuarioModificable.apellido"  class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="saldo">Depositar saldo:</label>
+          <input type="text" id="saldo" v-model="usuarioModificable.saldo"  class="form-control">
+        </div>
+        <div  class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-primary" type="submit">Confirmar</button>
+        <RouterLink to="/MiPerfil"><button class="btn btn-secondary">Volver</button></RouterLink>
+      </div>
       </form>
     </div>
-  </div>
-  <div class="back-button-container">
-    <RouterLink to="/Home"><button class="btn btn-secondary">Volver</button></RouterLink>
+    <div class="button-container">
+      <div>
+        <router-link to="/EliminarCuenta">
+          <button class="btn btn-danger">Eliminar cuenta</button>
+        </router-link>
+      </div>
+    </div>
   </div>
 </template>
 
-
-<style>
-.edit-profile {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.edit-profile h2 {
-  text-align: center;
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.edit-profile form {
-  display: flex;
-  flex-direction: column;
-}
-
-.edit-profile label {
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 5px;
-}
-
-.edit-profile input[type="text"],
-.edit-profile input[type="email"],
-.edit-profile input[type="password"],
-.edit-profile input[type="file"] {
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 14px;
-  color: #555;
-}
-
-.edit-profile button[type="submit"] {
-  padding: 10px 20px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 3px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.edit-profile button[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
-.edit-profile img {
-  max-width: 100%;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.back-button-container {
-  display: flex;
-  justify-content: flex-end;
-}
-</style>
