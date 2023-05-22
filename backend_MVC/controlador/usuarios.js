@@ -14,6 +14,10 @@ class Controlador {
     this.correo = new Correo()
   }
 
+  inicio = async (req,res) => {
+    res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Servidor Control Gastos!</h1></div>');
+  }
+
 
   registro = async (req, res) => {
     try {
