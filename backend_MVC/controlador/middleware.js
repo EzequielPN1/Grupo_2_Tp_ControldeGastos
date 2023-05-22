@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-
-
 const authenticateMiddleware = (req, res, next) => {
 
   console.log("Token " + req)

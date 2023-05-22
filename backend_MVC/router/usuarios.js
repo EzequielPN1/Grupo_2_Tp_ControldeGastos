@@ -1,18 +1,15 @@
 import express from "express";
-import usuarios from '../controlador/usuarios.js'
+import usuarios from '../controlador/usuarios.js';
 
+const routerUsuarios = express.Router()
 
-const router = express.Router()
-
-router.post("/register",usuarios.registro)
-router.post("/login", usuarios.login)
-router.post("/editarUsuario",usuarios.editarUsuario)
-router.get("/confirmar",usuarios.confirmar)
-router.post("/enviarCorreoNuevaPass",usuarios.enviarCorreoNuevaPass)
-router.post("/cambiarContrasenia",usuarios.cambiarContrasenia)
-
-
+routerUsuarios.post("/register",usuarios.registro)
+routerUsuarios.post("/login", usuarios.login)
+routerUsuarios.post("/editarUsuario",usuarios.editarUsuario)
+routerUsuarios.get("/confirmar",usuarios.confirmar)
+routerUsuarios.post("/enviarCorreoNuevaPass",usuarios.enviarCorreoNuevaPass)
+routerUsuarios.post("/cambiarContrasenia",usuarios.cambiarContrasenia)
 
 export {
-    router
+    routerUsuarios
 }

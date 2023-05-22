@@ -49,7 +49,7 @@ const login = (req, res) => {
     .catch(error => {
       console.log(error);
       if (error.message === "Usuario no encontrado") {
-                 res.status(404).send("El correo no está registrado.");
+        res.status(404).send("El correo no está registrado.");
       } else if (error.message === "Cuenta no confirmada") {
                  res.status(401).send("La cuenta no está confirmada.");
       } else if (error.message === "Contraseña incorrecta") {        
