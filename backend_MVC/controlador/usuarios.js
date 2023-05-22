@@ -17,8 +17,9 @@ class Controlador {
 
   registro = async (req, res) => {
     try {
-      const {nombre,apellido,email,fechaNac,dni,saldo,pass} = req.body
-      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNac,dni,saldo);
+      
+      const {nombre,apellido,email,fechaNacimiento,dni,saldo,pass} = req.body
+      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNacimiento,dni,saldo);
       const token = this.autentificador.generateTokenTiempo(email, '1h');
       await this.correo.enviarCorreoConfirmacion(token, email);
       console.log("Usuario a confirmar registro " + email)
@@ -64,7 +65,9 @@ class Controlador {
 
   confirmar = async (req, res) => {
     try {
-      const {email,token} = req.body
+
+      const email = req.query.email;
+      const token = req.query.token;
       const decodedToken = this.autentificador.decodificarToken(token)
       const emailDecodificado = decodedToken.userId;
 
@@ -76,6 +79,7 @@ class Controlador {
         res.send('Email no válido');
       }
     } catch (error) {
+      console.log("error conmfirmar")
       console.error(error.message);
       res.status(500).send(error.message);
     }
