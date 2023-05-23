@@ -15,84 +15,53 @@ const agregar = (gasto) => {
   });
 };
 
+  const editar = (id, gasto) => {
+    return new Promise((resolve, reject) => {
+      const {email, titulo, monto, fecha, categoria, descripcion} = gasto
+      const sql = `UPDATE gastos SET email = ?, titulo = ?, monto = ?, fecha = ?, categoria = ?, descripcion = ? WHERE id = ?`;
+      db.run(sql, [email, titulo, monto, fecha, categoria, descripcion, id], function(err) {
+        if (err) {
+          console.log(err);
+          reject("Error al editar gasto");
+        } else {
+          resolve("Gasto editado correctamente");
+        }
+      });
+    });
+  };
 
+  const eliminar = (id) => {
+    return new Promise((resolve, reject) => {
+      const sql = `DELETE FROM gastos WHERE id = ?`;
+      db.run(sql, [id], function(err) {
+        if (err) {
+          console.log(err);
+          reject("Error al eliminar gasto");
+        } else {
+          resolve("Gasto eliminado correctamente");
+        }
+      });
+    });
+  };
 
-
-  // const login = (email) => {
-  //   return new Promise((resolve, reject) => {
-  //     const sql = `SELECT * FROM usuarios WHERE email = ?`;
-  //     db.get(sql, [email], (err, row) => {
-  //       if (err) {
-  //         console.log(err);
-  //         reject("Error mail no registrado");
-  //       } else {
-  //         resolve(row);
-  //       }
-  //     });
-  //   });
-  // };
-
-
-
-  // const editarUsuario = (email, nombre) => {
-  //   return new Promise((resolve, reject) => {
-  //     const sql = `UPDATE usuarios SET nombre = ? WHERE email = ?`;
-  //     db.run(sql, [nombre, email], function(err) {
-  //       if (err) {
-  //         console.log(err);
-  //         reject("Error en la autenticación");
-  //       } else {
-  //         db.get(`SELECT * FROM usuarios WHERE email = ?`, [email], (err, row) => {
-  //           if (err) {
-  //             console.log(err);
-  //             reject("Error en la autenticación");
-  //           } else {
-  //             resolve(row);
-  //           }
-  //         });
-  //       }
-  //     });
-  //   });
-  // };
-
-
-  // const confirmarRegistro = (email) => {
-  //   return new Promise((resolve, reject) => {
-  //     const sql = `UPDATE usuarios SET registro = 1 WHERE email = ?`;
-  //     db.run(sql, [email], function(err) {
-  //       if (err) {
-  //         console.log(err);
-  //         reject("Error en la confirmación");
-  //       } else {
-  //         resolve();
-  //       }
-  //     });
-  //   });
-  // };
-
-
-
-  // const cambiarContrasenia = (email, nuevaPass) => {
-  //   return new Promise((resolve, reject) => {
-  //     const checkEmailSQL = 'SELECT COUNT(*) as count FROM usuarios WHERE email = ?';
-  //     db.get(checkEmailSQL, [email], (err, row) => {
-  //       if (row.count === 0) {
-  //         reject("El correo electrónico no está registrado");
-  //       } else {
-  //         const updatePasswordSQL = 'UPDATE usuarios SET pass = ? WHERE email = ?';
-  //         db.run(updatePasswordSQL, [nuevaPass, email], function(err) {
-  //           if (err) {
-  //             console.log(err);
-  //             reject("Error en el cambio de contraseña");
-  //           } else {
-  //             resolve();
-  //           }
-  //         });
-  //       }
-  //     });
-  //   });
-  // };
+const listar = email => {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT * FROM gastos WHERE email = ?`;
+    db.all(sql, [email], (err, rows) => {
+      if (err) {
+        console.log(err);
+        reject("Error al listar gastos");
+      } else {
+        console.log(rows);
+        resolve(rows);
+      }
+    });
+  });
+};
 
 export default {
-  agregar
+  agregar,
+  editar,
+  eliminar,
+  listar
 }
