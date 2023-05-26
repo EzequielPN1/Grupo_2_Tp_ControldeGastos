@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
+import AgregarGasto from "../components/agregarGasto.vue";
 
 
 
@@ -47,8 +48,6 @@ export default {
 
 </script>
 
-
-
 <template>
   <head>
 
@@ -72,8 +71,6 @@ export default {
 
   </body>
 </template>
-
-
 
 <style>
 /* Estilos para el navbar */
