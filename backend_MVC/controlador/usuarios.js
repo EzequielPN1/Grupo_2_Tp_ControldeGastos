@@ -1,15 +1,11 @@
-import ServicioUsuarios from "../servicio/usuarios.js"
+import ServicioUsuario from "../servicio/usuarios.js"
 import Autentificador from './autentificador.js'
 import Correo from './correo.js';
 
-
-
-
-
-class Controlador {
+class ControladorUsuario {
 
   constructor() {
-    this.servicio = new ServicioUsuarios()
+    this.servicio = new ServicioUsuario()
     this.autentificador = new Autentificador()
     this.correo = new Correo()
   }
@@ -17,7 +13,6 @@ class Controlador {
   inicio = async (req,res) => {
     res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Servidor Control Gastos!</h1></div>');
   }
-
 
   registro = async (req, res) => {
     try {
@@ -34,7 +29,6 @@ class Controlador {
     }
   };
 
-
   login = async (req, res) => {
     try {
       const {email,pass} = req.body
@@ -47,7 +41,6 @@ class Controlador {
       res.status(500).send(error.message);
     }
   };
-
 
   editarUsuario = async (req, res) => {
     try {
@@ -65,7 +58,6 @@ class Controlador {
       res.status(500).send(error.message);
     }
   }
-
 
   confirmar = async (req, res) => {
     try {
@@ -89,7 +81,6 @@ class Controlador {
     }
   };
 
-
   enviarCorreoNuevaPass = async (req, res) => {
     try {
       const email = req.body.email;
@@ -103,8 +94,7 @@ class Controlador {
       res.status(500).send(error.message);
     }
   };
-
-
+  
   cambiarContrasenia = async (req, res) => {
     try {
       const {email,newPassword,token} = req.body
@@ -119,7 +109,6 @@ class Controlador {
     }
   };
 
-  
   eliminarCuenta = async (req, res) => {
     try {  
       const {pass,token,email} = req.body
@@ -132,14 +121,6 @@ class Controlador {
       res.status(500).send(error.message);
     }
   };
-
-
-
-  
 };
 
-
-export default Controlador
-
-
-
+export default ControladorUsuario

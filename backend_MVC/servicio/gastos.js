@@ -1,24 +1,26 @@
-import gastos from '../model/gastos.js'
+import GastoSqlite from '../model/DAO/Sqlite/gastosSqlite.js'
 
-const agregar = async gasto => {
-    return await gastos.agregar(gasto)
+class ServicioGasto {
+
+    constructor() {
+        this.model = new GastoSqlite()
+    }
+
+    agregar = async gasto => {
+        return await this.model.agregar(gasto)
+    }
+    
+    editar = async (id, gasto) => {
+        return await this.model.editar(id, gasto)
+    }
+    
+    eliminar = async (id) => {
+        return await this.model.eliminar(id)
+    }
+    
+    listar = async (email) => {
+        return await this.model.listar(email)
+    }
 }
 
-const editar = async (id, gasto) => {
-    return await gastos.editar(id, gasto)
-}
-
-const eliminar = async (id) => {
-    return await gastos.eliminar(id)
-}
-
-const listar = async (email) => {
-    return await gastos.listar(email)
-}
-
-export default {
-    agregar,
-    editar,
-    eliminar,
-    listar
-}
+export default ServicioGasto

@@ -11,15 +11,12 @@ class ModelFactory {
                 
             case 'mongoDb':
                 console.log("Usando la base de datos MongoDb.");
-                  return new ModelMongodb()
+                return new ModelMongodb()
 
             default:
                 console.log("Usando la base de datos sqlite.(Default)");
                 return new ModelSqlite()
-
         }
-
-
     }
 }
 
