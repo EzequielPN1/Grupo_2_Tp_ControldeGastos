@@ -1,4 +1,4 @@
-import ConexionMongo from './coneccionMongoDb.js';
+import ConexionMongo from './conexionMongoDb.js';
 
 class UsuarioMongoDb {
     constructor() {
