@@ -34,17 +34,6 @@ const eliminar = async (req,res) => {
     }
 }
 
-// const listar = async (req,res) => {
-//     try {
-//         let email = req.params.email
-//         let gastos = await gastos.listar(email)
-//         res.status(200).json(gastos);
-//     }
-//     catch(e) {
-//         res.status(500).send("Error al listar gastos: ", e);
-//     }
-// }
-
 const listar = async (req, res) => {
     const email = req.params.email
     await gastos.listar(email)
