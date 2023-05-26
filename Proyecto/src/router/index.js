@@ -6,6 +6,8 @@ import Registro from '../views/Registro.vue'
 import EditarPerfil from '../views/EditarPerfil.vue'
 import GenerarPass from '../views/GenerarPass.vue'
 import CambioDePass from '../views/CambioDePass.vue'
+import MiPerfil from '../views/MiPerfil.vue'
+import EliminarCuenta from '../views/EliminarCuenta.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +49,18 @@ const router = createRouter({
       name: 'CambioDePass',
       component: CambioDePass,
     },
+    {
+      path: '/MiPerfil',
+      name: 'MiPerfil',
+      component: MiPerfil,
+    },
+    {
+      path: '/EliminarCuenta',
+      name: 'EliminarCuenta',
+      component: EliminarCuenta,
+    }
+    
+    
 
 
   ]

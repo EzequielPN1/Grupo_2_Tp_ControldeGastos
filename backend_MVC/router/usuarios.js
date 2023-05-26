@@ -1,15 +1,33 @@
 import express from "express";
-import usuarios from '../controlador/usuarios.js';
+import ControladorUsuario from '../controlador/usuarios.js'
 
-const routerUsuarios = express.Router()
 
-routerUsuarios.post("/register",usuarios.registro)
-routerUsuarios.post("/login", usuarios.login)
-routerUsuarios.post("/editarUsuario",usuarios.editarUsuario)
-routerUsuarios.get("/confirmar",usuarios.confirmar)
-routerUsuarios.post("/enviarCorreoNuevaPass",usuarios.enviarCorreoNuevaPass)
-routerUsuarios.post("/cambiarContrasenia",usuarios.cambiarContrasenia)
+class Router {
 
-export {
-    routerUsuarios
+    constructor() {
+        this.router = express.Router()
+        this.controlador = new ControladorUsuario()
+    }
+
+
+    start() {
+        this.router.get("/",this.controlador.inicio)
+        this.router.post("/register", this.controlador.registro)
+        this.router.post("/login", this.controlador.login)
+        this.router.post("/editarUsuario", this.controlador.editarUsuario)
+        this.router.get("/confirmar", this.controlador.confirmar)
+        this.router.post("/enviarCorreoNuevaPass", this.controlador.enviarCorreoNuevaPass)
+        this.router.post("/cambiarContrasenia", this.controlador.cambiarContrasenia)
+        this.router.delete("/eliminarCuenta",this.controlador.eliminarCuenta)
+       
+
+        return this.router
+    }
+
+
+
 }
+
+
+
+export default Router
