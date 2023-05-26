@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'; //libreria para importar el hash y salt
 import config from "../config.js";
 import CalculadorEdad from "../servicio/calculadorEdad.js"
 
-class Servicio {
+class ServicioUsuario {
 
   constructor() {
     this.model = ModelFactory.get(config.MODO_PERSISTENCIA)
@@ -27,7 +27,6 @@ class Servicio {
     }
   };
 
-
   login = async (email, pass) => {
     try {
       const usuario = await this.model.login(email); // Obtener el usuario de la base de datos
@@ -47,7 +46,6 @@ class Servicio {
     }
   };
 
-
   editarUsuario = async (email, nombre, apellido, saldo) => {
     try {
       const usuario = await this.model.editarUsuario(nombre, email, apellido, saldo)
@@ -57,7 +55,6 @@ class Servicio {
       throw new Error(error);
     }
   };
-
 
   confirmarRegistro = async (email) => {
     try {
@@ -77,7 +74,6 @@ class Servicio {
 
   }
 
-
   cambiarContrasenia = async (email, nuevaPass) => {
     try {
       const salt = await bcrypt.genSalt(10);
@@ -88,7 +84,6 @@ class Servicio {
     }
   };
 
-  
   eliminarCuenta = async (pass, email) => {
     try {
       const usuario = await this.model.login(email); // Obtener el usuario de la base de datos
@@ -102,15 +97,6 @@ class Servicio {
       throw new Error(error);
     }
   };
-
-
-
 }
 
-
-export default Servicio
-
-
-
-
-
+export default ServicioUsuario

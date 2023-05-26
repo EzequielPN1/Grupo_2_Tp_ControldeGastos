@@ -1,14 +1,12 @@
 import express from "express";
 import ControladorUsuario from '../controlador/usuarios.js'
 
-
-class Router {
+class RouterUsuario {
 
     constructor() {
         this.router = express.Router()
         this.controlador = new ControladorUsuario()
     }
-
 
     start() {
         this.router.get("/",this.controlador.inicio)
@@ -20,14 +18,9 @@ class Router {
         this.router.post("/cambiarContrasenia", this.controlador.cambiarContrasenia)
         this.router.delete("/eliminarCuenta",this.controlador.eliminarCuenta)
        
-
         return this.router
     }
 
-
-
 }
 
-
-
-export default Router
+export default RouterUsuario

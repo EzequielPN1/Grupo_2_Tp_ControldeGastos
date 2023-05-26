@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 class ConexionMongo {
+  
   constructor() {
     this.uri = 'mongodb://127.0.0.1:27017'; // URI de conexión a tu base de datos MongoDB
     this.usuariosMongoDb = null;
