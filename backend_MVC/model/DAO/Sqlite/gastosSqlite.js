@@ -9,9 +9,9 @@ class GastoSqlite {
   agregar = async (gasto) => {
 
     try {
-      const {email, titulo, monto, fecha, categoria, descripcion} = gasto
-      const sql = `INSERT INTO gastos (email, titulo, monto, fecha, categoria, descripcion) VALUES (?, ?, ?, ?, ?, ?)`;
-      await ConexionSqlite.runQuery(sql, [email, titulo, monto, fecha, categoria, descripcion])
+      const {email, titulo, monto, fecha, idCategoria, descripcion} = gasto
+      const sql = `INSERT INTO gastos (email, titulo, monto, fecha, idCategoria, descripcion) VALUES (?, ?, ?, ?, ?, ?)`;
+      await ConexionSqlite.runQuery(sql, [email, titulo, monto, fecha, idCategoria, descripcion])
       return "Gasto registrado correctamente";
     }
     catch (error) {
@@ -24,9 +24,9 @@ class GastoSqlite {
   editar = async (id, gasto) => {
 
     try {
-      const {email, titulo, monto, fecha, categoria, descripcion} = gasto
-      const sql = `UPDATE gastos SET email = ?, titulo = ?, monto = ?, fecha = ?, categoria = ?, descripcion = ? WHERE id = ?`;
-      await ConexionSqlite.runQuery(sql, [email, titulo, monto, fecha, categoria, descripcion, id])
+      const {email, titulo, monto, fecha, idCategoria, descripcion} = gasto
+      const sql = `UPDATE gastos SET email = ?, titulo = ?, monto = ?, fecha = ?, idCategoria = ?, descripcion = ? WHERE id = ?`;
+      await ConexionSqlite.runQuery(sql, [email, titulo, monto, fecha, idCategoria, descripcion, id])
       return "Gasto editado correctamente"
     }
     catch (error) {
