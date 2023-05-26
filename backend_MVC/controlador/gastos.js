@@ -7,14 +7,17 @@ class ControladorGasto {
     }
 
     agregar = async (req,res) => {
+        console.log(req.body);  
         try {
             let gasto = req.body
+            console.log(gasto);
             await this.gastos.agregar(gasto)
             res.status(200).send("Gasto ingresado correctamente");
         }
         catch(e) {
             res.status(500).send("Error al agregar gasto: ", e);
         }
+        
     }
     
     editar = async (req,res) => {

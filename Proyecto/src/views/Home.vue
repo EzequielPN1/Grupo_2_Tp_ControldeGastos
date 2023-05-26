@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
-import AgregarGasto from "../components/agregarGasto.vue";
+
 
 
 
@@ -62,7 +62,9 @@ export default {
       <li>
         <RouterLink to="/MiPerfil">Mi Perfil</RouterLink>
       </li>
-      <li><a href="#">Opción 1</a></li>
+      <li>
+        <RouterLink to="/AgregarGasto">Agregar Gasto</RouterLink>
+      </li>
       <li><a href="#">Opción 2</a></li>
       <li><a href="#">Opción 3</a></li>
       <button v-if="usuario.nombre !== ''" @click="salir" class="nav-link btn btn-outline-danger">Salir</button>

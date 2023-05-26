@@ -10,8 +10,6 @@ export const useUserStore = defineStore("user", {
         email: "",
         fechaNac:"",
         dni:0,
-        saldo:0.00,
-        pass: "",
         token: "",
       },
 

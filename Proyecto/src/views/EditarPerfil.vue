@@ -18,7 +18,6 @@ export default {
       {
         nombre: '',
         apellido: '',
-        saldo: 0.0,
       },
 
       vue: this,
@@ -62,10 +61,6 @@ export default {
         <div class="form-group">
           <label for="apellido">Apellido:</label>
           <input type="text" id="apellido" v-model="usuarioModificable.apellido"  class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="saldo">Depositar saldo:</label>
-          <input type="text" id="saldo" v-model="usuarioModificable.saldo"  class="form-control">
         </div>
         <div  class="d-flex justify-content-between align-items-center">
         <button class="btn btn-primary" type="submit">Confirmar</button>

@@ -1,5 +1,6 @@
 import ConexionSqlite from './conexionSqlite.js'
 
+
 class GastoSqlite {
 
   constructor() {
@@ -8,9 +9,10 @@ class GastoSqlite {
 
   agregar = async (gasto) => {
 
+    
     try {
       const {email, titulo, monto, fecha, categoria, descripcion} = gasto
-      const sql = `INSERT INTO gastos (email, titulo, monto, fecha, categoria, descripcion) VALUES (?, ?, ?, ?, ?, ?)`;
+      const sql = `INSERT INTO gastos (email, titulo, monto, fecha, categoria, descripcion) VALUES (?, ?, ?, ?, ?, ?)`;  
       await ConexionSqlite.runQuery(sql, [email, titulo, monto, fecha, categoria, descripcion])
       return "Gasto registrado correctamente";
     }

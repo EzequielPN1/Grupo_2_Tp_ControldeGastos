@@ -43,9 +43,6 @@ export default {
         <li>
           <span class="profile-label">Fecha de Nacimiento:</span> {{ usuario.fechaNac }}
         </li>
-        <li>
-          <span class="profile-label">Saldo Disponible:</span> $ {{ usuario.saldo }} pesos
-        </li>
       </ul>
     </div>
     <div class="button-container">
