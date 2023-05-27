@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { userService } from "../Services/userService.js"
 import { useUserStore } from "../stores/user";
-
+import Barra from "../views/Barra.vue"
 
 export default {
   setup() {
@@ -45,14 +45,17 @@ export default {
     }
 
   },
+  components: {
+    Barra,
+  },
 };
 </script>
 
 
 <template>
+  <Barra></Barra>
   <div class="edit-profile">
     <div>
-      <h2>Editar Perfil</h2>
       <form @submit.prevent="guardarPerfil(vue)">
         <div class="form-group">
           <label for="nombre">Nombre:</label>
@@ -64,7 +67,6 @@ export default {
         </div>
         <div  class="d-flex justify-content-between align-items-center">
         <button class="btn btn-primary" type="submit">Confirmar</button>
-        <RouterLink to="/MiPerfil"><button class="btn btn-secondary">Volver</button></RouterLink>
       </div>
       </form>
     </div>

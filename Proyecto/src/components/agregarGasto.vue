@@ -2,7 +2,7 @@
 import { gastosService } from "../Services/gastosService.js"
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
-
+import Barra from "../views/Barra.vue"
 
 export default {
   setup() {
@@ -39,7 +39,10 @@ export default {
         alert(error.response);
       }
     }
-  }
+  },
+   components: {
+    Barra,
+  },
 }
 
 
@@ -47,9 +50,7 @@ export default {
 
 
 <template>
-
-
-
+<Barra></Barra>
   <form class="form" @submit.prevent="agregarGasto()">
     <div class="form-group">
       <label for="title">Titulo</label>
@@ -71,9 +72,7 @@ export default {
       <label for="description">Descripción</label>
       <input v-model="gasto.descripcion" type="text" class="form-control" id="description" />
     </div>
-
     <button type="submit" class="btn btn-primary">Guardar Gasto</button>
-    <RouterLink to="/Home"><button class="btn btn-secondary">Volver</button></RouterLink>
   </form>
 </template>
 

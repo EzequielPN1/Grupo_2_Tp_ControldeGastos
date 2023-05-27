@@ -4,8 +4,12 @@ const apiClient = axiosClient.getApiClient();
 
 export const gastosService = {
 
-  agregarGasto(spent) {
-    return apiClient.post('/gastos/agregar',spent);
+  agregarGasto(gasto) {
+    return apiClient.post('/gastos/agregar',gasto);
+  },
+
+  getGastos(email){
+   return apiClient.get(`/gastos/listar/${email}`);
   },
 
 }

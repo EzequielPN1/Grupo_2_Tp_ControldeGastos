@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
+import Barra from "../views/Barra.vue"
 
 export default {
   setup() {
@@ -13,7 +14,9 @@ export default {
       usuario,
     }
   },
-
+  components: {
+    Barra,
+  },
 
 
 
@@ -24,8 +27,8 @@ export default {
 
 
 <template>
+  <Barra></Barra>
   <div>
-    <h1>Perfil</h1>
     <div class="profile-container">
       <ul>
         <li>
@@ -48,11 +51,6 @@ export default {
     <div class="button-container">
       <RouterLink to="/EditarPerfil">
         <button class="btn btn-primary">Editar Perfil</button>
-      </RouterLink>
-    </div>
-    <div class="button-container">
-      <RouterLink to="/Home">
-        <button class="btn btn-secondary">Volver</button>
       </RouterLink>
     </div>
   </div>

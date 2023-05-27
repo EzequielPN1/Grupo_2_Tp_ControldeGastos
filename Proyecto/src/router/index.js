@@ -9,10 +9,13 @@ import CambioDePass from '../views/CambioDePass.vue'
 import MiPerfil from '../views/MiPerfil.vue'
 import EliminarCuenta from '../views/EliminarCuenta.vue'
 import AgregarGasto from "../components/agregarGasto.vue";
+import ListarGastos from "../components/ListarGastos.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+
+    //Usuario:
     {
       path: '/',
       name: 'Inicio',
@@ -61,12 +64,17 @@ const router = createRouter({
       component: EliminarCuenta,
     },
     
-    //-------------------------------------------------------------------------------------------------
+    //Gasto:
 
     {
       path: '/AgregarGasto',
       name: 'AgregarGasto',
       component: AgregarGasto,
+    },
+    {
+      path: '/ListarGastos',
+      name: 'ListarGastos',
+      component: ListarGastos,
     }
     
 

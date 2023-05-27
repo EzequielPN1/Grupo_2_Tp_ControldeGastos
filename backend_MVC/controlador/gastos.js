@@ -43,15 +43,16 @@ class ControladorGasto {
     }
 
     listar = async (req, res) => {
-        const email = req.params.email
-        await this.gastos.listar(email)
-            .then(gastos => {
-                res.status(200).json(gastos);
-            })
-            .catch(error => {
-                res.status(500).send("Error interno del servidor.", error);
-            });
-    };
+        try {
+          let email = req.params.email;
+      
+          const gastos = await this.gastos.listar(email);
+          res.status(200).json(gastos);
+        } catch (error) {
+          res.status(500).send("Error interno del servidor.");
+        }
+      };
+      
 }
 
 export default ControladorGasto
