@@ -38,6 +38,7 @@ export default {
         console.log(error);
         alert(error.response);
       }
+      this.$refs.formulario.reset();
     }
   },
    components: {
@@ -51,19 +52,19 @@ export default {
 
 <template>
 <Barra></Barra>
-  <form class="form" @submit.prevent="agregarGasto()">
+  <form ref="formulario" class="form" @submit.prevent="agregarGasto()">
     <div class="form-group">
       <label for="title">Titulo</label>
-      <input v-model="gasto.titulo" type="text" class="form-control" id="title" />
+      <input v-model="gasto.titulo" type="text" class="form-control" id="title" required/>
     </div>
     <div class="form-group">
       <label for="amount">Monto</label>
-      <input v-model="gasto.monto" type="number" class="form-control" id="amount" />
+      <input v-model="gasto.monto" type="number" class="form-control" id="amount" required />
     </div>
     <label for="date">Fecha</label>
     <input id="date" type="date" v-model="gasto.fecha">
     <label for="category">Categoria</label>
-    <select id="category" class="form-select" aria-label="Default select example" v-model="gasto.categoria">
+    <select id="category" class="form-select" aria-label="Default select example" v-model="gasto.categoria" required>
       <option v-for="tipo in gasto.tipos" :key="tipo">
         {{ tipo }}
       </option>

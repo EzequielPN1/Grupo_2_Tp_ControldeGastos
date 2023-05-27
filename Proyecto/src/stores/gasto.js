@@ -5,6 +5,7 @@ export const useUserStore = defineStore("gasto", {
   state: () => {
     return {
       gasto: {
+        id:"",
         email: "",
         titulo: "",
         monto: 0,

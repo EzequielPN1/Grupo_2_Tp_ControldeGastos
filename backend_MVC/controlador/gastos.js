@@ -21,9 +21,8 @@ class ControladorGasto {
 
     editar = async (req, res) => {
         try {
-            let id = req.params.id
             let gasto = req.body
-            await this.gastos.editar(id, gasto)
+            await this.gastos.editar(gasto)
             res.status(200).send("Gasto editado correctamente");
         }
         catch (e) {
@@ -33,8 +32,8 @@ class ControladorGasto {
 
     eliminar = async (req, res) => {
         try {
-            let id = req.params.id
-            await this.gastos.eliminar(id)
+            let gasto = req.body
+            await this.gastos.eliminar(gasto)
             res.status(200).send("Gasto eliminado correctamente");
         }
         catch (e) {

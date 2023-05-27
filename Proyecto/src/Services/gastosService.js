@@ -5,11 +5,20 @@ const apiClient = axiosClient.getApiClient();
 export const gastosService = {
 
   agregarGasto(gasto) {
-    return apiClient.post('/gastos/agregar',gasto);
+    return apiClient.post('/gastos/agregar', gasto);
   },
 
-  getGastos(email){
-   return apiClient.get(`/gastos/listar/${email}`);
+  getGastos(email) {
+    return apiClient.get(`/gastos/listar/${email}`);
   },
+
+  eliminarGasto(gasto) {
+    return apiClient.post('/gastos/eliminar',gasto);
+  },
+
+  editarGasto(gasto) {
+    return apiClient.post('/gastos/editar',gasto);
+  },
+
 
 }

@@ -11,12 +11,12 @@ class ServicioGasto {
         return await this.model.agregar(gasto)
     }
     
-    editar = async (id, gasto) => {
-        return await this.model.editar(id, gasto)
+    editar = async (gasto) => {
+        return await this.model.editar(gasto)
     }
     
-    eliminar = async (id) => {
-        return await this.model.eliminar(id)
+    eliminar = async (gasto) => {
+        return await this.model.eliminar(gasto)
     }
     
     listar = async (email) => {

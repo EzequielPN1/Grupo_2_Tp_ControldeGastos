@@ -23,10 +23,10 @@ class GastoSqlite {
 
   };
   
-  editar = async (id, gasto) => {
+  editar = async (gasto) => {
 
     try {
-      const {email, titulo, monto, fecha, categoria, descripcion} = gasto
+      const {id,email, titulo, monto, fecha, categoria, descripcion} = gasto
       const sql = `UPDATE gastos SET email = ?, titulo = ?, monto = ?, fecha = ?, categoria = ?, descripcion = ? WHERE id = ?`;
       await ConexionSqlite.runQuery(sql, [email, titulo, monto, fecha, categoria, descripcion, id])
       return "Gasto editado correctamente"
@@ -38,9 +38,9 @@ class GastoSqlite {
 
   };
   
-  eliminar = async id => {
-
+  eliminar = async gasto => {
     try {
+      const {id} = gasto
       const sql = `DELETE FROM gastos WHERE id = ?`
       await ConexionSqlite.runQuery(sql, [id])
       return "Gasto eliminado correctamente"
