@@ -16,7 +16,18 @@ export default {
   data() {
     return {
       gastos: [],
+      tipos: ["Comida", "Social", "Vivienda","Remedios"],
+      categoriaSeleccionada: "",
     };
+  },
+  computed: {
+    gastosFiltrados() {
+      if (this.categoriaSeleccionada === "") {
+        return this.gastos; // Mostrar todos los gastos si no hay categoría seleccionada
+      } else {
+        return this.gastos.filter(gasto => gasto.categoria === this.categoriaSeleccionada);
+      }
+    },
   },
 
   components: {
@@ -29,6 +40,12 @@ export default {
 <template>
   <Barra></Barra>
   <div>
+  <label for="categoria">Filtrar por categoría:</label>
+  <select id="categoria" v-model="categoriaSeleccionada">
+    <option value="">Todos</option>
+    <option v-for="categoria in tipos" :value="categoria">{{ categoria }}</option>
+  </select>
+
   <table class="table">
     <thead>
       <tr>
@@ -40,7 +57,7 @@ export default {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(gasto, index) in gastos" :key="index">
+      <tr v-for="(gasto, index) in gastosFiltrados" :key="index">
         <td>{{ gasto.titulo }}</td>
         <td>{{ gasto.monto }}</td>
         <td>{{ gasto.fecha }}</td>
@@ -50,6 +67,7 @@ export default {
     </tbody>
   </table>
 </div>
+
 
 
 </template>

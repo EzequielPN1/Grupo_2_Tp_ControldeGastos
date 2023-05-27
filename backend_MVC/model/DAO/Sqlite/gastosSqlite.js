@@ -53,7 +53,6 @@ class GastoSqlite {
   };
   
   listar = async email => {
-
     try {
       const sql = `SELECT * FROM gastos WHERE email = ?`
       const row = await ConexionSqlite.getAllRows(sql, [email])

@@ -1,9 +1,10 @@
-import GastoSqlite from '../model/DAO/Sqlite/gastosSqlite.js'
+import ModelFactory from "../model/DAO/gastosFactory.js"
+import config from "../config.js";
 
 class ServicioGasto {
 
     constructor() {
-        this.model = new GastoSqlite()
+        this.model = ModelFactory.get(config.MODO_PERSISTENCIA) 
     }
 
     agregar = async gasto => {

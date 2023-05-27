@@ -9,13 +9,14 @@ class UsuarioMongoDb {
     async init() {
         try {
             const conexionMongo = new ConexionMongo();
-            this.usuariosCollection = await conexionMongo.connectToMongoDB();
+            await conexionMongo.connectToMongoDB();
+            this.usuariosCollection = await conexionMongo.usuariosColeccion()
         } catch (error) {
             console.error(error);
         }
     }
 
-    async registro(email, nombre, pass,apellido,fechaNac,dni,saldo) {
+    async registro(email, nombre, pass,apellido,fechaNac,dni) {
         try {
             // Verificar si el correo electrónico ya existe en la base de datos
             const existingUser = await this.usuariosCollection.findOne({ email: email });
@@ -33,7 +34,6 @@ class UsuarioMongoDb {
                 apellido:apellido,
                 fechaNac:fechaNac,
                 dni:dni,
-                saldo:saldo,
                 pass: pass,
                 registro: false
             };
@@ -74,10 +74,10 @@ class UsuarioMongoDb {
     }
 
 
-    async editarUsuario(email, nombre, apellido, saldo) {
+    async editarUsuario(email, nombre, apellido) {
         try {
           // Actualizar los campos "nombre", "apellido" y "saldo" del usuario
-          await this.usuariosCollection.updateOne({ email: email }, { $set: { nombre: nombre, apellido: apellido, saldo: saldo } });
+          await this.usuariosCollection.updateOne({ email: email }, { $set: { nombre: nombre, apellido: apellido, } });
       
           // Obtener el usuario actualizado
           const user = await this.usuariosCollection.findOne({ email: email });

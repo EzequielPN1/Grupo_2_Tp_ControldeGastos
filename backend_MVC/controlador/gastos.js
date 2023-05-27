@@ -45,7 +45,6 @@ class ControladorGasto {
     listar = async (req, res) => {
         try {
           let email = req.params.email;
-      
           const gastos = await this.gastos.listar(email);
           res.status(200).json(gastos);
         } catch (error) {
