@@ -6,10 +6,10 @@ class UsuarioSqlite {
     this.bd = ConexionSqlite.conexion
   }
 
-  registro = async (email, nombre, pass, apellido, fechaNac, dni, saldo) => {
+  registro = async (email, nombre, pass, apellido, fechaNac, dni) => {
     try {
-      const insertSql = `INSERT INTO usuarios (email, nombre, pass,apellido,fechaNac,dni,saldo) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-      await ConexionSqlite.runQuery(insertSql, [email, nombre, pass, apellido, fechaNac, dni, saldo]);
+      const insertSql = `INSERT INTO usuarios (email, nombre, pass,apellido,fechaNac,dni) VALUES (?, ?, ?, ?, ?, ?)`;
+      await ConexionSqlite.runQuery(insertSql, [email, nombre, pass, apellido, fechaNac, dni]);
       return "Usuario registrado correctamente";
     } catch (error) {
       if (error.includes("UNIQUE constraint failed: usuarios.email")) {
@@ -35,10 +35,10 @@ class UsuarioSqlite {
     }
   };
 
-  editarUsuario = async (email, nombre, apellido, saldo) => {
+  editarUsuario = async (email, nombre, apellido) => {
     try {
-      const updateSql = `UPDATE usuarios SET nombre = ?, apellido = ?, saldo = ? WHERE email = ?`;
-      await ConexionSqlite.runQuery(updateSql, [nombre, apellido, saldo, email]);
+      const updateSql = `UPDATE usuarios SET nombre = ?, apellido = ? WHERE email = ?`;
+      await ConexionSqlite.runQuery(updateSql, [nombre, apellido, email]);
 
       const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
       const row = await ConexionSqlite.getRow(selectSql, [email]);

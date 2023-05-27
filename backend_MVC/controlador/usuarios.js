@@ -16,9 +16,8 @@ class ControladorUsuario {
 
   registro = async (req, res) => {
     try {
-      
-      const {nombre,apellido,email,fechaNacimiento,dni,saldo,pass} = req.body
-      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNacimiento,dni,saldo);
+      const {nombre,apellido,email,fechaNacimiento,dni,pass} = req.body
+      const respuesta = await this.servicio.registro(email, nombre, pass,apellido,fechaNacimiento,dni);
       const token = this.autentificador.generateTokenTiempo(email, '1h');
       await this.correo.enviarCorreoConfirmacion(token, email);
       console.log("Usuario a confirmar registro " + email)
@@ -44,10 +43,10 @@ class ControladorUsuario {
 
   editarUsuario = async (req, res) => {
     try {
-      const {email,nombre,apellido,saldo} =req.body
+      const {email,nombre,apellido} =req.body
       await this.autentificador.autentificarToken(req.body.token);
 
-      const usuario = await this.servicio.editarUsuario(nombre, email,apellido,saldo);
+      const usuario = await this.servicio.editarUsuario(nombre, email,apellido);
       const token = this.autentificador.generateTokenTiempo(email, '20s');
       usuario.token = token;
       console.log("Usuario "+ email +" editado correctamente")
