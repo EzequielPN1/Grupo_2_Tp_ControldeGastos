@@ -2,7 +2,7 @@
 import { gastosService } from "../Services/gastosService.js"
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
-import Barra from "../views/Barra.vue"
+import Barra from "../components/NavBar.vue";
 
 export default {
   setup() {

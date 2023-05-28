@@ -8,7 +8,7 @@ export const gastosService = {
     return apiClient.post('/gastos/agregar', gasto);
   },
 
-  getGastos(email) {
+  listar(email) {
     return apiClient.get(`/gastos/listar/${email}`);
   },
 

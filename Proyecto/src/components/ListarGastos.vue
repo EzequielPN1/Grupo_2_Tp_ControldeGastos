@@ -1,7 +1,7 @@
 <script>
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
-import Barra from "../views/Barra.vue";
+import Barra from "../components/NavBar.vue";
 import { gastosService } from "../Services/gastosService.js"
 
 export default {
