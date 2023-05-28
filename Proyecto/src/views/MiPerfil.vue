@@ -24,8 +24,6 @@ export default {
 
 </script>
 
-
-
 <template>
   <Barra></Barra>
   <div>

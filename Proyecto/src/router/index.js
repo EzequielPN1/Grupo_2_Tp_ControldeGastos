@@ -76,15 +76,7 @@ const router = createRouter({
       name: 'ListarGastos',
       component: ListarGastos,
     }
-    
-
-
   ]
 });
-
-
-
-
-
 
 export default router

@@ -24,9 +24,5 @@ export const useUserStore = defineStore("user", {
         alert("El usuario no pudo actualizarse. Error: " + error);
       }
     }
-  },
-
-
-
-
+  }
 });
