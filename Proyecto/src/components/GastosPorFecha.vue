@@ -1,5 +1,5 @@
 <template>
-   <div>
+  <div>
     <canvas ref="myChart" width="400" height="300"></canvas>
   </div>
 </template>
@@ -16,7 +16,6 @@ export default {
   data() {
     return {
       gastos: [],
-      tipoGrafico: 'barra'
     };
   },
   methods: {
@@ -45,13 +44,15 @@ export default {
         // Crear un nuevo gráfico si no existe
         const { labels, data } = this.procesarDatosGastos();
         const config = {
-          type: 'bar',
+          type: 'line',
           data: {
             labels: labels,
             datasets: [{
               label: 'Monto acumulado',
               data: data,
-              borderWidth: 1
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
             }]
           },
           options: {
@@ -84,26 +85,24 @@ export default {
     procesarDatosGastos() {
       const acumulados = {};
       this.gastos.forEach(gasto => {
-        const fecha = new Date(gasto.fecha);
-        const mes = fecha.toLocaleString('default', { month: 'long' });
+        const fecha = gasto.fecha;
         const monto = gasto.monto;
 
-        if (acumulados.hasOwnProperty(mes)) {
-          acumulados[mes] += monto;
+        if (acumulados.hasOwnProperty(fecha)) {
+          acumulados[fecha] += monto;
         } else {
-          acumulados[mes] = monto;
+          acumulados[fecha] = monto;
         }
       });
 
-      const labels = Object.keys(acumulados);
-      const data = Object.values(acumulados);
+      const fechasOrdenadas = Object.keys(acumulados).sort();
+      const labels = fechasOrdenadas;
+      const data = fechasOrdenadas.map(fecha => acumulados[fecha]);
 
       return { labels, data };
     }
   }
 };
 </script>
-
-  
 
   
