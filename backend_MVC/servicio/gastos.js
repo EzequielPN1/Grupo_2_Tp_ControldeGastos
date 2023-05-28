@@ -1,21 +1,22 @@
-import GastoSqlite from '../model/DAO/Sqlite/gastosSqlite.js'
+import ModelFactory from "../model/DAO/gastosFactory.js"
+import config from "../config.js";
 
 class ServicioGasto {
 
     constructor() {
-        this.model = new GastoSqlite()
+        this.model = ModelFactory.get(config.MODO_PERSISTENCIA) 
     }
 
     agregar = async gasto => {
         return await this.model.agregar(gasto)
     }
     
-    editar = async (id, gasto) => {
-        return await this.model.editar(id, gasto)
+    editar = async (gasto) => {
+        return await this.model.editar(gasto)
     }
     
-    eliminar = async (id) => {
-        return await this.model.eliminar(id)
+    eliminar = async (gasto) => {
+        return await this.model.eliminar(gasto)
     }
     
     listar = async (email) => {

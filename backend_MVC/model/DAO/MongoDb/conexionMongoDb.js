@@ -15,16 +15,22 @@ class ConexionMongo {
         dbName: 'Usuario' // Nombre de la base de datos que deseas utilizar
       });
       console.log('Conexión exitosa a MongoDB');
-
-      // Obtener la colección "usuarios" de la base de datos
-      this.usuariosMongoDb = mongoose.connection.collection('usuarios');
-      
-      return this.usuariosMongoDb;
-      
     } catch (error) {
       console.error('Error al conectarse a MongoDB:', error);
     }
   }
+
+async usuariosColeccion(){
+  this.usuariosMongoDb = mongoose.connection.collection('usuarios');
+      return this.usuariosMongoDb;
+}
+
+async gastosColeccion(){
+  this.gastosMongodb = mongoose.connection.collection('gastos');
+  return  this.gastosMongodb;
+}
+
+
 }
 
 export default ConexionMongo;

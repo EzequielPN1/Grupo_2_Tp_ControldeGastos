@@ -4,7 +4,6 @@ CREATE TABLE usuarios (
   apellido TEXT,
   fechaNac TEXT,
   dni INTEGER,
-  saldo REAL,
   pass TEXT NOT NULL,
   registro INTEGER DEFAULT 0
 );

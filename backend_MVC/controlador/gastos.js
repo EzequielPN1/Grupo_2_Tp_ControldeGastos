@@ -6,50 +6,51 @@ class ControladorGasto {
         this.gastos = new ServicioUsuario()
     }
 
-    agregar = async (req,res) => {
+    agregar = async (req, res) => {
         try {
             let gasto = req.body
+            console.log(gasto);
             await this.gastos.agregar(gasto)
             res.status(200).send("Gasto ingresado correctamente");
+            console.log(req.body);
         }
-        catch(e) {
+        catch (e) {
             res.status(500).send("Error al agregar gasto: ", e);
         }
     }
-    
-    editar = async (req,res) => {
+
+    editar = async (req, res) => {
         try {
-            let id = req.params.id
             let gasto = req.body
-            await this.gastos.editar(id, gasto)
+            await this.gastos.editar(gasto)
             res.status(200).send("Gasto editado correctamente");
         }
-        catch(e) {
+        catch (e) {
             res.status(500).send("Error al editar gasto: ", e);
         }
     }
-    
-    eliminar = async (req,res) => {
+
+    eliminar = async (req, res) => {
         try {
-            let id = req.params.id
-            await this.gastos.eliminar(id)
+            let gasto = req.body
+            await this.gastos.eliminar(gasto)
             res.status(200).send("Gasto eliminado correctamente");
         }
-        catch(e) {
+        catch (e) {
             res.status(500).send("Error al editar gasto: ", e);
         }
     }
-    
+
     listar = async (req, res) => {
-        const email = req.params.email
-        await this.gastos.listar(email)
-          .then(gastos => {
-            res.status(200).json(gastos);
-          })
-          .catch(error => {
-            res.status(500).send("Error interno del servidor.", error);
-          });
+        try {
+          let email = req.params.email;
+          const gastos = await this.gastos.listar(email);
+          res.status(200).json(gastos);
+        } catch (error) {
+          res.status(500).send("Error interno del servidor.");
+        }
       };
+      
 }
 
 export default ControladorGasto

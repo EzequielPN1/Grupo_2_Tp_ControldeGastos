@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
+import Barra from "../components/NavBar.vue"
 
 export default {
   setup() {
@@ -12,14 +13,20 @@ export default {
     return {
       usuario,
     }
-  }
+  },
+  components: {
+    Barra,
+  },
+
+
+
 }
 
 </script>
 
 <template>
+  <Barra></Barra>
   <div>
-    <h1>Perfil</h1>
     <div class="profile-container">
       <ul>
         <li>
@@ -37,19 +44,11 @@ export default {
         <li>
           <span class="profile-label">Fecha de Nacimiento:</span> {{ usuario.fechaNac }}
         </li>
-        <li>
-          <span class="profile-label">Saldo Disponible:</span> $ {{ usuario.saldo }} pesos
-        </li>
       </ul>
     </div>
     <div class="button-container">
       <RouterLink to="/EditarPerfil">
         <button class="btn btn-primary">Editar Perfil</button>
-      </RouterLink>
-    </div>
-    <div class="button-container">
-      <RouterLink to="/Home">
-        <button class="btn btn-secondary">Volver</button>
       </RouterLink>
     </div>
   </div>
