@@ -12,16 +12,10 @@ export default {
     return {
       usuario,
     }
-  },
-
-
-
-
+  }
 }
 
 </script>
-
-
 
 <template>
   <div>

@@ -8,6 +8,7 @@ import GenerarPass from '../views/GenerarPass.vue'
 import CambioDePass from '../views/CambioDePass.vue'
 import MiPerfil from '../views/MiPerfil.vue'
 import EliminarCuenta from '../views/EliminarCuenta.vue'
+import Estadisticas from '../views/Estadisticas.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,17 +59,13 @@ const router = createRouter({
       path: '/EliminarCuenta',
       name: 'EliminarCuenta',
       component: EliminarCuenta,
+    },
+    {
+      path: '/estadisticas',
+      name: 'Estadisticas',
+      component: Estadisticas,
     }
-    
-    
-
-
   ]
 });
-
-
-
-
-
 
 export default router
