@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
-import Barra from "../views/Barra.vue"
+import Barra from "../components/NavBar.vue"
 
 export default {
   setup() {
