@@ -8,7 +8,6 @@ class GastoSqlite {
   }
 
   agregar = async (gasto) => {
-
     
     try {
       const {email, titulo, monto, fecha, categoria, descripcion} = gasto
