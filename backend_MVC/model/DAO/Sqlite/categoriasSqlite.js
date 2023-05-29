@@ -7,7 +7,6 @@ class CategoriaSqlite {
   }
 
   agregar = async (categoria) => {
-
     try {
       const {email, nombre, presupuesto} = categoria
       const sql = `INSERT INTO categorias (email, nombre, presupuesto) VALUES (?, ?, ?)`;

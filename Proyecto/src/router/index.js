@@ -10,6 +10,7 @@ import MiPerfil from '../views/MiPerfil.vue'
 import EliminarCuenta from '../views/EliminarCuenta.vue'
 import AgregarGasto from "../components/agregarGasto.vue";
 import ListarGastos from "../components/ListarGastos.vue";
+import Categoria from "../components/Categoria.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,6 +76,11 @@ const router = createRouter({
       path: '/ListarGastos',
       name: 'ListarGastos',
       component: ListarGastos,
+    },
+    {
+      path: '/Categoria',
+      name: 'Categoria',
+      component: Categoria,
     }
   ]
 });

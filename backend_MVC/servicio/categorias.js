@@ -1,9 +1,10 @@
-import CategoriaSqlite from '../model/DAO/Sqlite/categoriasSqlite.js'
+import ModelFactory from "../model/DAO/categoriasFactory.js"
+import config from "../config.js";
 
 class ServicioCategoria {
 
     constructor() {
-        this.model = new CategoriaSqlite()
+        this.model = ModelFactory.get(config.MODO_PERSISTENCIA) 
     }
 
     agregar = async categoria => {

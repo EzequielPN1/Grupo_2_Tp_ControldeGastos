@@ -10,8 +10,8 @@ class RouterCategoria {
 
     start() {
         this.router.post("/agregar", this.controlador.agregar)
-        this.router.put("/editar/:id", this.controlador.editar)
-        this.router.delete("/eliminar/:id", this.controlador.eliminar)
+        this.router.put("/editar", this.controlador.editar)
+        this.router.post("/eliminar", this.controlador.eliminar)
         this.router.get("/listar/:email", this.controlador.listar)
 
         return this.router
