@@ -1,5 +1,5 @@
 <template>
-   <div>
+  <div>
     <canvas ref="myChart" width="400" height="300"></canvas>
   </div>
 </template>
@@ -16,10 +16,6 @@ export default {
   data() {
     return {
       gastos: [],
-      tipoGrafico: 'barra',
-      meses: [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ],
     };
   },
   methods: {
@@ -48,13 +44,15 @@ export default {
         // Crear un nuevo gráfico si no existe
         const { labels, data } = this.procesarDatosGastos();
         const config = {
-          type: 'bar',
+          type: 'line',
           data: {
             labels: labels,
             datasets: [{
               label: 'Monto acumulado',
               data: data,
-              borderWidth: 1
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
             }]
           },
           options: {
@@ -85,30 +83,26 @@ export default {
     },
 
     procesarDatosGastos() {
-  const acumulados = {};
+      const acumulados = {};
+      this.gastos.forEach(gasto => {
+        const fecha = gasto.fecha;
+        const monto = gasto.monto;
 
-  // Inicializar acumulados con valores en cero para todos los meses
-  this.meses.forEach(mes => {
-    acumulados[mes] = 0;
-  });
+        if (acumulados.hasOwnProperty(fecha)) {
+          acumulados[fecha] += monto;
+        } else {
+          acumulados[fecha] = monto;
+        }
+      });
 
-  this.gastos.forEach(gasto => {
-    const fecha = new Date(gasto.fecha);
-    const mes = this.meses[fecha.getMonth()]; // Obtener el nombre del mes
+      const fechasOrdenadas = Object.keys(acumulados).sort();
+      const labels = fechasOrdenadas;
+      const data = fechasOrdenadas.map(fecha => acumulados[fecha]);
 
-    const monto = gasto.monto;
-    acumulados[mes] += monto;
-  });
-
-  const labels = Object.keys(acumulados);
-  const data = Object.values(acumulados);
-
-  return { labels, data };
-}
+      return { labels, data };
+    }
   }
 };
 </script>
-
-  
 
   

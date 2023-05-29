@@ -72,7 +72,9 @@ export default {
       <li>
         <RouterLink to="/ListarGastos">Listar gastos</RouterLink>
       </li>
-      <li><a href="#">Opción 3</a></li>
+      <li>
+        <RouterLink to="/Categoria">Categoria</RouterLink>
+      </li>
       <button v-if="usuario.nombre !== ''" @click="salir" class="nav-link btn btn-outline-danger">Salir</button>
     </ul>
 
