@@ -16,7 +16,10 @@ export default {
   data() {
     return {
       gastos: [],
-      tipoGrafico: 'barra'
+      tipoGrafico: 'barra',
+      meses: [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ],
     };
   },
   methods: {
@@ -82,24 +85,26 @@ export default {
     },
 
     procesarDatosGastos() {
-      const acumulados = {};
-      this.gastos.forEach(gasto => {
-        const fecha = new Date(gasto.fecha);
-        const mes = fecha.toLocaleString('default', { month: 'long' });
-        const monto = gasto.monto;
+  const acumulados = {};
 
-        if (acumulados.hasOwnProperty(mes)) {
-          acumulados[mes] += monto;
-        } else {
-          acumulados[mes] = monto;
-        }
-      });
+  // Inicializar acumulados con valores en cero para todos los meses
+  this.meses.forEach(mes => {
+    acumulados[mes] = 0;
+  });
 
-      const labels = Object.keys(acumulados);
-      const data = Object.values(acumulados);
+  this.gastos.forEach(gasto => {
+    const fecha = new Date(gasto.fecha);
+    const mes = this.meses[fecha.getMonth()]; // Obtener el nombre del mes
 
-      return { labels, data };
-    }
+    const monto = gasto.monto;
+    acumulados[mes] += monto;
+  });
+
+  const labels = Object.keys(acumulados);
+  const data = Object.values(acumulados);
+
+  return { labels, data };
+}
   }
 };
 </script>
