@@ -10,6 +10,12 @@
   import Chart from 'chart.js/auto';
   
   export default {
+    data() {
+      return {
+        anioSeleccionado: 2023,
+        mesSeleccionado: 'Enero'
+      }
+    },
     mounted() {
       this.actualizarGastos();
     },
@@ -21,14 +27,15 @@
         const gastosStore = await useGastosStore();
         await gastosStore.obtenerGastos(usuario.email);
         const gastos = gastosStore.gastos;
-  
+        const gastosSegunAnio = gastos.filter(gasto => parseInt(gasto.fecha.substring(0, gasto.fecha.indexOf('-'))) === this.anioSeleccionado)
+        const gastonsSegunMes = gastosSegunAnio.filter(gasto => parseInt(gasto.fecha.split('-')[1]) === this.mesSeleccionado)  
         this.mostrarGrafico(gastos);
       },
   
       mostrarGrafico(gastos) {
         const ctx = this.$refs.myChart.getContext('2d');
         const chartInstance = this.$data._chart; // Obtener la instancia del gráfico existente
-  
+
         if (chartInstance) {
           // Actualizar los datos del gráfico existente
           const { labels, data } = this.procesarDatosGastos(gastos);
@@ -98,6 +105,11 @@
         const data = Object.values(categorias);
   
         return { labels, data };
+      },
+      modificarAnioMes(anio, mes) {
+        this.mesSeleccionado = mes
+        this.anioSeleccionado = anio
+        this.actualizarGastos()
       }
     }
   };
