@@ -18,7 +18,6 @@ class UsuarioMongoDb {
 
     async registro(email, nombre, pass,apellido,fechaNac,dni) {
         try {
-            // Verificar si el correo electrónico ya existe en la base de datos
             const existingUser = await this.usuariosCollection.findOne({ email: email });
             if (existingUser) {
                 throw new Error(`Error, el correo ${email} ya fue ingresado`);
@@ -27,7 +26,6 @@ class UsuarioMongoDb {
             if (!email || !nombre || !pass) {
                 throw new Error('El email, nombre y pass son campos requeridos');
               }
-            // Insertar el nuevo usuario en la colección
             const newUser = {
                 email: email,
                 nombre: nombre,
@@ -48,7 +46,7 @@ class UsuarioMongoDb {
 
     async login(email) {
         try {
-            // Verificar si el correo electrónico está registrado en la base de datos
+         
             const user = await this.usuariosCollection.findOne({ email: email });
             if (!user) {
                 throw new Error(`El ${email} no está registrado`);
@@ -63,7 +61,7 @@ class UsuarioMongoDb {
 
     async confirmarRegistro(email) {
         try {
-            // Actualizar el campo "registro" del usuario a 1 (confirmado)
+           
             await this.usuariosCollection.updateOne({ email: email }, { $set: { registro: true } });
 
             return;
@@ -76,10 +74,10 @@ class UsuarioMongoDb {
 
     async editarUsuario(email, nombre, apellido) {
         try {
-          // Actualizar los campos "nombre", "apellido" y "saldo" del usuario
+         
           await this.usuariosCollection.updateOne({ email: email }, { $set: { nombre: nombre, apellido: apellido, } });
       
-          // Obtener el usuario actualizado
+        
           const user = await this.usuariosCollection.findOne({ email: email });
       
           return user;
@@ -92,13 +90,13 @@ class UsuarioMongoDb {
 
     async cambiarContrasenia(email, nuevaPass) {
         try {
-            // Verificar si el correo electrónico existe en la base de datos
+           
             const existingUser = await this.usuariosCollection.findOne({ email: email });
             if (!existingUser) {
                 throw new Error("El correo " + email + " no está registrado");
             }
 
-            // Actualizar la contraseña del usuario
+            
             await this.usuariosCollection.updateOne({ email: email }, { $set: { pass: nuevaPass } });
 
             return;
@@ -110,10 +108,10 @@ class UsuarioMongoDb {
 
     async eliminarCuenta(email){
         try {
-          const usuario = await this.usuariosCollection.findOne({ email }); // Buscar el usuario por su correo electrónico en la colección de usuarios
+          const usuario = await this.usuariosCollection.findOne({ email }); 
       
           if (usuario) {
-            await this.usuariosCollection.deleteOne({ email }); // Eliminar el usuario de la colección
+            await this.usuariosCollection.deleteOne({ email }); 
             console.log(`La cuenta con el email ${email} ha sido borrada correctamente`);
           } else {
             throw new Error("Usuario no encontrado");

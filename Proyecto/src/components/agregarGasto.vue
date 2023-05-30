@@ -2,14 +2,16 @@
 import { gastosService } from "../Services/gastosService.js"
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
+import { useCategoriaStore } from "../stores/categorias.js"
 import Barra from "../components/NavBar.vue";
 
 export default {
+  async mounted() {
+    await this.obtenerCategorias();
+  },
   setup() {
-
     const store = useUserStore();
     const { usuario } = storeToRefs(store);
-
     return {
       usuario,
     }
@@ -21,14 +23,22 @@ export default {
         titulo: "",
         monto: 0,
         fecha: "",
-        categoria: "", // se debe cambiar cuando tengamos tipos guardados por usuario
+        categoria: "", 
         descripcion: "",
-        tipos: ["Comida", "Social", "Vivienda", "Remedios"],
       },
+      categorias:[]
 
     }
   },
   methods: {
+    async obtenerCategorias() {
+      const store = useCategoriaStore();
+      await store.obtenerCategorias(this.usuario.email);
+      this.categorias = store.categorias
+    },
+
+
+
     async agregarGasto() {
       this.gasto.email = this.usuario.email
       try {
@@ -65,8 +75,8 @@ export default {
     <input id="date" type="date" v-model="gasto.fecha">
     <label for="category">Categoria</label>
     <select id="category" class="form-select" aria-label="Default select example" v-model="gasto.categoria" required>
-      <option v-for="tipo in gasto.tipos" :key="tipo">
-        {{ tipo }}
+      <option v-for="tipo in this.categorias" :key="tipo">
+        {{ tipo.nombre }}
       </option>
     </select>
     <div class="form-group">

@@ -25,9 +25,8 @@ class ControladorCategoria {
     
     editar = async (req,res) => {
         try {
-            let id = req.params.id
             let categoria = req.body
-            await this.categorias.editar(id, categoria)
+            await this.categorias.editar(categoria)
             res.status(200).send("Categoria editada correctamente");
         }
         catch(e) {
@@ -37,12 +36,12 @@ class ControladorCategoria {
     
     eliminar = async (req,res) => {
         try {
-            let id = req.params.id
-            await this.categorias.eliminar(id)
+            let categoria = req.body
+            await this.categorias.eliminar(categoria)
             res.status(200).send("Categoria eliminada correctamente");
         }
         catch(e) {
-            res.status(500).send("Error al editar categoria: ", e);
+            res.status(500).send("Error al eliminar la categoria: ", e);
         }
     }
     

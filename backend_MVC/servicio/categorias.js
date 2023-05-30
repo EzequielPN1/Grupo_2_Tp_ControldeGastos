@@ -11,12 +11,12 @@ class ServicioCategoria {
         return await this.model.agregar(categoria)
     }
     
-    editar = async (id, categoria) => {
-        return await this.model.editar(id, categoria)
+    editar = async (categoria) => {
+        return await this.model.editar(categoria)
     }
     
-    eliminar = async (id) => {
-        return await this.model.eliminar(id)
+    eliminar = async (categoria) => {
+        return await this.model.eliminar(categoria)
     }
     
     listar = async (email) => {

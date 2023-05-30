@@ -1,5 +1,5 @@
 import ModelSqlite from "./Sqlite/categoriasSqlite.js"
-//import ModelMongodb from "./MongoDb/categoriasModel.js"
+import ModelMongodb from "./MongoDb/categoriasModel.js"
 
 class ModelFactory {
     static get(tipo) {

@@ -1,20 +1,19 @@
 <template>
   <Barra></Barra>
   <div>
-    <form @submit.prevent="agregarCategoria()">
-      <div>
+    <form @submit.prevent="agregarCategoria()" class="formulario-agregar">
+      <div class="form-group">
         <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" v-model="categoria.nombre" required>
+        <input type="text" id="nombre" v-model="categoria.nombre" required class="form-control">
       </div>
-      <div>
+      <div class="form-group">
         <label for="presupuesto">Presupuesto:</label>
-        <input type="number" id="presupuesto" v-model="categoria.presupuesto" required>
+        <input type="number" id="presupuesto" v-model="categoria.presupuesto" required class="form-control">
       </div>
       <button type="submit" class="btn btn-primary">Agregar</button>
     </form>
 
     <div>
-      <h2>Categorías ingresadas:</h2>
       <table class="table">
         <thead>
           <tr>
@@ -30,7 +29,7 @@
                 {{ categoria.nombre }}
               </template>
               <template v-else>
-                <input type="text" v-model="categoria.nombre" required>
+                <input type="text" v-model="categoria.nombre" required class="form-control">
               </template>
             </td>
             <td>
@@ -38,7 +37,7 @@
                 {{ categoria.presupuesto }}
               </template>
               <template v-else>
-                <input type="number" v-model="categoria.presupuesto" required>
+                <input type="number" v-model="categoria.presupuesto" required class="form-control">
               </template>
             </td>
             <td>
@@ -73,27 +72,29 @@ export default {
   setup() {
     const store = useUserStore();
     const { usuario } = store;
-    const categoriaStore = useCategoriaStore();
 
     return {
       usuario,
-      categorias: categoriaStore.categorias,
+
     }
   },
   data() {
     return {
       categoria: {
+        id: '',
         email: '',
         nombre: '',
         presupuesto: 0
-      }
+      },
+      categorias: []
+
     };
   },
   methods: {
     async obtenerCategorias() {
       const store = useCategoriaStore();
-      console.log(this.usuario.email);
       await store.obtenerCategorias(this.usuario.email);
+      this.categorias = store.categorias
     },
 
     async agregarCategoria() {
@@ -109,13 +110,13 @@ export default {
 
       this.categoria.nombre = '';
       this.categoria.presupuesto = 0;
+      this.obtenerCategorias()
     },
     editarCategoria(categoria) {
       categoria.editando = true;
     },
     async guardarCategoria(categoria) {
       try {
-        console.log(categoria);
         await categoriaService.editarCategoria(categoria);
         await this.obtenerCategorias();
         console.log("Categoría editada correctamente.");
@@ -129,7 +130,7 @@ export default {
       try {
         console.log(categoria);
         await categoriaService.eliminarCategoria(categoria);
-        await this.obtenerCategorias(); 
+        await this.obtenerCategorias();
         alert("Categoría eliminada correctamente.");
       } catch (error) {
         console.log(error);
@@ -158,5 +159,29 @@ export default {
 
 .table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+
+/* Estilos para el formulario */
+.formulario-agregar {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn {
+  margin-top: 10px;
 }
 </style>

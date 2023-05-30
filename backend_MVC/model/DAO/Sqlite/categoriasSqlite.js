@@ -11,7 +11,6 @@ class CategoriaSqlite {
       const { email, nombre, presupuesto } = categoria;
       
       const existeCategoria = await this.verificarExistenciaCategoria(email, nombre);
-      console.log(existeCategoria);
       if (existeCategoria) {
         throw new Error("Ya existe la categoría");
       }
@@ -33,10 +32,9 @@ class CategoriaSqlite {
   
   
   
-  editar = async (id, categoria) => {
-
+  editar = async (categoria) => {
     try {
-      const {email, nombre, presupuesto} = categoria
+      const {id,email, nombre, presupuesto} = categoria
       const sql = `UPDATE categorias SET email = ?, nombre = ?, presupuesto = ? WHERE id = ?`;
       await ConexionSqlite.runQuery(sql, [email, nombre, presupuesto, id])
       return "Categoria editada correctamente"
@@ -48,9 +46,9 @@ class CategoriaSqlite {
 
   };
   
-  eliminar = async id => {
-
+  eliminar = async categoria => {
     try {
+      const {id} = categoria
       const sql = `DELETE FROM categorias WHERE id = ?`
       await ConexionSqlite.runQuery(sql, [id])
       return "Categoria eliminada correctamente"

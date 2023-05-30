@@ -2,16 +2,27 @@
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
 import { gastosService } from "../Services/gastosService.js"
+import { useCategoriaStore } from "../stores/categorias.js"
 import Barra from "../components/NavBar.vue";
 
 export default {
   async mounted() {
     await this.actualizarGastos();
+    await this.obtenerCategorias();
+  },
+  setup() {
+    const store = useUserStore();
+    const { usuario } = store;
+
+    return {
+      usuario,
+
+    }
   },
   data() {
     return {
       gastos: [],
-      tipos: ["Comida", "Social", "Vivienda", "Remedios"],
+      categorias: [],
       categoriaSeleccionada: "",
     };
   },
@@ -20,13 +31,20 @@ export default {
       if (this.categoriaSeleccionada === "") {
         return this.gastos;
       } else {
-        return this.gastos.filter(
-          (gasto) => gasto.categoria === this.categoriaSeleccionada
-        );
+        return this.gastos.filter((gasto) => gasto.categoria === this.categoriaSeleccionada);
       }
     },
+
   },
   methods: {
+
+    async obtenerCategorias() {
+      const store = useCategoriaStore();
+      await store.obtenerCategorias(this.usuario.email);
+      this.categorias = store.categorias
+    },
+
+
     async actualizarGastos() {
       const userStore = useUserStore();
       const { usuario } = userStore;
@@ -40,8 +58,8 @@ export default {
     editarGasto(gasto) {
       gasto.editando = true;
     },
-   async guardarGasto(gasto) {
-    try {
+    async guardarGasto(gasto) {
+      try {
         console.log(gasto);
         await gastosService.editarGasto(gasto);
         await this.actualizarGastos();
@@ -78,7 +96,7 @@ export default {
     <label for="categoria">Filtrar por categoría:</label>
     <select id="categoria" v-model="categoriaSeleccionada">
       <option value="">Todos</option>
-      <option v-for="categoria in tipos" :value="categoria">{{ categoria }}</option>
+      <option v-for="categoria in categorias" :value="categoria.nombre">{{ categoria.nombre }}</option>
     </select>
 
     <table class="table">
