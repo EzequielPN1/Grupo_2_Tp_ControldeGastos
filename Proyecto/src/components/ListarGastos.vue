@@ -1,8 +1,8 @@
 <script>
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
-import Barra from "../components/NavBar.vue";
 import { gastosService } from "../Services/gastosService.js"
+import Barra from "../components/NavBar.vue";
 
 export default {
   async mounted() {

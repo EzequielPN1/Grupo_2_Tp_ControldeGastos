@@ -5,7 +5,7 @@ export default {
     return {
       nuevaContrasenia: '',
       email: '',
-      token:'',
+      token: '',
       vue: this,
     };
   },
@@ -26,12 +26,12 @@ export default {
 
     async cambiarContrasenia() {
       try {
-        const response = await userService.cambiarContrasenia(this.email,this.token,this.nuevaContrasenia);
+        const response = await userService.cambiarContrasenia(this.email, this.token, this.nuevaContrasenia);
         console.log(response);
         alert(response.data);
         window.close();
       } catch (error) {
-        console.error(error);
+        console.log(error.response.data);
         alert(error.response.data);
         window.close();
       }

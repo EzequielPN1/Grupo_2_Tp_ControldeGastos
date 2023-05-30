@@ -8,17 +8,30 @@ class CategoriaSqlite {
 
   agregar = async (categoria) => {
     try {
-      const {email, nombre, presupuesto} = categoria
+      const { email, nombre, presupuesto } = categoria;
+      
+      const existeCategoria = await this.verificarExistenciaCategoria(email, nombre);
+      console.log(existeCategoria);
+      if (existeCategoria) {
+        throw new Error("Ya existe la categoría");
+      }
+      
       const sql = `INSERT INTO categorias (email, nombre, presupuesto) VALUES (?, ?, ?)`;
-      await ConexionSqlite.runQuery(sql, [email, nombre, presupuesto])
+      await ConexionSqlite.runQuery(sql, [email, nombre, presupuesto]);
       return "Categoria registrada correctamente";
+    } catch (error) {
+      throw new Error("Error al agregar categoria: " + error);
     }
-    catch (error) {
-      console.log(error);
-      throw new Error("Error al agregar categoria: " + error.message);
-    }
-
   };
+  
+  verificarExistenciaCategoria = async (email, nombre) => {
+    const sql = `SELECT COUNT(*) AS count FROM categorias WHERE email = ? AND nombre = ?`;
+    const result = await ConexionSqlite.getRow(sql, [email, nombre]);
+    return result && result.count > 0;
+  };
+  
+  
+  
   
   editar = async (id, categoria) => {
 

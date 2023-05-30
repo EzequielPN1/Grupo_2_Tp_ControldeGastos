@@ -23,7 +23,7 @@ export default {
         fecha: "",
         categoria: "", // se debe cambiar cuando tengamos tipos guardados por usuario
         descripcion: "",
-        tipos: ["Comida", "Social", "Vivienda","Remedios"],
+        tipos: ["Comida", "Social", "Vivienda", "Remedios"],
       },
 
     }
@@ -35,13 +35,13 @@ export default {
         const response = await gastosService.agregarGasto(this.gasto)
         alert(response.data);
       } catch (error) {
-        console.log(error);
-        alert(error.response);
+        console.log(error.response.data);
+        alert(error.response.data);
       }
       this.$refs.formulario.reset();
     }
   },
-   components: {
+  components: {
     Barra,
   },
 }
@@ -51,11 +51,11 @@ export default {
 
 
 <template>
-<Barra></Barra>
+  <Barra></Barra>
   <form ref="formulario" class="form" @submit.prevent="agregarGasto()">
     <div class="form-group">
       <label for="title">Titulo</label>
-      <input v-model="gasto.titulo" type="text" class="form-control" id="title" required/>
+      <input v-model="gasto.titulo" type="text" class="form-control" id="title" required />
     </div>
     <div class="form-group">
       <label for="amount">Monto</label>

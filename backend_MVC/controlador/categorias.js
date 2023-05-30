@@ -8,17 +8,20 @@ class ControladorCategoria {
 
     agregar = async (req,res) => {
         try {
-            
             let categoria = req.body
             console.log(categoria);
-            await this.categorias.agregar(categoria)
-            res.status(200).send("Categoria ingresada correctamente");
+            const respuesta = await this.categorias.agregar(categoria)
+            res.status(200).send(respuesta);
         }
-        catch(e) {
-            res.status(500).send("Error al agregar categoria: ", e);
+        catch(error) {
+            console.log(error.message)
+            res.status(500).send(error.message);
         }
         
     }
+
+
+    
     
     editar = async (req,res) => {
         try {
