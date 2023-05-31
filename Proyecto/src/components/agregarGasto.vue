@@ -23,10 +23,10 @@ export default {
         titulo: "",
         monto: 0,
         fecha: "",
-        categoria: "", 
+        idCategoria: "",
         descripcion: "",
       },
-      categorias:[]
+      categorias: []
 
     }
   },
@@ -43,6 +43,7 @@ export default {
       this.gasto.email = this.usuario.email
       try {
         const response = await gastosService.agregarGasto(this.gasto)
+        console.log(this.gasto);
         alert(response.data);
       } catch (error) {
         console.log(error.response.data);
@@ -74,8 +75,8 @@ export default {
     <label for="date">Fecha</label>
     <input id="date" type="date" v-model="gasto.fecha">
     <label for="category">Categoria</label>
-    <select id="category" class="form-select" aria-label="Default select example" v-model="gasto.categoria" required>
-      <option v-for="tipo in this.categorias" :key="tipo">
+    <select id="category" class="form-select" aria-label="Default select example" v-model="gasto.idCategoria" required>
+      <option v-for="tipo in this.categorias" :key="tipo.id" :value="tipo.id">
         {{ tipo.nombre }}
       </option>
     </select>

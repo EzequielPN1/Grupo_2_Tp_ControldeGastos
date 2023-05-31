@@ -1,8 +1,8 @@
 <script>
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
-import { gastosService } from "../Services/gastosService.js"
-import { useCategoriaStore } from "../stores/categorias.js"
+import { gastosService } from "../Services/gastosService.js";
+import { useCategoriaStore } from "../stores/categorias.js";
 import Barra from "../components/NavBar.vue";
 
 export default {
@@ -16,8 +16,7 @@ export default {
 
     return {
       usuario,
-
-    }
+    };
   },
   data() {
     return {
@@ -31,19 +30,18 @@ export default {
       if (this.categoriaSeleccionada === "") {
         return this.gastos;
       } else {
-        return this.gastos.filter((gasto) => gasto.categoria === this.categoriaSeleccionada);
+        return this.gastos.filter(
+          (gasto) => gasto.idCategoria === this.categoriaSeleccionada
+        );
       }
     },
-
   },
   methods: {
-
     async obtenerCategorias() {
       const store = useCategoriaStore();
       await store.obtenerCategorias(this.usuario.email);
-      this.categorias = store.categorias
+      this.categorias = store.categorias;
     },
-
 
     async actualizarGastos() {
       const userStore = useUserStore();
@@ -52,15 +50,21 @@ export default {
       const gastosStore = await useGastosStore();
       await gastosStore.obtenerGastos(usuario.email);
       this.gastos = gastosStore.gastos;
-    },
 
+      this.gastos.forEach((gasto) => {
+        const categoria = this.categorias.find(
+          (c) => c.id === gasto.idCategoria
+        );
+        gasto.nombreCategoria = categoria ? categoria.nombre : "";
+      });
+    },
 
     editarGasto(gasto) {
       gasto.editando = true;
     },
+
     async guardarGasto(gasto) {
       try {
-        console.log(gasto);
         await gastosService.editarGasto(gasto);
         await this.actualizarGastos();
         console.log("Gasto editado correctamente.");
@@ -71,10 +75,8 @@ export default {
       gasto.editando = false;
     },
 
-
     async eliminarGasto(gasto) {
       try {
-        console.log(gasto)
         await gastosService.eliminarGasto(gasto);
         await this.actualizarGastos();
         alert("Gasto eliminado correctamente.");
@@ -83,6 +85,12 @@ export default {
         alert("Error al eliminar el gasto.");
       }
     },
+
+    getCategoriaNombre(idCategoria) {
+      const categoria = this.categorias.find((c) => c.id === idCategoria);
+      return categoria ? categoria.nombre : "";
+    },
+
   },
   components: {
     Barra,
@@ -96,7 +104,7 @@ export default {
     <label for="categoria">Filtrar por categoría:</label>
     <select id="categoria" v-model="categoriaSeleccionada">
       <option value="">Todos</option>
-      <option v-for="categoria in categorias" :value="categoria.nombre">{{ categoria.nombre }}</option>
+      <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }}</option>
     </select>
 
     <table class="table">
@@ -136,7 +144,16 @@ export default {
               <input v-model="gasto.fecha" type="text">
             </template>
           </td>
-          <td>{{ gasto.categoria }}</td>
+          <td>
+            <template v-if="!gasto.editando">
+              {{ getCategoriaNombre(gasto.idCategoria) }}
+            </template>
+            <template v-else>
+              <select v-model="gasto.idCategoria">
+                <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }}</option>
+              </select>
+            </template>
+          </td>
           <td>
             <template v-if="!gasto.editando">
               {{ gasto.descripcion }}
@@ -159,8 +176,6 @@ export default {
     </table>
   </div>
 </template>
-
-
 
 <style>
 .table {

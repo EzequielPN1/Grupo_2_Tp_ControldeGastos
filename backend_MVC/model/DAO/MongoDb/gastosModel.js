@@ -22,14 +22,14 @@ class GastosMongoDb {
 
   agregar = async (gasto) => {
     try {
-      const { email, titulo, monto, fecha, categoria, descripcion } = gasto;
+      const { email, titulo, monto, fecha, idCategoria, descripcion } = gasto;
 
       const newGasto = {
         email: email,
         titulo: titulo,
         monto: monto,
         fecha: fecha,
-        categoria: categoria,
+        idCategoria: idCategoria,
         descripcion: descripcion,
       };
 
@@ -72,7 +72,7 @@ class GastosMongoDb {
 
   editar = async (gasto) => {
     try {
-      const { _id, email, titulo, monto, fecha, categoria, descripcion } = gasto;
+      const { _id, email, titulo, monto, fecha, idCategoria, descripcion } = gasto;
       const objectId = new ObjectId(_id);
   
       await this.gastosCollection.updateOne({ _id: objectId }, {
@@ -81,7 +81,7 @@ class GastosMongoDb {
           titulo: titulo,
           monto: monto,
           fecha: fecha,
-          categoria: categoria,
+          idCategoria: idCategoria,
           descripcion: descripcion
         }
       });

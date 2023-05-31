@@ -1,6 +1,6 @@
 import ConexionMongo from './conexionMongoDb.js'
 import { ObjectId } from 'mongodb';
-
+import mongoose from 'mongoose';
 
 class CategoriasMongoDb {
 
@@ -20,34 +20,29 @@ class CategoriasMongoDb {
     }
 
     agregar = async (categoria) => {
-
         try {
-            const { email, nombre, presupuesto } = categoria;
-
-            const existeCategoria = await this.verificarExistenciaCategoria(email, nombre);
-            if (existeCategoria) {
-                throw new Error("Ya existe la categoría");
-            }
-
-            const categoriaExistente = await this.categoriasCollection.findOne({ email, nombre });
-            if (categoriaExistente) {
-                throw new Error("Ya existe la categoría");
-            }
-
-            const nuevaCategoria = {
-                email: email,
-                nombre: nombre,
-                presupuesto: presupuesto
-            };
-
-            await this.categoriasCollection.insertOne(nuevaCategoria)
-
-            return "Categoria registrada correctamente";
+          const { email, nombre, presupuesto } = categoria;
+      
+          const existeCategoria = await this.verificarExistenciaCategoria(email, nombre);
+          if (existeCategoria) {
+            throw new Error("Ya existe la categoría");
+          }
+      
+          const nuevaCategoria = {
+            email: email,
+            nombre: nombre,
+            presupuesto: presupuesto,
+            id: new mongoose.Types.ObjectId() // Generar un nuevo ObjectId para el campo id
+          };
+      
+          await this.categoriasCollection.insertOne(nuevaCategoria);
+      
+          return "Categoria registrada correctamente";
         } catch (error) {
-            throw new Error("Error al agregar categoria: " + error);
+          throw new Error("Error al agregar categoria: " + error);
         }
-
-    };
+      };
+      
 
     verificarExistenciaCategoria = async (email, nombre) => {
         const categoriaExistente = await this.categoriasCollection.findOne({ email, nombre });
