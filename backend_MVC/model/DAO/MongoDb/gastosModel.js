@@ -13,7 +13,7 @@ class GastosMongoDb {
     try {
       const conexionMongo = new ConexionMongo();
       await conexionMongo.connectToMongoDB();
-      this.gastosCollection = await conexionMongo.gastosColeccion()
+      this.gastosCollection =  conexionMongo.gastosColeccion()
     } catch (error) {
       console.error(error);
     }

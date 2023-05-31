@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 class ConexionMongo {
 
   constructor() {
-    this.uri = 'mongodb://127.0.0.1:27017'; 
+    this.uri = 'mongodb://127.0.0.1:27017';
   }
 
   async connectToMongoDB() {
@@ -11,7 +11,7 @@ class ConexionMongo {
       await mongoose.connect(this.uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: 'Usuario' 
+        dbName: 'Usuario'
       });
       console.log('Conexión exitosa a MongoDB');
     } catch (error) {
@@ -19,17 +19,17 @@ class ConexionMongo {
     }
   }
 
-  async usuariosColeccion() {
+  usuariosColeccion() {
     this.usuariosMongoDb = mongoose.connection.collection('usuarios');
     return this.usuariosMongoDb;
   }
 
-  async gastosColeccion() {
-    this.gastosMongodb = mongoose.connection.collection('gastos');
+  gastosColeccion() {
+     this.gastosMongodb = mongoose.connection.collection('gastos');
     return this.gastosMongodb;
   }
 
-  async categoriasColeccion() {
+  categoriasColeccion() {
     this.categoriasMongodb = mongoose.connection.collection('categorias');
     return this.categoriasMongodb;
   }
