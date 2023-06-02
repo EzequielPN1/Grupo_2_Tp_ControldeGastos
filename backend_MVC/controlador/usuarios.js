@@ -1,6 +1,7 @@
 import ServicioUsuario from "../servicio/usuarios.js"
 import Autentificador from './autentificador.js'
 import Correo from './correo.js';
+import WhatsAppSender from './WhatsAppSender.cjs';
 
 class ControladorUsuario {
 
@@ -8,6 +9,7 @@ class ControladorUsuario {
     this.servicio = new ServicioUsuario()
     this.autentificador = new Autentificador()
     this.correo = new Correo()
+    this.WhatsAppSender = new WhatsAppSender()
   }
 
   inicio = async (req,res) => {
