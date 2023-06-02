@@ -9,7 +9,7 @@ class ServicioUsuario {
     this.model = ModelFactory.get(config.MODO_PERSISTENCIA)
   }
 
-  registro = async (email, nombre, pass, apellido, fechaNac, dni) => {
+  registro = async (email,celular, nombre, pass, apellido, fechaNac, dni) => {
     try {
 
       let edad = CalculadorEdad.calcularEdad(fechaNac)
@@ -20,7 +20,7 @@ class ServicioUsuario {
 
       const salt = await bcrypt.genSalt(10); // generamos el salt de forma asincrónica
       const hash = await bcrypt.hash(pass, salt); // generamos el hash de forma asincrónica
-      const respuesta = await this.model.registro(email, nombre, hash, apellido, fechaNac, dni); // registramos el usuario con el hash
+      const respuesta = await this.model.registro(email,celular, nombre, hash, apellido, fechaNac, dni); // registramos el usuario con el hash
       return respuesta;
     } catch (error) {
       throw new Error(error);
@@ -46,9 +46,9 @@ class ServicioUsuario {
     }
   };
 
-  editarUsuario = async (email, nombre, apellido) => {
+  editarUsuario = async (email,celular, nombre, apellido) => {
     try {
-      const usuario = await this.model.editarUsuario(nombre, email, apellido)
+      const usuario = await this.model.editarUsuario(email,celular, nombre, apellido)
       console.log(usuario);
       return usuario;
     } catch (error) {
@@ -58,10 +58,21 @@ class ServicioUsuario {
 
   confirmarRegistro = async (email) => {
     try {
-      await this.model.confirmarRegistro(email)
+     const usuario =  await this.model.confirmarRegistro(email)
       console.log('Registro del email ' + email + ' confirmado correctamente');
+      return usuario;
     } catch (error) {
       throw new Error("Error al confirmar el registro");
+    }
+  }
+
+
+  chequearConfirmacion = async(email) => {
+    try{
+        let confirmado = await this.model.chequearConfirmacion(email);
+        return confirmado;
+    } catch (error) {
+      throw new Error("Error al chequear la Confirmacion");
     }
   }
 

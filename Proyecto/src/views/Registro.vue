@@ -10,6 +10,7 @@ export default {
         nombre: "",
         apellido: "",
         email: "",
+        celular:"",
         dni: 0,
         fechaNacimiento: "",
         pass: "",
@@ -56,6 +57,10 @@ export default {
       <label for="exampleInputEmail1">Email address</label>
       <input v-model="usuario.email" type="email" class="form-control" id="exampleInputEmail1"
         aria-describedby="emailHelp" required />
+    </div>
+    <div class="form-group">
+      <label>Celular</label>
+      <input v-model="usuario.celular" class="form-control" required />
     </div>
     <div class="form-group">
       <label for="fechaNacimiento">Fecha de nacimiento</label>

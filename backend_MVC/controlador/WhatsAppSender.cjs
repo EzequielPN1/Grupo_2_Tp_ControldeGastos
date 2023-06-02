@@ -21,11 +21,16 @@ class WhatsAppSender {
   }
 
 
-  
-
   enviarMensaje(numero, mensaje) {
     this.client.sendMessage(numero, mensaje);
+    console.log("Mensaje enviado con exito al numero " + numero);
   }
+
+  convertirEnNumeroWhatsApp( numero) {
+   let numeroAdaptado = "549" + numero + "@c.us";
+    return numeroAdaptado;
+}
+
 }
 
 module.exports = WhatsAppSender;
