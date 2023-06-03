@@ -58,13 +58,13 @@ export default {
     <ul class="navbar">
       <div>
         <li>
-          <RouterLink v-if="usuario.nombre != ''" :to="'/Home'">
+          <RouterLink v-if="usuario.nombre != ''" :to="'/MiPerfil'">
             <h2>{{ usuario.nombre }}</h2>
           </RouterLink>
         </li>
       </div>
       <li>
-        <RouterLink to="/MiPerfil">Mi Perfil</RouterLink>
+        <RouterLink to="/Home">Inicio</RouterLink>
       </li>
       <li>
         <RouterLink to="/AgregarGasto">Agregar Gasto</RouterLink>

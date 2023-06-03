@@ -2,14 +2,16 @@
 import { gastosService } from "../Services/gastosService.js"
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
+import { useCategoriaStore } from "../stores/categorias.js"
 import Barra from "../components/NavBar.vue";
 
 export default {
+  async mounted() {
+    await this.obtenerCategorias();
+  },
   setup() {
-
     const store = useUserStore();
     const { usuario } = storeToRefs(store);
-
     return {
       usuario,
     }
@@ -21,27 +23,36 @@ export default {
         titulo: "",
         monto: 0,
         fecha: "",
-        categoria: "", // se debe cambiar cuando tengamos tipos guardados por usuario
+        idCategoria: "",
         descripcion: "",
-        tipos: ["Comida", "Social", "Vivienda","Remedios"],
       },
+      categorias: []
 
     }
   },
   methods: {
+    async obtenerCategorias() {
+      const store = useCategoriaStore();
+      await store.obtenerCategorias(this.usuario.email);
+      this.categorias = store.categorias
+    },
+
+
+
     async agregarGasto() {
       this.gasto.email = this.usuario.email
       try {
         const response = await gastosService.agregarGasto(this.gasto)
+        console.log(this.gasto);
         alert(response.data);
       } catch (error) {
-        console.log(error);
-        alert(error.response);
+        console.log(error.response.data);
+        alert(error.response.data);
       }
       this.$refs.formulario.reset();
     }
   },
-   components: {
+  components: {
     Barra,
   },
 }
@@ -51,11 +62,11 @@ export default {
 
 
 <template>
-<Barra></Barra>
+  <Barra></Barra>
   <form ref="formulario" class="form" @submit.prevent="agregarGasto()">
     <div class="form-group">
       <label for="title">Titulo</label>
-      <input v-model="gasto.titulo" type="text" class="form-control" id="title" required/>
+      <input v-model="gasto.titulo" type="text" class="form-control" id="title" required />
     </div>
     <div class="form-group">
       <label for="amount">Monto</label>
@@ -64,9 +75,9 @@ export default {
     <label for="date">Fecha</label>
     <input id="date" type="date" v-model="gasto.fecha">
     <label for="category">Categoria</label>
-    <select id="category" class="form-select" aria-label="Default select example" v-model="gasto.categoria" required>
-      <option v-for="tipo in gasto.tipos" :key="tipo">
-        {{ tipo }}
+    <select id="category" class="form-select" aria-label="Default select example" v-model="gasto.idCategoria" required>
+      <option v-for="tipo in this.categorias" :key="tipo.id" :value="tipo.id">
+        {{ tipo.nombre }}
       </option>
     </select>
     <div class="form-group">

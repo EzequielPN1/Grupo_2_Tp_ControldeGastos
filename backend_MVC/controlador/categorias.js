@@ -8,23 +8,25 @@ class ControladorCategoria {
 
     agregar = async (req,res) => {
         try {
-            
             let categoria = req.body
             console.log(categoria);
-            await this.categorias.agregar(categoria)
-            res.status(200).send("Categoria ingresada correctamente");
+            const respuesta = await this.categorias.agregar(categoria)
+            res.status(200).send(respuesta);
         }
-        catch(e) {
-            res.status(500).send("Error al agregar categoria: ", e);
+        catch(error) {
+            console.log(error.message)
+            res.status(500).send(error.message);
         }
         
     }
+
+
+    
     
     editar = async (req,res) => {
         try {
-            let id = req.params.id
             let categoria = req.body
-            await this.categorias.editar(id, categoria)
+            await this.categorias.editar(categoria)
             res.status(200).send("Categoria editada correctamente");
         }
         catch(e) {
@@ -34,12 +36,12 @@ class ControladorCategoria {
     
     eliminar = async (req,res) => {
         try {
-            let id = req.params.id
-            await this.categorias.eliminar(id)
+            let categoria = req.body
+            await this.categorias.eliminar(categoria)
             res.status(200).send("Categoria eliminada correctamente");
         }
         catch(e) {
-            res.status(500).send("Error al editar categoria: ", e);
+            res.status(500).send("Error al eliminar la categoria: ", e);
         }
     }
     

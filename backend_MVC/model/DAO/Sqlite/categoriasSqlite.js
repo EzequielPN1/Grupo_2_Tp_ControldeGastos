@@ -8,22 +8,33 @@ class CategoriaSqlite {
 
   agregar = async (categoria) => {
     try {
-      const {email, nombre, presupuesto} = categoria
+      const { email, nombre, presupuesto } = categoria;
+      
+      const existeCategoria = await this.verificarExistenciaCategoria(email, nombre);
+      if (existeCategoria) {
+        throw new Error("Ya existe la categoría");
+      }
+      
       const sql = `INSERT INTO categorias (email, nombre, presupuesto) VALUES (?, ?, ?)`;
-      await ConexionSqlite.runQuery(sql, [email, nombre, presupuesto])
+      await ConexionSqlite.runQuery(sql, [email, nombre, presupuesto]);
       return "Categoria registrada correctamente";
+    } catch (error) {
+      throw new Error("Error al agregar categoria: " + error);
     }
-    catch (error) {
-      console.log(error);
-      throw new Error("Error al agregar categoria: " + error.message);
-    }
-
   };
   
-  editar = async (id, categoria) => {
-
+  verificarExistenciaCategoria = async (email, nombre) => {
+    const sql = `SELECT COUNT(*) AS count FROM categorias WHERE email = ? AND nombre = ?`;
+    const result = await ConexionSqlite.getRow(sql, [email, nombre]);
+    return result && result.count > 0;
+  };
+  
+  
+  
+  
+  editar = async (categoria) => {
     try {
-      const {email, nombre, presupuesto} = categoria
+      const {id,email, nombre, presupuesto} = categoria
       const sql = `UPDATE categorias SET email = ?, nombre = ?, presupuesto = ? WHERE id = ?`;
       await ConexionSqlite.runQuery(sql, [email, nombre, presupuesto, id])
       return "Categoria editada correctamente"
@@ -35,9 +46,9 @@ class CategoriaSqlite {
 
   };
   
-  eliminar = async id => {
-
+  eliminar = async categoria => {
     try {
+      const {id} = categoria
       const sql = `DELETE FROM categorias WHERE id = ?`
       await ConexionSqlite.runQuery(sql, [id])
       return "Categoria eliminada correctamente"

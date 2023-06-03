@@ -8,6 +8,7 @@ export const useUserStore = defineStore("user", {
         nombre: "",
         apellido:"",
         email: "",
+        celular:"",
         fechaNac:"",
         dni:0,
         token: "",

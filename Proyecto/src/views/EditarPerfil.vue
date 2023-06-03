@@ -18,6 +18,7 @@ export default {
       {
         nombre: '',
         apellido: '',
+        celular:'',
       },
 
       vue: this,
@@ -29,7 +30,7 @@ export default {
       const usuarioEditado = {
         nombre: this.usuarioModificable.nombre !== '' ? this.usuarioModificable.nombre : this.usuario.nombre,
         apellido: this.usuarioModificable.apellido !== '' ? this.usuarioModificable.apellido : this.usuario.apellido,
-        saldo: Number(this.usuarioModificable.saldo) + Number(this.usuario.saldo),
+        celular: this.usuarioModificable.celular !== '' ? this.usuarioModificable.celular : this.usuario.celular,
         email: this.usuario.email,
         token: this.usuario.token
       };
@@ -64,6 +65,10 @@ export default {
         <div class="form-group">
           <label for="apellido">Apellido:</label>
           <input type="text" id="apellido" v-model="usuarioModificable.apellido"  class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="apellido">Celular:</label>
+          <input type="text" id="apellido" v-model="usuarioModificable.celular"  class="form-control">
         </div>
         <div  class="d-flex justify-content-between align-items-center">
         <button class="btn btn-primary" type="submit">Confirmar</button>

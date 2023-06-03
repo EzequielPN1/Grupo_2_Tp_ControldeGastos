@@ -2,7 +2,7 @@
   <div>
     <canvas ref="myChart" width="400" height="300"></canvas>
   </div>
-  </template>
+</template>
   
   <script>
   import { useUserStore } from "../stores/user";

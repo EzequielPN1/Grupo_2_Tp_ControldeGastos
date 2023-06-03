@@ -1,5 +1,6 @@
 CREATE TABLE usuarios (
   email TEXT PRIMARY KEY,
+  celular TEXT NOT NULL,
   nombre TEXT NOT NULL,
   apellido TEXT,
   fechaNac TEXT,

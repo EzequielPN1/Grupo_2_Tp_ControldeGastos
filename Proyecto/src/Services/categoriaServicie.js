@@ -8,7 +8,7 @@ export const categoriaService = {
     return apiClient.post('/categorias/agregar', categoria);
   },
 
-  listarCategoria(email) {
+  listarCategorias(email) {
     return apiClient.get(`/categorias/listar/${email}`);
   },
 
