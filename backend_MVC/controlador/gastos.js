@@ -1,9 +1,9 @@
-import ServicioUsuario from '../servicio/gastos.js'
+import ServicioGasto from '../servicio/gastos.js'
 
 class ControladorGasto {
 
     constructor() {
-        this.gastos = new ServicioUsuario()
+        this.gastos = new ServicioGasto()
     }
 
     agregar = async (req, res) => {

@@ -74,8 +74,7 @@ class ControladorUsuario {
         if (confirmado) {
           const usuario = await this.servicio.confirmarRegistro(emailDecodificado);
           res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Registro confirmado!</h1></div>');
-          const whatsapp = this.WhatsAppSender.convertirEnNumeroWhatsApp(usuario.celular)
-          this.WhatsAppSender.enviarMensaje(whatsapp, 'Ha confirmado su cuenta correctamente')
+          this.WhatsAppSender.enviarBootPresentacion(usuario.celular)
         } else {
           res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Su registro ya se confirmo!</h1></div>');
         }
