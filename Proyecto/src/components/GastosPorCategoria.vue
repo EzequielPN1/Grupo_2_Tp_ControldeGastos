@@ -10,6 +10,14 @@
   import Chart from 'chart.js/auto';
   
   export default {
+    data() {
+      return {
+        gastos: [],
+        anioSeleccionado: 2023,
+        mesSeleccionado: 1,
+        chartInstance: null
+      }
+    },
     mounted() {
       this.actualizarGastos();
     },
@@ -21,23 +29,21 @@
         const gastosStore = await useGastosStore();
         await gastosStore.obtenerGastos(usuario.email);
         const gastos = gastosStore.gastos;
-  
-        this.mostrarGrafico(gastos);
+        const gastosSegunAnio = gastos.filter(gasto => parseInt(gasto.fecha.substring(0, gasto.fecha.indexOf('-'))) === this.anioSeleccionado)
+        const gastonsSegunMes = gastosSegunAnio.filter(gasto => parseInt(gasto.fecha.split('-')[1]) == this.mesSeleccionado)  
+        this.gastos = gastonsSegunMes
+        this.mostrarGrafico();
       },
   
-      mostrarGrafico(gastos) {
-        const ctx = this.$refs.myChart.getContext('2d');
-        const chartInstance = this.$data._chart; // Obtener la instancia del gráfico existente
-  
-        if (chartInstance) {
-          // Actualizar los datos del gráfico existente
-          const { labels, data } = this.procesarDatosGastos(gastos);
-          chartInstance.data.labels = labels;
-          chartInstance.data.datasets[0].data = data;
-          chartInstance.update();
-        } else {
-          // Crear un nuevo gráfico si no existe
-          const { labels, data } = this.procesarDatosGastos(gastos);
+      mostrarGrafico() {
+        const ctx = this.$refs.myChart?.getContext('2d');
+
+        if (this.chartInstance) {
+          // Destruir el gráfico existente antes de reutilizar el lienzo
+          this.chartInstance.destroy();
+        }
+
+          const { labels, data } = this.procesarDatosGastos(this.gastos);
           const config = {
             type: 'doughnut',
             data: {
@@ -77,8 +83,7 @@
             }
           };
   
-          new Chart(ctx, config);
-        }
+          this.chartInstance = new Chart(ctx, config);
       },
   
       procesarDatosGastos(gastos) {
@@ -98,6 +103,11 @@
         const data = Object.values(categorias);
   
         return { labels, data };
+      },
+      modificarAnioMes(anio, mes) {
+        this.mesSeleccionado = mes
+        this.anioSeleccionado = anio
+        this.actualizarGastos()
       }
     }
   };
