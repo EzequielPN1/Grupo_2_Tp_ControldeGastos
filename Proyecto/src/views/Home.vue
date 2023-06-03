@@ -23,9 +23,13 @@ export default {
     modificarMes() {
       const numeroMes = this.meses.indexOf(this.mesSeleccionado) + 1
       this.$refs.modificarAnioMesCat.modificarAnioMes(this.anioSeleccionado, numeroMes)
+      this.$refs.modificarAnioMesFecha.modificarAnioMes(this.anioSeleccionado, numeroMes)
     },
     modificarAnio() {
-      this.$refs.modificarAnioMesCat.modificarAnioMes(this.anioSeleccionado, this.mesSeleccionado)
+      const numeroMes = this.meses.indexOf(this.mesSeleccionado) + 1
+      this.$refs.modificarAnioMesCat.modificarAnioMes(this.anioSeleccionado, numeroMes)
+      this.$refs.modificarAnioMesFecha.modificarAnioMes(this.anioSeleccionado, numeroMes)
+      this.$refs.modificarAnioMes.modificarAnio(this.anioSeleccionado)
     }
   }
 };
@@ -44,8 +48,8 @@ export default {
         <input type="number" min="1900" max="2023" placeholder="Año" @change="modificarAnio" v-model="anioSeleccionado">
       </div>
       <GastosPorCategoria ref="modificarAnioMesCat"></GastosPorCategoria>
-      <GastosPorMes></GastosPorMes>
-      <GastosPorFecha></GastosPorFecha>
+      <GastosPorMes ref="modificarAnioMes"></GastosPorMes>
+      <GastosPorFecha ref="modificarAnioMesFecha"></GastosPorFecha>
     </div>
   </div>
 </template>
