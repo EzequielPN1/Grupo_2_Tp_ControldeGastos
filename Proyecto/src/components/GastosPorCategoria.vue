@@ -4,9 +4,10 @@
   </div>
 </template>
   
-  <script>
+<script>
   import { useUserStore } from "../stores/user";
   import { useGastosStore } from "../stores/gastos.js";
+  import { useCategoriaStore } from "../stores/categorias.js";
   import Chart from 'chart.js/auto';
   
   export default {
@@ -20,13 +21,21 @@
     },
     mounted() {
       this.actualizarGastos();
+      this.obtenerCategorias();
     },
     methods: {
+      async obtenerCategorias() {
+        const userStore = useUserStore();
+        const { usuario } = userStore;
+        const store = useCategoriaStore();
+        await store.obtenerCategorias(usuario.email);
+        this.categorias = store.categorias;
+      },
       async actualizarGastos() {
         const userStore = useUserStore();
         const { usuario } = userStore;
   
-        const gastosStore = await useGastosStore();
+        const gastosStore = useGastosStore();
         await gastosStore.obtenerGastos(usuario.email);
         const gastos = gastosStore.gastos;
         const gastosSegunAnio = gastos.filter(gasto => parseInt(gasto.fecha.substring(0, gasto.fecha.indexOf('-'))) === this.anioSeleccionado)
@@ -36,8 +45,8 @@
       },
   
       mostrarGrafico() {
-        const ctx = this.$refs.myChart?.getContext('2d');
-
+        const ctx = this.$refs.myChart.getContext('2d');
+        
         if (this.chartInstance) {
           // Destruir el gráfico existente antes de reutilizar el lienzo
           this.chartInstance.destroy();
@@ -89,7 +98,7 @@
       procesarDatosGastos(gastos) {
         const categorias = {};
         gastos.forEach(gasto => {
-          const categoria = gasto.categoria;
+          const categoria = this.getCategoriaNombre(gasto.idCategoria);
           const monto = gasto.monto;
   
           if (categorias.hasOwnProperty(categoria)) {
@@ -108,6 +117,10 @@
         this.mesSeleccionado = mes
         this.anioSeleccionado = anio
         this.actualizarGastos()
+      },
+      getCategoriaNombre(idCategoria) {
+        const categoria = this.categorias.find((c) => c.id === idCategoria);
+        return categoria ? categoria.nombre : "";
       }
     }
   };
