@@ -21,33 +21,50 @@ class CategoriasMongoDb {
 
     agregar = async (categoria) => {
         try {
-          const { email, nombre, presupuesto } = categoria;
-      
-          const existeCategoria = await this.verificarExistenciaCategoria(email, nombre);
-          if (existeCategoria) {
-            throw new Error("Ya existe la categoría");
-          }
-      
-          const nuevaCategoria = {
-            email: email,
-            nombre: nombre,
-            presupuesto: presupuesto,
-            id: new mongoose.Types.ObjectId() // Generar un nuevo ObjectId para el campo id
-          };
-      
-          await this.categoriasCollection.insertOne(nuevaCategoria);
-      
-          return "Categoria registrada correctamente";
+            const { email, nombre, presupuesto } = categoria;
+
+            const existeCategoria = await this.verificarExistenciaCategoria(email, nombre);
+            if (existeCategoria) {
+                throw new Error("Ya existe la categoría");
+            }
+
+            const nuevaCategoria = {
+                email: email,
+                nombre: nombre,
+                presupuesto: presupuesto,
+                id: new mongoose.Types.ObjectId() // Generar un nuevo ObjectId para el campo id
+            };
+
+            await this.categoriasCollection.insertOne(nuevaCategoria);
+
+            return "Categoria registrada correctamente";
         } catch (error) {
-          throw new Error("Error al agregar categoria: " + error);
+            throw new Error("Error al agregar categoria: " + error);
         }
-      };
-      
+    };
+
 
     verificarExistenciaCategoria = async (email, nombre) => {
         const categoriaExistente = await this.categoriasCollection.findOne({ email, nombre });
         return !!categoriaExistente;
     };
+
+
+    devolverId = async (nombre, email) => {
+        try {
+            const categoria = await this.categoriasCollection.findOne({ nombre, email });
+
+            if (categoria) {
+                return categoria.id;
+            } else {
+                throw new Error("Error al obtener la categoría");
+            }
+        } catch (error) {
+            throw new Error("Error al obtener la categoría: " + error.message);
+        }
+    };
+
+
 
 
     listar = async (email) => {

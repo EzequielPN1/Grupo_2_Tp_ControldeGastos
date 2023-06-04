@@ -7,8 +7,9 @@ class WhatsAppSender {
   constructor() {
 
     this.client = new Client();
-    this.gasto = new ServicioGasto()
+    this.gastos = new ServicioGasto()
     this.categorias = new ServicioCategoria()
+
     this.client.on('ready', () => {
       console.log('Cuenta de Ezequiel logueada');
       this.enviarMensaje('5491133419818@c.us', 'Cuenta de Ezequiel logueada');
@@ -38,20 +39,30 @@ class WhatsAppSender {
     return numeroAdaptado;
   }
 
+  convertirEnNumeroOriginal(numeroAdaptado) {
+    // Eliminar el prefijo "549" y el sufijo "@c.us"
+    let numeroOriginal = numeroAdaptado.replace("549", "").replace("@c.us", "");
+    return numeroOriginal;
+  }
 
-  enviarBootPresentacion(numero) {
-    let whatsapp = this.convertirEnNumeroWhatsApp(numero)
+
+  enviarBootPresentacion(whatsapp) {
     const robotEmoji = '\u{1F916}';
-
     const mensajeBienvenida = 'Bienvenido al Boot de Control de gastos' + robotEmoji;
     const mensajeMenu = 'Puedo ayudarte con estas acciones si deseas'
     const mensajeInfo = `1-Contarte sobre la aplicacion`;
-    const mensajeIngresarGasto = `2-Ingresar un Gasto`
+    const mensajeIngresarGasto = `2-Ingresar un Gasto`;
+    const mensajeIngresarCategoria = `3-Ingresar una Categoria`
+
+
 
     this.enviarMensaje(whatsapp, mensajeBienvenida)
     this.enviarMensaje(whatsapp, mensajeMenu)
     this.enviarMensaje(whatsapp, mensajeInfo)
     this.enviarMensaje(whatsapp, mensajeIngresarGasto)
+    this.enviarMensaje(whatsapp, mensajeIngresarCategoria)
+
+
   }
 
 
@@ -71,20 +82,22 @@ class WhatsAppSender {
       }
 
       if (message.body === '2') {
-        this.client.sendMessage(message.from, `ingrese  la plantilla con los datos correspondientes para su ingreso:\n 
-        Ingreso:
-        email: \n 
-        titulo: \n 
-        monto: \n 
-        idCategoria: \n
-        descripcion:  \n
+        this.client.sendMessage(message.from, `ingrese  la plantilla con los datos correspondientes para su ingreso:`);
+        this.client.sendMessage(message.from, `
+         IngresoGasto:
+        
+        email: 
+        titulo:  
+        monto: 
+        idCategoria: 
+        descripcion: 
         `);
 
       }
 
-      const email = ['Ingreso:'];
+      const ingresoGasto = ['IngresoGasto:'];
 
-      if (message.body.includes(email)) {
+      if (message.body.includes(ingresoGasto)) {
         const palabrasClaves = ['email:', 'titulo:', 'monto:', 'idCategoria:', 'descripcion:'];
         const encontradas = [];
         const gasto = { email: '', titulo: '', monto: '', fecha: '', idCategoria: '', descripcion: '' };
@@ -101,8 +114,45 @@ class WhatsAppSender {
           }
         });
 
-        this.guardarGasto(message.from,gasto)
+        this.guardarGasto(message.from, gasto)
       }
+
+
+      if (message.body === '3') {
+        this.client.sendMessage(message.from, `ingrese  la plantilla con los datos correspondientes para su ingreso: `);
+        this.client.sendMessage(message.from, `
+        IngresoCategoria:
+
+        nombre: 
+        email: 
+        presupuesto: 
+        `);
+
+      }
+
+      const ingresoCategoria = ['IngresoCategoria:'];
+
+      if (message.body.includes(ingresoCategoria)) {
+        const palabrasClaves = ['nombre:', 'email:', 'presupuesto:'];
+        const encontradas = [];
+        const categoria = { nombre: '', email: '', presupuesto: '' };
+
+        palabrasClaves.forEach((palabra) => {
+          if (message.body.includes(palabra)) {
+            encontradas.push(palabra);
+            const regex = new RegExp(palabra + '([^\\n]+)');
+            const match = message.body.match(regex);
+            if (match && match[1]) {
+              const value = match[1].trim();
+              categoria[palabra.replace(':', '')] = value;
+            }
+          }
+        });
+
+        this.guardarCategoria(message.from, categoria)
+      }
+
+
 
 
 
@@ -114,7 +164,8 @@ class WhatsAppSender {
 
 
 
-  async guardarGasto(numero,gasto) {
+
+  async guardarGasto(numero, gasto) {
     try {
       let idCategoria = await this.categorias.devolverId(gasto.idCategoria, gasto.email);
 
@@ -125,9 +176,10 @@ class WhatsAppSender {
       gasto.idCategoria = idCategoria
       gasto.fecha = fechaFormateada;
       console.log(gasto);
-      this.client.sendMessage(numero, 'Ingreso correcto del gasto ');
 
-      await this.gasto.agregar(gasto);
+
+      await this.gastos.agregar(gasto);
+      this.client.sendMessage(numero, 'Ingreso correcto del gasto ');
       console.log("Gasto agregado correctamente por whatsApp");
     } catch (error) {
       console.error('Ocurrió un error en al guardar el gasto');
@@ -135,6 +187,23 @@ class WhatsAppSender {
 
     }
   }
+
+  async guardarCategoria(numero, categoria) {
+
+    try {
+      await this.categorias.agregar(categoria)
+      this.client.sendMessage(numero, 'Ingreso correcto de la categoria ');
+
+    } catch (error) {
+      console.error('error' + error);
+      this.client.sendMessage(numero, 'Error vuelva a ingresar la plantilla completa ');
+
+    }
+  }
+
+
+
+
 
 
 

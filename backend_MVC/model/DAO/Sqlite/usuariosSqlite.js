@@ -112,6 +112,8 @@ chequearConfirmacion = async(email) =>{
     }
   };
 
+
+
 }
 
 export default UsuarioSqlite
