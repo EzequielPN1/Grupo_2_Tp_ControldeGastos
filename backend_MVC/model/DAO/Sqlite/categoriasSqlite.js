@@ -28,8 +28,19 @@ class CategoriaSqlite {
     const result = await ConexionSqlite.getRow(sql, [email, nombre]);
     return result && result.count > 0;
   };
+
+
   
+  devolverId = async (nombre,email) => {
+    const sql = 'SELECT id FROM categorias WHERE nombre = ? AND email = ?';
+    const result = await ConexionSqlite.getRow(sql, [nombre, email]);
   
+    if (result) {
+      return result.id; 
+    } else {
+      throw new Error("Error al obtener la categoria: ");
+    }
+  };
   
   
   editar = async (categoria) => {

@@ -22,6 +22,10 @@ class ServicioCategoria {
     listar = async (email) => {
         return await this.model.listar(email)
     }
+
+    devolverId = async(nombre,email) => {
+        return await this.model.devolverId(nombre,email)
+    }
 }
 
 export default ServicioCategoria

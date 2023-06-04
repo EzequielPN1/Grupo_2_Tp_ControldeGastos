@@ -1,11 +1,14 @@
-const qrcode = require('qrcode-terminal');
-const { Client } = require('whatsapp-web.js');
-
+import qrcode from 'qrcode-terminal';
+import { Client } from 'whatsapp-web.js';
+import ServicioGasto from '../servicio/gastos.js'
+import ServicioCategoria from '../servicio/categorias.js'
 
 class WhatsAppSender {
   constructor() {
 
     this.client = new Client();
+    this.gasto = new ServicioGasto()
+    this.categorias = new ServicioCategoria()
     this.client.on('ready', () => {
       console.log('Cuenta de Ezequiel logueada');
       this.enviarMensaje('5491133419818@c.us', 'Cuenta de Ezequiel logueada');
@@ -73,7 +76,7 @@ class WhatsAppSender {
         email: \n 
         titulo: \n 
         monto: \n 
-        categoria: \n
+        idCategoria: \n
         descripcion:  \n
         `);
 
@@ -82,9 +85,9 @@ class WhatsAppSender {
       const email = ['Ingreso:'];
 
       if (message.body.includes(email)) {
-        const palabrasClaves = ['email:', 'titulo:', 'monto:', 'categoria:', 'descripcion:'];
+        const palabrasClaves = ['email:', 'titulo:', 'monto:', 'idCategoria:', 'descripcion:'];
         const encontradas = [];
-        const gasto = { email: '', titulo: '', monto: '', categoria: '', descripcion: '' };
+        const gasto = { email: '', titulo: '', monto: '', fecha: '', idCategoria: '', descripcion: '' };
 
         palabrasClaves.forEach((palabra) => {
           if (message.body.includes(palabra)) {
@@ -98,10 +101,7 @@ class WhatsAppSender {
           }
         });
 
-        console.log(gasto);
-        const { email, titulo, monto, fecha, idCategoria, descripcion } = gasto;
-
-
+        this.guardarGasto(message.from,gasto)
       }
 
 
@@ -114,9 +114,33 @@ class WhatsAppSender {
 
 
 
+  async guardarGasto(numero,gasto) {
+    try {
+      let idCategoria = await this.categorias.devolverId(gasto.idCategoria, gasto.email);
+
+      const fechaActual = new Date('2023-06-03T22:59:18.142Z');
+      const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      const fechaFormateada = fechaActual.toLocaleDateString('es-ES', opciones);
+
+      gasto.idCategoria = idCategoria
+      gasto.fecha = fechaFormateada;
+      console.log(gasto);
+      this.client.sendMessage(numero, 'Ingreso correcto del gasto ');
+
+      await this.gasto.agregar(gasto);
+      console.log("Gasto agregado correctamente por whatsApp");
+    } catch (error) {
+      console.error('Ocurrió un error en al guardar el gasto');
+      this.client.sendMessage(numero, 'Error vuelva a ingresar la plantilla completa');
+
+    }
+  }
+
+
 
 
 
 }
 
-module.exports = WhatsAppSender;
+
+export default WhatsAppSender;

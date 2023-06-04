@@ -1,7 +1,7 @@
 import ServicioUsuario from "../servicio/usuarios.js"
 import Autentificador from './autentificador.js'
 import Correo from './correo.js';
-import WhatsAppSender from './WhatsAppSender.cjs';
+import WhatsAppSender from './WhatsAppSender.js';
 
 class ControladorUsuario {
 
