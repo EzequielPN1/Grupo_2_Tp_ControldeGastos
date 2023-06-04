@@ -2,6 +2,7 @@ import ServicioUsuario from "../servicio/usuarios.js"
 import Autentificador from './autentificador.js'
 import Correo from './correo.js';
 import WhatsAppSender from './WhatsAppSender.js';
+import config from "../config.js";
 
 class ControladorUsuario {
 
@@ -9,7 +10,9 @@ class ControladorUsuario {
     this.servicio = new ServicioUsuario()
     this.autentificador = new Autentificador()
     this.correo = new Correo()
-    this.WhatsAppSender = new WhatsAppSender()
+    if(config.WHATSAPP){
+      this.WhatsAppSender = new WhatsAppSender()
+    }
   }
 
   inicio = async (req, res) => {
@@ -32,8 +35,9 @@ class ControladorUsuario {
 
   login = async (req, res) => {
     try {
-      const { email, pass } = req.body
-      const usuario = await this.servicio.login(email, pass);
+      const { email, pass, huella } = req.body
+      console.log(huella);
+      const usuario = await this.servicio.login(email, pass, huella);
       const token = this.autentificador.generateTokenTiempo(email, '20s');
       usuario.token = token;
       res.status(200).json(usuario);
@@ -70,12 +74,14 @@ class ControladorUsuario {
 
       if (email === emailDecodificado) {
         let confirmado = await this.servicio.chequearConfirmacion(emailDecodificado);
-        
+
         if (confirmado) {
           const usuario = await this.servicio.confirmarRegistro(emailDecodificado);
           res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Registro confirmado!</h1></div>');
-          let whatsapp = this.WhatsAppSender.convertirEnNumeroWhatsApp(usuario.celular)
-          this.WhatsAppSender.enviarBootPresentacion(whatsapp)
+          if(config.WHATSAPP){
+            let whatsapp = this.WhatsAppSender.convertirEnNumeroWhatsApp(usuario.celular)
+            this.WhatsAppSender.enviarBootPresentacion(whatsapp)
+          }
         } else {
           res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Su registro ya se confirmo!</h1></div>');
         }
@@ -131,6 +137,9 @@ class ControladorUsuario {
       res.status(500).send(error.message);
     }
   };
+
 };
+
+
 
 export default ControladorUsuario
