@@ -30,9 +30,14 @@ class WhatsAppSender {
 
 
   enviarMensaje(numero, mensaje) {
-    this.client.sendMessage(numero, mensaje);
-    console.log("Mensaje enviado con exito al numero " + numero);
+    try {
+      this.client.sendMessage(numero, mensaje);
+      console.log("Mensaje enviado con éxito al número " + numero);
+    } catch (error) {
+      console.log("Error al enviar el mensaje");
+    }
   }
+  
 
   convertirEnNumeroWhatsApp(numero) {
     let numeroAdaptado = "549" + numero + "@c.us";
@@ -55,14 +60,14 @@ class WhatsAppSender {
     const mensajeIngresarCategoria = `3-Ingresar una Categoria`
 
 
-
+    
     this.enviarMensaje(whatsapp, mensajeBienvenida)
     this.enviarMensaje(whatsapp, mensajeMenu)
     this.enviarMensaje(whatsapp, mensajeInfo)
     this.enviarMensaje(whatsapp, mensajeIngresarGasto)
     this.enviarMensaje(whatsapp, mensajeIngresarCategoria)
 
-
+ 
   }
 
 

@@ -25,13 +25,29 @@ export default {
   methods: {
     async loguear(user, vue) {
       try {
+        user.huella = this.generateFingerprint();
         const response = await userService.login(user);
         vue.usuario = response.data;
+        console.log(this.generateFingerprint()); 
         vue.$router.push("/Home");
       } catch (error) {
         console.log(error);
         alert(error.response.data);
       }
+    },
+
+    generateFingerprint() {
+      const fingerprintArray = [
+        navigator.userAgent,
+        navigator.language,
+        window.screen.height,
+        window.screen.width,
+        window.screen.colorDepth,
+        window.screen.availHeight,
+        window.screen.availWidth
+      ];
+
+     return this.fingerprint = fingerprintArray.join('|');
     }
   },
 };

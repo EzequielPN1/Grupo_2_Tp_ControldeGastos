@@ -21,4 +21,5 @@ export const userService = {
   eliminarCuenta(pass,token,email) {
     return apiClient.delete('/eliminarCuenta', { data: { pass, token, email } });
   },
+
 }

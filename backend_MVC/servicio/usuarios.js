@@ -27,7 +27,7 @@ class ServicioUsuario {
     }
   };
 
-  login = async (email, pass) => {
+  login = async (email, pass,huella) => {
     try {
       const usuario = await this.model.login(email); // Obtener el usuario de la base de datos
       const match = await bcrypt.compare(pass, usuario.pass); // Comparar la contraseña ingresada con el hash almacenado
@@ -35,6 +35,7 @@ class ServicioUsuario {
         if (usuario.registro == 0) {
           throw new Error("Cuenta no confirmada");
         } else {
+          this.model.agregarHuella(email,huella)
           console.log("Inicio de sesión exitoso de " + email);
           return usuario;
         }
@@ -108,7 +109,6 @@ class ServicioUsuario {
       throw new Error(error);
     }
   };
-
 
 
 }

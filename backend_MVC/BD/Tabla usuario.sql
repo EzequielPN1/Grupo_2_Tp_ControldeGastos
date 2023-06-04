@@ -6,7 +6,8 @@ CREATE TABLE usuarios (
   fechaNac TEXT,
   dni INTEGER,
   pass TEXT NOT NULL,
-  registro INTEGER DEFAULT 0
+  registro INTEGER DEFAULT 0,
+  huella TEXT
 );
 
 

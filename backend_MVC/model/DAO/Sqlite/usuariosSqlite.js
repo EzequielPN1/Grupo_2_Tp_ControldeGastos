@@ -6,10 +6,10 @@ class UsuarioSqlite {
     this.bd = ConexionSqlite.conexion
   }
 
-  registro = async (email,celular, nombre, pass, apellido, fechaNac, dni) => {
+  registro = async (email, celular, nombre, pass, apellido, fechaNac, dni) => {
     try {
       const insertSql = `INSERT INTO usuarios (email,celular, nombre, pass,apellido,fechaNac,dni) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-      await ConexionSqlite.runQuery(insertSql, [email,celular, nombre, pass, apellido, fechaNac, dni]);
+      await ConexionSqlite.runQuery(insertSql, [email, celular, nombre, pass, apellido, fechaNac, dni]);
       return "Usuario registrado correctamente";
     } catch (error) {
       if (error.includes("UNIQUE constraint failed: usuarios.email")) {
@@ -35,10 +35,22 @@ class UsuarioSqlite {
     }
   };
 
-  editarUsuario = async (email,celular, nombre, apellido) => {
+
+  agregarHuella = async (email, huella) => {
+    try {
+      const updateSql = `UPDATE usuarios SET huella = ? WHERE email = ?`;
+      await await ConexionSqlite.runQuery(updateSql, [huella, email]);
+    } catch (error) {
+
+      console.log(error);
+    }
+  }
+
+
+  editarUsuario = async (email, celular, nombre, apellido) => {
     try {
       const updateSql = `UPDATE usuarios SET celular = ?,nombre  = ?, apellido = ? WHERE email = ?`;
-      await ConexionSqlite.runQuery(updateSql, [nombre, apellido, email,celular]);
+      await ConexionSqlite.runQuery(updateSql, [nombre, apellido, email, celular]);
 
       const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
       const row = await ConexionSqlite.getRow(selectSql, [email]);
@@ -50,35 +62,35 @@ class UsuarioSqlite {
     }
   };
 
-confirmarRegistro = async (email) => {
-  try {
-    const updateSql = `UPDATE usuarios SET registro = 1 WHERE email = ?`;
-    await ConexionSqlite.runQuery(updateSql, [email]);
+  confirmarRegistro = async (email) => {
+    try {
+      const updateSql = `UPDATE usuarios SET registro = 1 WHERE email = ?`;
+      await ConexionSqlite.runQuery(updateSql, [email]);
 
-    const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
-    const usuario = await ConexionSqlite.getRow(selectSql, [email]);
+      const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
+      const usuario = await ConexionSqlite.getRow(selectSql, [email]);
 
-    return usuario;
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error en la confirmación");
-  }
-};
-
-chequearConfirmacion = async(email) =>{
-  try {
-    const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
-    const row = await ConexionSqlite.getRow(selectSql, [email]);
-
-    if (!row) {
-      throw new Error("El " + email + " no está registrado");
+      return usuario;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error en la confirmación");
     }
+  };
 
-    return row.registro != 1;
-  } catch (error) {
-    throw new Error(error.message);
+  chequearConfirmacion = async (email) => {
+    try {
+      const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
+      const row = await ConexionSqlite.getRow(selectSql, [email]);
+
+      if (!row) {
+        throw new Error("El " + email + " no está registrado");
+      }
+
+      return row.registro != 1;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
-}
 
 
   cambiarContrasenia = async (email, nuevaPass) => {
@@ -111,7 +123,6 @@ chequearConfirmacion = async(email) =>{
       throw new Error(error);
     }
   };
-
 
 
 }
