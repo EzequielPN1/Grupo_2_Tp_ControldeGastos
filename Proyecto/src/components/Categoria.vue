@@ -1,3 +1,124 @@
+<script>
+import Barra from "../components/NavBar.vue";
+import { categoriaService } from "../Services/categoriaServicie.js"
+import { useUserStore } from "../stores/user";
+import { useCategoriaStore } from "../stores/categorias.js"
+import { userService } from "../Services/userService.js"
+
+export default {
+  mounted() {
+    if (this.usuario.nombre === '') {
+      const huella = this.generateFingerprint();
+      userService.devolverUsuario(huella)
+        .then(response => {
+          if (response.data) {
+            this.usuario = response.data;
+            this.loadData();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.$router.push('/');
+        });
+    } else {
+      this.loadData();
+    }
+
+  },
+  components: {
+    Barra,
+  },
+
+  setup() {
+    const store = useUserStore();
+    const { usuario } = store;
+
+    return {
+      usuario,
+
+    }
+  },
+  data() {
+    return {
+      categoria: {
+        id: '',
+        email: '',
+        nombre: '',
+        presupuesto: 0
+      },
+      categorias: []
+
+    };
+  },
+  methods: {
+    async loadData() {
+      await this.obtenerCategorias();
+    },
+    async obtenerCategorias() {
+      const store = useCategoriaStore();
+      await store.obtenerCategorias(this.usuario.email);
+      this.categorias = store.categorias;
+    },
+
+
+    async agregarCategoria() {
+      this.categoria.email = this.usuario.email;
+
+      try {
+        const response = await categoriaService.agregarCategoria(this.categoria);
+        alert(response.data);
+      } catch (error) {
+        console.log(error.response.data);
+        alert(error.response.data);
+      }
+
+      this.categoria.nombre = '';
+      this.categoria.presupuesto = 0;
+      this.obtenerCategorias()
+    },
+    editarCategoria(categoria) {
+      categoria.editando = true;
+    },
+    async guardarCategoria(categoria) {
+      try {
+        await categoriaService.editarCategoria(categoria);
+        await this.obtenerCategorias();
+        console.log("Categoría editada correctamente.");
+      } catch (error) {
+        console.log(error);
+        alert("Error al editar la categoría.");
+      }
+      categoria.editando = false;
+    },
+    async eliminarCategoria(categoria) {
+      try {
+        console.log(categoria);
+        await categoriaService.eliminarCategoria(categoria);
+        await this.obtenerCategorias();
+        alert("Categoría eliminada correctamente.");
+      } catch (error) {
+        console.log(error);
+        alert("Error al eliminar la categoría.");
+      }
+    },
+
+    generateFingerprint() {
+      const fingerprintArray = [
+        navigator.userAgent,
+        navigator.language,
+        window.screen.height,
+        window.screen.width,
+        window.screen.colorDepth,
+        window.screen.availHeight,
+        window.screen.availWidth
+      ];
+
+      return this.fingerprint = fingerprintArray.join('|');
+    }
+  },
+}
+</script>
+
 <template>
   <Barra></Barra>
   <div>
@@ -55,91 +176,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import Barra from "../components/NavBar.vue";
-import { categoriaService } from "../Services/categoriaServicie.js"
-import { useUserStore } from "../stores/user";
-import { useCategoriaStore } from "../stores/categorias.js"
-
-export default {
-  components: {
-    Barra,
-  },
-  async mounted() {
-    await this.obtenerCategorias();
-  },
-  setup() {
-    const store = useUserStore();
-    const { usuario } = store;
-
-    return {
-      usuario,
-
-    }
-  },
-  data() {
-    return {
-      categoria: {
-        id: '',
-        email: '',
-        nombre: '',
-        presupuesto: 0
-      },
-      categorias: []
-
-    };
-  },
-  methods: {
-    async obtenerCategorias() {
-      const store = useCategoriaStore();
-      await store.obtenerCategorias(this.usuario.email);
-      this.categorias = store.categorias
-    },
-
-    async agregarCategoria() {
-      this.categoria.email = this.usuario.email;
-
-      try {
-        const response = await categoriaService.agregarCategoria(this.categoria);
-        alert(response.data);
-      } catch (error) {
-        console.log(error.response.data);
-        alert(error.response.data);
-      }
-
-      this.categoria.nombre = '';
-      this.categoria.presupuesto = 0;
-      this.obtenerCategorias()
-    },
-    editarCategoria(categoria) {
-      categoria.editando = true;
-    },
-    async guardarCategoria(categoria) {
-      try {
-        await categoriaService.editarCategoria(categoria);
-        await this.obtenerCategorias();
-        console.log("Categoría editada correctamente.");
-      } catch (error) {
-        console.log(error);
-        alert("Error al editar la categoría.");
-      }
-      categoria.editando = false;
-    },
-    async eliminarCategoria(categoria) {
-      try {
-        console.log(categoria);
-        await categoriaService.eliminarCategoria(categoria);
-        await this.obtenerCategorias();
-        alert("Categoría eliminada correctamente.");
-      } catch (error) {
-        console.log(error);
-        alert("Error al eliminar la categoría.");
-      }
-    },
-  },
-}
-</script>
 
 <style>
 .table {

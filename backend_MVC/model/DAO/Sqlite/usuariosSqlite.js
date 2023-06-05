@@ -125,6 +125,36 @@ class UsuarioSqlite {
   };
 
 
+  logout = async (email) => {
+    try {
+      const huella =''
+      const updateSql = `UPDATE usuarios SET huella = ? WHERE email = ?`;
+      await ConexionSqlite.runQuery(updateSql, [huella,email]);
+      console.log("logout del email: "+email);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error al logout del usuario: " + error.message);
+    }
+
+  }
+
+
+  devolverUsuario = async (huella) => {
+    try {
+      const selectSql = `SELECT * FROM usuarios WHERE huella = ?`;
+      const row = await ConexionSqlite.getRow(selectSql, [huella]);
+
+      if (!row) {
+        throw new Error("Ningun usuario tiene la huella guardad");
+      }
+
+      return row;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+
 }
 
 export default UsuarioSqlite

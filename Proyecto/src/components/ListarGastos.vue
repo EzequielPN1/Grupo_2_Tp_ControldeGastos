@@ -1,15 +1,33 @@
 <script>
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
-import { gastosService } from "../Services/gastosService.js";
 import { useCategoriaStore } from "../stores/categorias.js";
+import { gastosService } from "../Services/gastosService.js";
 import Barra from "../components/NavBar.vue";
+import { userService } from "../Services/userService.js"
+
 
 export default {
-  async mounted() {
-    await this.actualizarGastos();
-    await this.obtenerCategorias();
-  },
+  created() {
+    if (this.usuario.nombre === '') {
+      const huella = this.generateFingerprint();
+      userService.devolverUsuario(huella)
+        .then(response => {
+          if (response.data) {
+            this.usuario = response.data;
+            this.loadData();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.$router.push('/');
+        });
+    }else{
+      this.loadData();
+    }
+    
+},
+
   setup() {
     const store = useUserStore();
     const { usuario } = store;
@@ -37,6 +55,11 @@ export default {
     },
   },
   methods: {
+
+    async loadData() {
+    await this.actualizarGastos();
+    await this.obtenerCategorias();
+  },
     async obtenerCategorias() {
       const store = useCategoriaStore();
       await store.obtenerCategorias(this.usuario.email);
@@ -44,11 +67,8 @@ export default {
     },
 
     async actualizarGastos() {
-      const userStore = useUserStore();
-      const { usuario } = userStore;
-
-      const gastosStore = await useGastosStore();
-      await gastosStore.obtenerGastos(usuario.email);
+      const gastosStore =  useGastosStore();
+      await gastosStore.obtenerGastos(this.usuario.email);
       this.gastos = gastosStore.gastos;
 
       this.gastos.forEach((gasto) => {
@@ -90,6 +110,20 @@ export default {
       const categoria = this.categorias.find((c) => c.id === idCategoria);
       return categoria ? categoria.nombre : "";
     },
+
+    generateFingerprint() {
+      const fingerprintArray = [
+        navigator.userAgent,
+        navigator.language,
+        window.screen.height,
+        window.screen.width,
+        window.screen.colorDepth,
+        window.screen.availHeight,
+        window.screen.availWidth
+      ];
+
+      return this.fingerprint = fingerprintArray.join('|');
+    }
 
   },
   components: {

@@ -22,4 +22,12 @@ export const userService = {
     return apiClient.delete('/eliminarCuenta', { data: { pass, token, email } });
   },
 
+  logout(email) {
+    return apiClient.post('/logout',{ email: email });
+  },
+
+  devolverUsuario(huella) {
+    return apiClient.post('/devolverUsuario',{ huella: huella });
+  },
+
 }

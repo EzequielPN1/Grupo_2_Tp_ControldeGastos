@@ -138,6 +138,30 @@ class ControladorUsuario {
     }
   };
 
+  logout = async (req,res) => {
+     try{
+      const {email} = req.body
+      await this.servicio.logout(email)
+      res.status(200).json();
+     }catch (error) {
+      res.status(500).send(error.message);
+    }
+    
+  }
+
+  devolverUsuario = async(req,res)=> {
+    try{
+      const {huella} = req.body
+      const usuario = await this.servicio.devolverUsuario(huella)
+      res.status(200).json(usuario);
+     }catch (error) {
+      res.status(500).send(error.message);
+    }
+
+  }
+
+
+
 };
 
 

@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
-
+import { userService } from "../Services/userService.js"
 
 
 
@@ -23,7 +23,9 @@ export default {
     };
   },
   methods: {
-    salir() {
+    async salir() {
+      await userService.logout(this.usuario.email);
+
       this.usuario.nombre = '';
       this.usuario.apellido = '';
       this.usuario.email = '';
@@ -32,15 +34,38 @@ export default {
       this.usuario.saldo = 0;
       this.usuario.pass = '';
       this.usuario.token = '';
+
       this.$router.push('/');
+    },
+
+    generateFingerprint() {
+      const fingerprintArray = [
+        navigator.userAgent,
+        navigator.language,
+        window.screen.height,
+        window.screen.width,
+        window.screen.colorDepth,
+        window.screen.availHeight,
+        window.screen.availWidth
+      ];
+
+      return this.fingerprint = fingerprintArray.join('|');
     }
 
 
   },
   created() {
     if (this.usuario.nombre === '') {
-      this.salir(),
-        this.$router.push('/');
+      const huella = this.generateFingerprint();
+      userService.devolverUsuario(huella)
+        .then(response => {
+          if (response.data) {
+            this.usuario = response.data;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
 

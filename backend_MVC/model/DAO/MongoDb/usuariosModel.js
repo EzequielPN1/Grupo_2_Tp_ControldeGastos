@@ -156,7 +156,36 @@ class UsuarioMongoDb {
       }
 
 
+      logout = async (email) => {
+        try {
+          const huella = '';
+          const filter = { email: email };
+          const update = { $set: { huella: huella } };
+          
+          await this.usuariosCollection.updateOne(filter, update);
+          console.log("Logout del email: " + email);
+        } catch (error) {
+          console.log(error);
+          throw new Error("Error al cerrar sesión del usuario: " + error.message);
+        }
+      }
 
+
+      devolverUsuario = async (huella) => {
+        try {
+          const filter = { huella: huella };
+          const row = await this.usuariosCollection.findOne(filter);
+      
+          if (!row) {
+            throw new Error("Ningún usuario tiene la huella guardada");
+          }
+      
+          return row;
+        } catch (error) {
+          throw new Error(error.message);
+        }
+      }
+      
 
 }
 

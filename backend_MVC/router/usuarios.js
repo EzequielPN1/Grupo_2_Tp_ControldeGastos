@@ -17,8 +17,10 @@ class RouterUsuario {
         this.router.post("/enviarCorreoNuevaPass", this.controlador.enviarCorreoNuevaPass)
         this.router.post("/cambiarContrasenia", this.controlador.cambiarContrasenia)
         this.router.delete("/eliminarCuenta",this.controlador.eliminarCuenta)
+        this.router.post("/logout",this.controlador.logout)
+        this.router.post("/devolverUsuario",this.controlador.devolverUsuario)
 
-       
+
         return this.router
     }
 
