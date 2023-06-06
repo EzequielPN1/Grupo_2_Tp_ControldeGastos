@@ -75,11 +75,13 @@ export default {
 <template>
   <Barra></Barra>
   <div>
-    <label for="categoria">Filtrar por categoría:</label>
-    <select id="categoria" v-model="categoriaSeleccionada">
-      <option value="">Todos</option>
-      <option v-for="categoria in tipos" :value="categoria">{{ categoria }}</option>
-    </select>
+    <div class="filtro-categoria">
+      <label for="categoria">Filtrar por categoría:</label>
+      <select id="categoria" v-model="categoriaSeleccionada">
+        <option value="">Todos</option>
+        <option v-for="categoria in tipos" :value="categoria">{{ categoria }}</option>
+      </select>
+    </div>
 
     <table class="table">
       <thead>
@@ -162,5 +164,13 @@ export default {
 
 .table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+
+.filtro-categoria {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: 1em auto;
+  width: 15em;
 }
 </style>

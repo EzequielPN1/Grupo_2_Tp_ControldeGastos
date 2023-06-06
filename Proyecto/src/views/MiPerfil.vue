@@ -1,27 +1,24 @@
 <script>
-import { storeToRefs } from "pinia";
-import { useUserStore } from "../stores/user";
-import { RouterLink } from "vue-router";
-import Barra from "../components/NavBar.vue"
+  import { storeToRefs } from "pinia";
+  import { useUserStore } from "../stores/user";
+  import { RouterLink } from "vue-router";
+  import Barra from "../components/NavBar.vue"
 
-export default {
-  setup() {
+  export default {
+    setup() {
 
-    const store = useUserStore();
-    const { usuario } = storeToRefs(store);
+      const store = useUserStore();
+      const { usuario } = storeToRefs(store);
 
-    return {
-      usuario,
-    }
-  },
-  components: {
-    Barra,
-  },
+      return {
+        usuario,
+      }
+    },
+    components: {
+      Barra,
+    },
 
-
-
-}
-
+  }
 </script>
 
 <template>
@@ -55,16 +52,16 @@ export default {
 </template>
 
 <style>
-.profile-container {
-  margin-bottom: 20px;
-}
+  .profile-container {
+    margin-bottom: 20px;
+  }
 
-.profile-label {
-  font-weight: bold;
-  margin-right: 5px;
-}
+  .profile-label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
 
-.button-container {
-  margin-top: 10px;
-}
+  .button-container {
+    margin-top: 10px;
+  }
 </style>
