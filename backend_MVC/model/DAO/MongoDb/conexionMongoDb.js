@@ -13,7 +13,7 @@ class ConexionMongo {
         useUnifiedTopology: true,
         dbName: 'Usuario'
       });
-      console.log('Conexión exitosa a MongoDB');
+  
     } catch (error) {
       console.error('Error al conectarse a MongoDB:', error);
     }

@@ -145,15 +145,7 @@ class UsuarioMongoDb {
         }
     };
 
-    agregarHuella = async (email, huella) => {
-        try {
-          const filter = { email: email };
-          const update = { $set: { huella: huella } };
-          await this.usuariosCollection.updateOne(filter, update);
-        } catch (error) {
-          console.log(error);
-        }
-      }
+  
 
 
 
