@@ -54,15 +54,14 @@ export default {
     async loadData() {
       await this.obtenerCategorias();
     },
+
     async obtenerCategorias() {
       const store = useCategoriaStore();
       await store.obtenerCategorias(this.usuario.email);
       this.categorias = store.categorias;
     },
 
-
     async agregarCategoria() {
-
       this.categoria.email = this.usuario.email;
       try {
         await this.validarToken();

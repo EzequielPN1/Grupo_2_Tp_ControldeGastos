@@ -57,14 +57,11 @@ export default {
     },
 
     async obtenerCategorias() {
-
       const store = useCategoriaStore();
       await store.obtenerCategorias(this.usuario.email);
       this.categorias = store.categorias;
     },
     async actualizarGastos() {
-
-
       const gastosStore = await useGastosStore();
       await gastosStore.obtenerGastos(this.usuario.email);
       const gastos = gastosStore.gastos;
@@ -126,7 +123,7 @@ export default {
         }
       };
 
-      // Crear un nuevo gráfico con el canvas ajustado al tamaño de los datos
+      
       this.chartInstance = new Chart(ctx, config);
     },
 
