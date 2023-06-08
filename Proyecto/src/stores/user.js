@@ -6,11 +6,11 @@ export const useUserStore = defineStore("user", {
     return {
       usuario: {
         nombre: "",
-        apellido:"",
+        apellido: "",
         email: "",
-        celular:"",
-        fechaNac:"",
-        dni:0,
+        celular: "",
+        fechaNac: "",
+        dni: 0,
         token: "",
       },
 
@@ -24,6 +24,16 @@ export const useUserStore = defineStore("user", {
       } catch (error) {
         alert("El usuario no pudo actualizarse. Error: " + error);
       }
+    },
+
+    borrarStore() {
+      this.usuario.nombre = "";
+      this.usuario.apellido = "";
+      this.usuario.email = "";
+      this.usuario.dni = 0;
+      this.usuario.fechaNac = "";
+      this.usuario.celular = "";
+      this.usuario.token = "";
     }
   }
 });

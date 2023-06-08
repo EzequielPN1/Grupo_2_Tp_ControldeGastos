@@ -6,23 +6,12 @@ import { useCategoriaStore } from "../stores/categorias.js"
 import { userService } from "../Services/userService.js"
 
 export default {
+
   created() {
     if (this.usuario.nombre === '') {
-      const token = localStorage.getItem('token');
-      if (token) {
-        userService.devolverUsuarioValidado(token)
-          .then(response => {
-            if (response.data) {
-              this.usuario = response.data;
-              this.loadData()
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }
+      this.validarUsuario();
     } else {
-      this.loadData()
+      this.loadData();
     }
   },
   components: {
@@ -54,14 +43,15 @@ export default {
     async loadData() {
       await this.obtenerCategorias();
     },
-
     async obtenerCategorias() {
       const store = useCategoriaStore();
       await store.obtenerCategorias(this.usuario.email);
       this.categorias = store.categorias;
     },
 
+
     async agregarCategoria() {
+
       this.categoria.email = this.usuario.email;
       try {
         await this.validarToken();
@@ -85,8 +75,8 @@ export default {
         await categoriaService.editarCategoria(categoria);
         await this.obtenerCategorias();
         console.log("Categoría editada correctamente.");
-      } catch (error) {      
-        alert("Error al editar la categoría."+ error.response.data);
+      } catch (error) {
+        alert("Error al editar la categoría." + error.response.data);
         console.log(error);
       }
 
@@ -100,8 +90,8 @@ export default {
         await categoriaService.eliminarCategoria(categoria);
         await this.obtenerCategorias();
         alert("Categoría eliminada correctamente.");
-      } catch (error) {       
-        alert("Error al eliminar la categoría."+ error.response.data);
+      } catch (error) {
+        alert("Error al eliminar la categoría." + error.response.data);
         console.log(error);
       }
     },
@@ -119,7 +109,24 @@ export default {
         this.$router.push('/');
         throw error;
       }
-    }
+    },
+
+
+    validarUsuario() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        userService.devolverUsuarioValidado(token)
+          .then(response => {
+            if (response.data) {
+              this.usuario = response.data;
+              this.loadData();
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    },
 
 
   }

@@ -36,22 +36,21 @@ class UsuarioSqlite {
   };
 
 
-
-
   editarUsuario = async (email, celular, nombre, apellido) => {
     try {
       const updateSql = `UPDATE usuarios SET celular = ?,nombre  = ?, apellido = ? WHERE email = ?`;
-      await ConexionSqlite.runQuery(updateSql, [nombre, apellido, email, celular]);
+      await ConexionSqlite.runQuery(updateSql, [celular,nombre,apellido,email]);
 
       const selectSql = `SELECT * FROM usuarios WHERE email = ?`;
       const row = await ConexionSqlite.getRow(selectSql, [email]);
-
       return row;
+
     } catch (error) {
       console.log(error);
       throw new Error("Error al editar al usuario: " + error.message);
     }
   };
+
 
   confirmarRegistro = async (email) => {
     try {

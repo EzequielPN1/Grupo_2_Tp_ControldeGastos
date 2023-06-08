@@ -26,24 +26,12 @@ import { userService } from "../Services/userService.js"
 
 export default {
   created() {
-    if (this.usuario.nombre === '') {
-      const token = localStorage.getItem('token');
-      if (token) {
-        userService.devolverUsuarioValidado(token)
-          .then(response => {
-            if (response.data) {
-              this.usuario = response.data;
-              this.loadData();
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }
-    } else {
-      this.loadData();
-    }
-  },
+  if (this.usuario.nombre === '') {
+    this.validarUsuario();
+  } else {
+    this.loadData();
+  }
+},
   data() {
     return {
       gastos: [],
@@ -143,6 +131,23 @@ export default {
       const currentDate = new Date();
       this.anioSeleccionado = currentDate.getFullYear();
     },
+
+
+    validarUsuario() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      userService.devolverUsuarioValidado(token)
+        .then(response => {
+          if (response.data) {
+            this.usuario = response.data;
+            this.loadData();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
   }
 };
 </script>

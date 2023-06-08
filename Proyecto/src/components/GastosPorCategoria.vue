@@ -7,26 +7,13 @@ import { useCategoriaStore } from "../stores/categorias.js";
 import { userService } from "../Services/userService.js"
 
 export default {
-
   created() {
-  if (this.usuario.nombre === '') {
-    const token = localStorage.getItem('token');
-    if (token) {
-      userService.devolverUsuarioValidado(token)
-        .then(response => {
-          if (response.data) {
-            this.usuario = response.data;
-            this.loadData()
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    if (this.usuario.nombre === '') {
+      this.validarUsuario();
+    } else {
+      this.loadData();
     }
-  }else{
-    this.loadData()
-  }
-},
+  },
 
   setup() {
     const store = useUserStore();
@@ -57,11 +44,14 @@ export default {
     },
 
     async obtenerCategorias() {
+
       const store = useCategoriaStore();
       await store.obtenerCategorias(this.usuario.email);
       this.categorias = store.categorias;
     },
     async actualizarGastos() {
+
+
       const gastosStore = await useGastosStore();
       await gastosStore.obtenerGastos(this.usuario.email);
       const gastos = gastosStore.gastos;
@@ -123,7 +113,7 @@ export default {
         }
       };
 
-      
+      // Crear un nuevo gráfico con el canvas ajustado al tamaño de los datos
       this.chartInstance = new Chart(ctx, config);
     },
 
@@ -158,6 +148,22 @@ export default {
 
       this.mesSeleccionado = currentMonth;
       this.anioSeleccionado = currentYear;
+    },
+
+    validarUsuario() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        userService.devolverUsuarioValidado(token)
+          .then(response => {
+            if (response.data) {
+              this.usuario = response.data;
+              this.loadData();
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
     },
 
 

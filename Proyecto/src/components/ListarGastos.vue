@@ -10,21 +10,9 @@ import { userService } from "../Services/userService.js"
 export default {
   created() {
   if (this.usuario.nombre === '') {
-    const token = localStorage.getItem('token');
-    if (token) {
-      userService.devolverUsuarioValidado(token)
-        .then(response => {
-          if (response.data) {
-            this.usuario = response.data;
-            this.loadData()
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  }else{
-    this.loadData()
+    this.validarUsuario();
+  } else {
+    this.loadData();
   }
 },
 
@@ -126,7 +114,23 @@ export default {
         this.$router.push('/');
         throw error;
       }
+    },
+
+    validarUsuario() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      userService.devolverUsuarioValidado(token)
+        .then(response => {
+          if (response.data) {
+            this.usuario = response.data;
+            this.loadData();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
+  },
 
 
 

@@ -46,22 +46,19 @@ class ControladorUsuario {
     }
   };
 
+  
   editarUsuario = async (req, res) => {
     try {
       const { email, celular, nombre, apellido } = req.body
-      await this.autentificador.autentificarToken(req.body.token);
-
       const usuario = await this.servicio.editarUsuario(email, celular, nombre, apellido);
-      const token = this.autentificador.generateTokenTiempo(email, '1h');
-      usuario.token = token;
       console.log("Usuario " + email + " editado correctamente")
       res.status(200).json(usuario);
-
     } catch (error) {
       console.error(error.message);
       res.status(500).send(error.message);
     }
   }
+
 
   confirmar = async (req, res) => {
     try {

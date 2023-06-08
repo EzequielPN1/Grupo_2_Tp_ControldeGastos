@@ -5,15 +5,22 @@ import { RouterLink } from "vue-router";
 import { userService } from "../Services/userService.js"
 
 
-
 export default {
+  created() {
+    const token = localStorage.getItem('token');
+    if (this.usuario.nombre === '') {
+      this.validarUsuario(token);
+    } else {
+      this.validarToken(token);
+    }
+  },
   setup() {
 
     const store = useUserStore();
     const { usuario } = storeToRefs(store);
 
     return {
-      usuario,
+      usuario, store
     }
   },
   data() {
@@ -24,54 +31,50 @@ export default {
   },
   methods: {
     async salir() {
-    
-      this.usuario.nombre = '';
-      this.usuario.apellido = '';
-      this.usuario.email = '';
-      this.usuario.dni = '';
-      this.usuario.fechaNacimiento = '';
-      this.usuario.saldo = 0;
-      this.usuario.pass = '';
-      this.usuario.token = '';
-
+      this.store.borrarStore()
+      localStorage.removeItem('token');
       this.$router.push('/');
     },
 
 
-
-
-  },
-  created() {
-    const token = localStorage.getItem('token');
-  if (this.usuario.nombre === '') {
+    validarUsuario(token) {
       userService.devolverUsuarioValidado(token)
         .then(response => {
           if (response.data) {
             this.usuario = response.data;
-            localStorage.setItem('token', this.usuario .token);
+            this.actualizarToken(this.usuario.token);
           }
         })
         .catch(error => {
-          console.log(error);
-          alert(error.response.data);
-          this.$router.push('/');
+          this.manejarError(error);
         });
-    
-  }else{
-        userService.validarToken(token)
+    },
+
+    validarToken(token) {
+      userService.validarToken(token)
         .then(response => {
           if (response.data) {
             this.usuario.token = response.data;
-            localStorage.setItem('token', this.usuario .token);
+            this.actualizarToken(this.usuario.token);
           }
         })
         .catch(error => {
-          console.log(error);
-          alert(error.response.data);
-          this.$router.push('/');
+          this.manejarError(error);
         });
-  }
-},
+    },
+
+    actualizarToken(token) {
+      localStorage.setItem('token', token);
+    },
+
+    manejarError(error) {
+      console.log(error);
+      alert(error.response.data);
+      this.$router.push('/');
+    }
+
+
+  },
 
 
 };

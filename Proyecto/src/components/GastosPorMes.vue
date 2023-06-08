@@ -10,21 +10,9 @@ export default {
 
   created() {
   if (this.usuario.nombre === '') {
-    const token = localStorage.getItem('token');
-    if (token) {
-      userService.devolverUsuarioValidado(token)
-        .then(response => {
-          if (response.data) {
-            this.usuario = response.data;
-            this.loadData()
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  }else{
-    this.loadData()
+    this.validarUsuario();
+  } else {
+    this.loadData();
   }
 },
 
@@ -148,6 +136,22 @@ export default {
       const currentDate = new Date();
       this.anioSeleccionado = currentDate.getFullYear();
     },
+
+    validarUsuario() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      userService.devolverUsuarioValidado(token)
+        .then(response => {
+          if (response.data) {
+            this.usuario = response.data;
+            this.loadData();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
 
   }
 };
