@@ -1,32 +1,12 @@
-<template>
-  <div>
-    <div>
-      <label for="anio">Año:</label>
-      <select id="anio" v-model="anioSeleccionado" @change="actualizarGastos">
-        <option v-for="(anio, index) in anios" :key="index" :value="anio">{{ anio }}</option>
-      </select>
-    </div>
-    <div>
-      <label for="mes">Mes:</label>
-      <select id="mes" v-model="mesSeleccionado" @change="actualizarGastos">
-        <option v-for="(mes, index) in meses" :key="index" :value="index + 1">{{ mes }}</option>
-      </select>
-    </div>
-    <div>
-      <canvas ref="myChart"></canvas>
-    </div>
-  </div>
-</template>
-
 <script>
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
 import Chart from 'chart.js/auto';
-import { userService } from "../Services/userService.js"
+import { tokenService } from "../Services/tokenService.js"
 
 export default {
   created() {
-    this.validarUsuario();
+    tokenService.validarUsuarioRecarga(this, this.loadData)
   },
   data() {
     return {
@@ -134,18 +114,28 @@ export default {
       this.anioSeleccionado = currentDate.getFullYear();
     },
 
-    async validarUsuario() {
-      const token = localStorage.getItem('token');
-        try {
-          const response = await userService.devolverUsuarioValidado(token);
-          if (response.data) {
-            this.usuario = response.data;
-            this.loadData();
-          }
-        } catch (error) {
-          
-      }
-    },
+
   }
 };
 </script>
+
+
+<template>
+  <div>
+    <div>
+      <label for="anio">Año:</label>
+      <select id="anio" v-model="anioSeleccionado" @change="actualizarGastos">
+        <option v-for="(anio, index) in anios" :key="index" :value="anio">{{ anio }}</option>
+      </select>
+    </div>
+    <div>
+      <label for="mes">Mes:</label>
+      <select id="mes" v-model="mesSeleccionado" @change="actualizarGastos">
+        <option v-for="(mes, index) in meses" :key="index" :value="index + 1">{{ mes }}</option>
+      </select>
+    </div>
+    <div>
+      <canvas ref="myChart"></canvas>
+    </div>
+  </div>
+</template>

@@ -3,12 +3,11 @@ import Barra from "../components/NavBar.vue";
 import { categoriaService } from "../Services/categoriaServicie.js"
 import { useUserStore } from "../stores/user";
 import { useCategoriaStore } from "../stores/categorias.js"
-import { userService } from "../Services/userService.js"
-
+import { tokenService } from "../Services/tokenService.js"
 export default {
 
   created() {
-    this.validarUsuario();
+    tokenService.validarUsuarioRecarga(this, this.loadData)
   },
   components: {
     Barra,
@@ -50,7 +49,7 @@ export default {
 
       this.categoria.email = this.usuario.email;
       try {
-        await this.validarToken();
+        await tokenService.validarToken(this.usuario,this.$router)
         const response = await categoriaService.agregarCategoria(this.categoria);
         alert(response.data);
       } catch (error) {
@@ -67,7 +66,7 @@ export default {
     },
     async guardarCategoria(categoria) {
       try {
-        await this.validarToken();
+        await tokenService.validarToken(this.usuario,this.$router)
         await categoriaService.editarCategoria(categoria);
         await this.obtenerCategorias();
         console.log("Categoría editada correctamente.");
@@ -82,7 +81,7 @@ export default {
     async eliminarCategoria(categoria) {
 
       try {
-        await this.validarToken();
+        await tokenService.validarToken(this.usuario,this.$router)
         await categoriaService.eliminarCategoria(categoria);
         await this.obtenerCategorias();
         alert("Categoría eliminada correctamente.");
@@ -91,35 +90,6 @@ export default {
         console.log(error);
       }
     },
-
-    async validarToken() {
-      const token = localStorage.getItem('token');
-      try {
-        const response = await userService.validarToken(token);
-        if (response.data) {
-          this.usuario.token = response.data;
-          localStorage.setItem('token', this.usuario.token);
-        }
-      } catch (error) {
-        this.$router.push('/');
-        throw error;
-      }
-    },
-
-
-    async validarUsuario() {
-      const token = localStorage.getItem('token');
-        try {
-          const response = await userService.devolverUsuarioValidado(token);
-          if (response.data) {
-            this.usuario = response.data;
-            this.loadData();
-          }
-        } catch (error) {
-
-      }
-    },
-
 
   }
 }

@@ -1,19 +1,24 @@
 <script>
-import { gastosService } from "../Services/gastosService.js"
+
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
-import { useCategoriaStore } from "../stores/categorias.js"
+import { useGastosStore } from "../stores/gastos.js";
+import { useCategoriaStore } from "../stores/categorias.js";
+import { gastosService } from "../Services/gastosService.js";
 import Barra from "../components/NavBar.vue";
-import { userService } from "../Services/userService.js"
+import { tokenService } from "../Services/tokenService.js"
+
 export default {
   async mounted() {
-    await this.obtenerCategorias();
+    tokenService.validarUsuarioRecarga(this, this.loadData)
   },
   setup() {
     const store = useUserStore();
     const { usuario } = storeToRefs(store);
+    const gastosStore = useGastosStore();
+    const storeCategoria = useCategoriaStore();
     return {
-      usuario,
+      usuario, storeCategoria, gastosStore
     }
   },
   data() {
@@ -26,49 +31,67 @@ export default {
         idCategoria: "",
         descripcion: "",
       },
-      categorias: []
+      gastos: [],
+      categorias: [],
 
     }
   },
   methods: {
-    async obtenerCategorias() {
-      const store = useCategoriaStore();
-      await store.obtenerCategorias(this.usuario.email);
-      this.categorias = store.categorias
+    async loadData() {
+      await this.actualizarGastos();
+      await this.obtenerCategorias();
     },
+    async obtenerCategorias() {
+      await this.storeCategoria.obtenerCategorias(this.usuario.email);
+      this.categorias = this.storeCategoria.categorias;
+    },
+
+    async actualizarGastos() {
+      await this.gastosStore.obtenerGastos(this.usuario.email);
+      this.gastos = this.gastosStore.gastos;
+    },
+
+
 
 
 
     async agregarGasto() {
-      this.gasto.email = this.usuario.email
-      try {
-        await this.validarToken();
-        const response = await gastosService.agregarGasto(this.gasto)
-        console.log(this.gasto);
-        alert(response.data);
-        this.$refs.formulario.reset();
-      } catch (error) {
-        alert("Error al agregar el gasto."+ error.response.data);
-      }
     
-    },
-    async validarToken() {
-      const token = localStorage.getItem('token');
-
       try {
-        const response = await userService.validarToken(token);
-        if (response.data) {
-          this.usuario.token = response.data;
-          localStorage.setItem('token', this.usuario.token);
+        await tokenService.validarToken(this.usuario, this.$router)
+
+        const categoria = this.categorias.find(categoria => categoria.id === this.gasto.idCategoria);
+        const presupuesto = categoria.presupuesto
+        const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id);
+
+        let sumaGastos = 0;
+        gastosMismaCategoria.forEach(gasto => {
+          sumaGastos += gasto.monto;
+        });
+        const sumaTotal = sumaGastos + this.gasto.monto;
+
+        console.log("la suma con el gasto nuevo incluido: " + sumaTotal);
+        console.log("el presupuesto de la categoria base: " +presupuesto);
+        
+        this.gasto.email = this.usuario.email
+        if (presupuesto > sumaTotal) {
+          const response = await gastosService.agregarGasto(this.gasto)
+          console.log(this.gasto);
+          alert(response.data);
+          this.$refs.formulario.reset();
+        } else {
+          alert("El gasto  supera el presupuesto");
         }
+        
       } catch (error) {
-        this.$router.push('/');
-        throw error;
+        alert("Error al agregar el gasto." + error.response.data);
       }
+
     },
+
   },
 
- 
+
   components: {
     Barra,
   },

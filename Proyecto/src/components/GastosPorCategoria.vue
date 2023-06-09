@@ -4,11 +4,11 @@ import Chart from 'chart.js/auto';
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
 import { useCategoriaStore } from "../stores/categorias.js";
-import { userService } from "../Services/userService.js"
+import { tokenService } from "../Services/tokenService.js"
 
 export default {
   created() {
-    this.validarUsuario();
+    tokenService.validarUsuarioRecarga(this, this.loadData)
   },
 
   setup() {
@@ -146,18 +146,7 @@ export default {
       this.anioSeleccionado = currentYear;
     },
 
-    async validarUsuario() {
-      const token = localStorage.getItem('token');
-      try {
-        const response = await userService.devolverUsuarioValidado(token);
-        if (response.data) {
-          this.usuario = response.data;
-          this.loadData();
-        }
-      } catch (error) {
-        
-      }
-    },
+
 
 
   }

@@ -4,29 +4,29 @@ import { useGastosStore } from "../stores/gastos.js";
 import { useCategoriaStore } from "../stores/categorias.js";
 import { gastosService } from "../Services/gastosService.js";
 import Barra from "../components/NavBar.vue";
-import { userService } from "../Services/userService.js"
-
+import { tokenService } from "../Services/tokenService.js"
 
 export default {
+  
   created() {
-    this.validarUsuario();
+    tokenService.validarUsuarioRecarga(this, this.loadData)
   },
 
   setup() {
-
     const { usuario } = useUserStore();
     const storeCategoria = useCategoriaStore();
     const gastosStore = useGastosStore();
-
     return {
       usuario, storeCategoria, gastosStore
     };
   },
+
   data() {
     return {
       gastos: [],
       categorias: [],
       categoriaSeleccionada: "",
+    
     };
   },
   computed: {
@@ -67,22 +67,54 @@ export default {
       gasto.editando = true;
     },
 
+
     async guardarGasto(gasto) {
-      try {
-        await this.validarToken();
+    
+    try {
+      await tokenService.validarToken(this.usuario, this.$router)
+
+      const categoria = this.categorias.find(categoria => categoria.id === gasto.idCategoria);
+      const presupuesto = categoria.presupuesto
+
+
+      const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id);
+
+      let sumaGastos = 0;
+      gastosMismaCategoria.forEach(gasto => {
+        sumaGastos += gasto.monto;
+      });
+     
+
+      console.log("la suma con el gasto nuevo incluido: " + sumaGastos);
+      console.log("el presupuesto de la categoria base: " +presupuesto);
+      
+     
+      if (presupuesto > sumaGastos) {
         await gastosService.editarGasto(gasto);
-        await this.actualizarGastos();
+       
         console.log("Gasto editado correctamente.");
-      } catch (error) {
-        console.log(error);
-        alert("Error al editar el gasto." + error.response.data);
+      } else {
+        alert("El gasto  supera el presupuesto");
       }
-      gasto.editando = false;
-    },
+      await this.actualizarGastos();
+    } catch (error) {
+      alert("Error al editar el gasto." + error.response.data);
+    }
+    gasto.editando = false;
+
+  },
+
+
+
+
+
+
+
+
 
     async eliminarGasto(gasto) {
       try {
-        await this.validarToken();
+        await tokenService.validarToken(this.usuario, this.$router)
         await gastosService.eliminarGasto(gasto);
         await this.actualizarGastos();
         alert("Gasto eliminado correctamente.");
@@ -96,40 +128,6 @@ export default {
       const categoria = this.categorias.find((c) => c.id === idCategoria);
       return categoria ? categoria.nombre : "";
     },
-
-    async validarToken() {
-      const token = localStorage.getItem('token');
-
-      try {
-        const response = await userService.validarToken(token);
-        if (response.data) {
-          this.usuario.token = response.data;
-          localStorage.setItem('token', this.usuario.token);
-        }
-      } catch (error) {
-        this.$router.push('/');
-        throw error;
-      }
-    },
-
-    async validarUsuario() {
-      const token = localStorage.getItem('token');
-        try {
-          const response = await userService.devolverUsuarioValidado(token);
-          if (response.data) {
-            this.usuario = response.data;
-            this.loadData();
-          }
-        } catch (error) {
-          
-      }
-    },
-
-
-
-
-
-
 
   },
   components: {
@@ -175,7 +173,7 @@ export default {
               {{ gasto.monto }}
             </template>
             <template v-else>
-              <input v-model="gasto.monto" type="text">
+              <input v-model="gasto.monto" type="number">
             </template>
           </td>
           <td>

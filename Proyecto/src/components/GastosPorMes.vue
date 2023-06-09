@@ -4,12 +4,12 @@
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
 import Chart from 'chart.js/auto';
-import { userService } from "../Services/userService.js"
+import { tokenService } from "../Services/tokenService.js"
 
 export default {
 
   created() {
-    this.validarUsuario();
+    tokenService.validarUsuarioRecarga(this, this.loadData)
   },
 
   data() {
@@ -134,18 +134,6 @@ export default {
     },
 
 
-    async validarUsuario() {
-      const token = localStorage.getItem('token');
-      try {
-        const response = await userService.devolverUsuarioValidado(token);
-        if (response.data) {
-          this.usuario = response.data;
-          this.loadData();
-        }
-      } catch (error) {
-        
-      }
-    },
 
   }
 };

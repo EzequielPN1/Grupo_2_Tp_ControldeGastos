@@ -4,6 +4,8 @@ import Correo from './correo.js';
 import WhatsAppSender from './WhatsAppSender.js';
 import config from "../config.js";
 
+const timepoToken = '10m'
+
 class ControladorUsuario {
 
   constructor() {
@@ -13,6 +15,7 @@ class ControladorUsuario {
     if(config.WHATSAPP){
       this.WhatsAppSender = new WhatsAppSender()
     }
+   
   }
 
   inicio = async (req, res) => {
@@ -37,7 +40,7 @@ class ControladorUsuario {
     try {
       const { email, pass } = req.body
       const usuario = await this.servicio.login(email, pass);
-      const token = this.autentificador.generateTokenTiempo(email, '10s');
+      const token = this.autentificador.generateTokenTiempo(email, timepoToken);
       usuario.token = token;
       res.status(200).json(usuario);
     } catch (error) {
@@ -145,7 +148,7 @@ class ControladorUsuario {
       console.log("email valido : " + emailDecodificado);
 
       const usuario = await this.servicio.devolverUsuarioValidado(emailDecodificado)
-      const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, '10s');
+      const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, timepoToken);
       usuario.token = tokenNuevo;
       console.log(usuario);
       res.status(200).json(usuario);
@@ -164,7 +167,7 @@ class ControladorUsuario {
       const decodedToken = this.autentificador.decodificarToken(token)
       const emailDecodificado = decodedToken.userId;
       console.log("email valido : " + emailDecodificado);
-      const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, '10s');
+      const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, timepoToken);
       res.status(200).json(tokenNuevo);
      }catch (error) {
       res.status(500).send(error.message);

@@ -2,24 +2,20 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
-import { userService } from "../Services/userService.js"
-
+import { tokenService } from "../Services/tokenService.js"
 
 export default {
   created() {
-    this.validarUsuario();
+    tokenService.validarUsuario(this, this.$router)
   },
   setup() {
-
     const store = useUserStore();
     const { usuario } = storeToRefs(store);
-
     return {
       usuario, store
     }
   },
   data() {
-
     return {
       verUsuarios: false,
     };
@@ -31,28 +27,7 @@ export default {
       this.$router.push('/');
     },
 
-
-    async validarUsuario() {
-      const token = localStorage.getItem('token');
-        try {
-          const response = await userService.devolverUsuarioValidado(token);
-          if (response.data) {
-            this.usuario = response.data;
-            localStorage.setItem('token', this.usuario.token);
-          }
-        } catch (error) {
-          this.$router.push('/');
-          alert(error.response.data);
-      }
-    },
-
-
-
-
-
   },
-
-
 };
 
 </script>
@@ -92,7 +67,6 @@ export default {
 </template>
 
 <style>
-/* Estilos para el navbar */
 ul.navbar {
   list-style-type: none;
   margin: 0;
