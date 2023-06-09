@@ -9,7 +9,7 @@
     <div>
       <label for="mes">Mes:</label>
       <select id="mes" v-model="mesSeleccionado" @change="actualizarGastos">
-        <option v-for="(mes, index) in meses" :key="index" :value="index+1">{{ mes }}</option>
+        <option v-for="(mes, index) in meses" :key="index" :value="index + 1">{{ mes }}</option>
       </select>
     </div>
     <div>
@@ -26,11 +26,7 @@ import { userService } from "../Services/userService.js"
 
 export default {
   created() {
-    if (this.usuario.nombre === '') {
-      this.validarUsuario();
-    } else {
-      this.loadData();
-    }
+    this.validarUsuario();
   },
   data() {
     return {
@@ -70,87 +66,84 @@ export default {
       this.mostrarGrafico(gastosFiltrados);
     },
     mostrarGrafico(gastos) {
-  const ctx = this.$refs.myChart.getContext('2d');
-  if (this.chartInstance) {
-    this.chartInstance.destroy();
-  }
-
-  const { labels, data } = this.procesarDatosGastos(gastos);
-
-  const config = {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Gastos por fecha',
-        data: data,
-        borderWidth: 1,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      },
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      },
-      layout: {
-        padding: {
-          top: 10,
-          bottom: 10,
-          left: 10,
-          right: 10
-        }
+      const ctx = this.$refs.myChart.getContext('2d');
+      if (this.chartInstance) {
+        this.chartInstance.destroy();
       }
-    }
-  };
 
-  this.chartInstance = new Chart(ctx, config);
-},
+      const { labels, data } = this.procesarDatosGastos(gastos);
+
+      const config = {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Gastos por fecha',
+            data: data,
+            borderWidth: 1,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          layout: {
+            padding: {
+              top: 10,
+              bottom: 10,
+              left: 10,
+              right: 10
+            }
+          }
+        }
+      };
+
+      this.chartInstance = new Chart(ctx, config);
+    },
 
     procesarDatosGastos(gastos) {
-  const labels = [];
-  const data = [];
+      const labels = [];
+      const data = [];
 
-  gastos.forEach(gasto => {
-    const fecha = new Date(gasto.fecha);
-    const mes = fecha.getMonth() + 1;
-    const anio = fecha.getFullYear();
-    const fechaLabel = `${mes}/${anio}`;
-    const monto = gasto.monto;
+      gastos.forEach(gasto => {
+        const fecha = new Date(gasto.fecha);
+        const mes = fecha.getMonth() + 1;
+        const anio = fecha.getFullYear();
+        const fechaLabel = `${mes}/${anio}`;
+        const monto = gasto.monto;
 
-    labels.push(fechaLabel);
-    data.push(monto);
-  });
+        labels.push(fechaLabel);
+        data.push(monto);
+      });
 
-  return { labels, data };
-},
+      return { labels, data };
+    },
     setDefaultYear() {
       const currentDate = new Date();
       this.anioSeleccionado = currentDate.getFullYear();
     },
 
-    validarUsuario() {
+    async validarUsuario() {
       const token = localStorage.getItem('token');
-      if (token) {
-        userService.devolverUsuarioValidado(token)
-          .then(response => {
-            if (response.data) {
-              this.usuario = response.data;
-              this.loadData();
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        try {
+          const response = await userService.devolverUsuarioValidado(token);
+          if (response.data) {
+            this.usuario = response.data;
+            this.loadData();
+          }
+        } catch (error) {
+          
       }
     },
   }

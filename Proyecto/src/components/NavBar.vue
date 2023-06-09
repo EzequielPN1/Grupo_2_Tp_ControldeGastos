@@ -7,12 +7,7 @@ import { userService } from "../Services/userService.js"
 
 export default {
   created() {
-    const token = localStorage.getItem('token');
-    if (this.usuario.nombre === '') {
-      this.validarUsuario(token);
-    } else {
-      this.validarToken(token);
-    }
+    this.validarUsuario();
   },
   setup() {
 
@@ -37,41 +32,22 @@ export default {
     },
 
 
-    validarUsuario(token) {
-      userService.devolverUsuarioValidado(token)
-        .then(response => {
+    async validarUsuario() {
+      const token = localStorage.getItem('token');
+        try {
+          const response = await userService.devolverUsuarioValidado(token);
           if (response.data) {
             this.usuario = response.data;
-            this.actualizarToken(this.usuario.token);
+            localStorage.setItem('token', this.usuario.token);
           }
-        })
-        .catch(error => {
-          this.manejarError(error);
-        });
+        } catch (error) {
+          this.$router.push('/');
+          alert(error.response.data);
+      }
     },
 
-    validarToken(token) {
-      userService.validarToken(token)
-        .then(response => {
-          if (response.data) {
-            this.usuario.token = response.data;
-            this.actualizarToken(this.usuario.token);
-          }
-        })
-        .catch(error => {
-          this.manejarError(error);
-        });
-    },
 
-    actualizarToken(token) {
-      localStorage.setItem('token', token);
-    },
 
-    manejarError(error) {
-      console.log(error);
-      alert(error.response.data);
-      this.$router.push('/');
-    }
 
 
   },

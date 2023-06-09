@@ -9,12 +9,8 @@ import { userService } from "../Services/userService.js"
 export default {
 
   created() {
-  if (this.usuario.nombre === '') {
     this.validarUsuario();
-  } else {
-    this.loadData();
-  }
-},
+  },
 
   data() {
     return {
@@ -46,8 +42,8 @@ export default {
       this.actualizarGastos();
     },
     async actualizarGastos() {
-      
-      
+
+
       const gastosStore = await useGastosStore();
       await gastosStore.obtenerGastos(this.usuario.email);
       this.gastos = gastosStore.gastos;
@@ -56,10 +52,10 @@ export default {
         const fecha = new Date(gasto.fecha);
         return fecha.getFullYear() === this.anioSeleccionado;
       });
-     
-     
+
+
       this.mostrarGrafico(gastosFiltrados);
-  
+
     },
 
     mostrarGrafico(gastos) {
@@ -106,14 +102,14 @@ export default {
         }
       };
 
-      
+
       this.chartInstance = new Chart(ctx, config);
     },
 
     procesarDatosGastos(gastos) {
       const acumulados = {};
 
-    
+
       this.meses.forEach(mes => {
         acumulados[mes] = 0;
       });
@@ -137,21 +133,19 @@ export default {
       this.anioSeleccionado = currentDate.getFullYear();
     },
 
-    validarUsuario() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      userService.devolverUsuarioValidado(token)
-        .then(response => {
-          if (response.data) {
-            this.usuario = response.data;
-            this.loadData();
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  },
+
+    async validarUsuario() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await userService.devolverUsuarioValidado(token);
+        if (response.data) {
+          this.usuario = response.data;
+          this.loadData();
+        }
+      } catch (error) {
+        
+      }
+    },
 
   }
 };

@@ -8,11 +8,7 @@ import { userService } from "../Services/userService.js"
 export default {
 
   created() {
-    if (this.usuario.nombre === '') {
-      this.validarUsuario();
-    } else {
-      this.loadData();
-    }
+    this.validarUsuario();
   },
   components: {
     Barra,
@@ -98,7 +94,6 @@ export default {
 
     async validarToken() {
       const token = localStorage.getItem('token');
-
       try {
         const response = await userService.validarToken(token);
         if (response.data) {
@@ -112,19 +107,16 @@ export default {
     },
 
 
-    validarUsuario() {
+    async validarUsuario() {
       const token = localStorage.getItem('token');
-      if (token) {
-        userService.devolverUsuarioValidado(token)
-          .then(response => {
-            if (response.data) {
-              this.usuario = response.data;
-              this.loadData();
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        try {
+          const response = await userService.devolverUsuarioValidado(token);
+          if (response.data) {
+            this.usuario = response.data;
+            this.loadData();
+          }
+        } catch (error) {
+
       }
     },
 

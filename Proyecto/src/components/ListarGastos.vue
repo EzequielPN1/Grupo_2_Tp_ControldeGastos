@@ -9,21 +9,17 @@ import { userService } from "../Services/userService.js"
 
 export default {
   created() {
-  if (this.usuario.nombre === '') {
     this.validarUsuario();
-  } else {
-    this.loadData();
-  }
-},
+  },
 
   setup() {
 
     const { usuario } = useUserStore();
     const storeCategoria = useCategoriaStore();
-    const gastosStore =  useGastosStore();
+    const gastosStore = useGastosStore();
 
     return {
-      usuario,storeCategoria,gastosStore
+      usuario, storeCategoria, gastosStore
     };
   },
   data() {
@@ -47,9 +43,9 @@ export default {
   methods: {
 
     async loadData() {
-    await this.actualizarGastos();
-    await this.obtenerCategorias();
-  },
+      await this.actualizarGastos();
+      await this.obtenerCategorias();
+    },
     async obtenerCategorias() {
       await this.storeCategoria.obtenerCategorias(this.usuario.email);
       this.categorias = this.storeCategoria.categorias;
@@ -79,7 +75,7 @@ export default {
         console.log("Gasto editado correctamente.");
       } catch (error) {
         console.log(error);
-        alert("Error al editar el gasto."+ error.response.data);
+        alert("Error al editar el gasto." + error.response.data);
       }
       gasto.editando = false;
     },
@@ -92,7 +88,7 @@ export default {
         alert("Gasto eliminado correctamente.");
       } catch (error) {
         console.log(error);
-        alert("Error al eliminar el gasto."+ error.response.data);
+        alert("Error al eliminar el gasto." + error.response.data);
       }
     },
 
@@ -116,21 +112,22 @@ export default {
       }
     },
 
-    validarUsuario() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      userService.devolverUsuarioValidado(token)
-        .then(response => {
+    async validarUsuario() {
+      const token = localStorage.getItem('token');
+        try {
+          const response = await userService.devolverUsuarioValidado(token);
           if (response.data) {
             this.usuario = response.data;
             this.loadData();
           }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  },
+        } catch (error) {
+          
+      }
+    },
+
+
+
+
 
 
 
@@ -139,7 +136,7 @@ export default {
     Barra,
   },
 
-  
+
 };
 </script>
 

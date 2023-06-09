@@ -15,20 +15,19 @@ export const userService = {
   enviarCorreoNuevaPass(email) {
     return apiClient.post('/enviarCorreoNuevaPass', { email: email });
   },
-  cambiarContrasenia(email,token, newPassword) {
-    return apiClient.post('/cambiarContrasenia', { email: email,token:token, newPassword: newPassword });
+  cambiarContrasenia(email, token, newPassword) {
+    return apiClient.post('/cambiarContrasenia', { email: email, token: token, newPassword: newPassword });
   },
-  eliminarCuenta(pass,token,email) {
+  eliminarCuenta(pass, token, email) {
     return apiClient.delete('/eliminarCuenta', { data: { pass, token, email } });
   },
 
-
   devolverUsuarioValidado(token) {
-    return apiClient.post('/devolverUsuarioValidado',{token:token});
+    return apiClient.post('/devolverUsuarioValidado', { token: token });
   },
 
   validarToken(token) {
-    return apiClient.post('/validarToken',{token:token});
+    return apiClient.post('/validarToken', { token: token });
   },
 
 }
