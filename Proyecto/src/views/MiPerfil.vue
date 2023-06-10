@@ -25,16 +25,23 @@
   <Barra></Barra>
   <div>
     <div class="profile-container">
-      <h4>Nombre</h4>
-      <span>{{ usuario.nombre }}</span>
-      <h4>Apellido</h4>
-      <span>{{ usuario.apellido }}</span>
-      <h4>DNI</h4>
-      <span>{{ usuario.dni }}</span>
-      <h4>Email</h4>
-      <span>{{ usuario.email }}</span>
-      <h4>Fecha de nacimiento</h4>
-      <span>{{ usuario.fechaNac }}</span>
+      <ul>
+        <li>
+          <span class="profile-label">Nombre:</span> {{ usuario.nombre }}
+        </li>
+        <li>
+          <span class="profile-label">Apellido:</span> {{ usuario.apellido }}
+        </li>
+        <li>
+          <span class="profile-label">DNI:</span> {{ usuario.dni }}
+        </li>
+        <li>
+          <span class="profile-label">Email:</span> {{ usuario.email }}
+        </li>
+        <li>
+          <span class="profile-label">Fecha de Nacimiento:</span> {{ usuario.fechaNac }}
+        </li>
+      </ul>
     </div>
     <div class="button-container">
       <RouterLink to="/EditarPerfil">
@@ -46,12 +53,7 @@
 
 <style>
   .profile-container {
-    text-align: center;
-    padding: 1em;
-  }
-
-  .profile-container h4 {
-    margin-top: .5em;
+    margin-bottom: 20px;
   }
 
   .profile-label {
@@ -60,7 +62,6 @@
   }
 
   .button-container {
-    display: flex;
-    justify-content: center;
+    margin-top: 10px;
   }
 </style>

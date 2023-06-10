@@ -1,20 +1,18 @@
-<script>
+<script >
   import { RouterLink } from 'vue-router'
 </script>
 
 
 <template>
-  <div class="imagen-fondo" style="text-align: center; margin-top: 2em;">
+  <div class="imagen-fondo">
     <img src="../images/logo.png" alt="" class="logo">
   </div>
-  <div style="text-align: center;">
-    <router-link to="/Login">
-      <button class="btn btn-primary">Iniciar Sesión</button>
-    </router-link>
-    <router-link to="/Registro">
-      <button class="btn btn-secondary">Registrarse</button>
-    </router-link>
-  </div>
+  <router-link to="/Login">
+    <button class="btn btn-primary">Loguearse</button>
+  </router-link>
+  <router-link to="/Registro">
+    <button class="btn btn-secondary">Registrarse</button>
+  </router-link>
 </template>
 
 <style>
