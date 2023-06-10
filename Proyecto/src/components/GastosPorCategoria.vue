@@ -25,7 +25,7 @@ export default {
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
       ],
-      anios: [2020, 2021, 2022, 2023], // Actualiza los años según tus necesidades
+      anios: [2020, 2021, 2022, 2023],
       mesSeleccionado: '',
       anioSeleccionado: '',
       chartInstance: null
@@ -90,9 +90,14 @@ export default {
           maintainAspectRatio: false,
           scales: {
             y: {
-              beginAtZero: true
+              beginAtZero: false, 
+              ticks: {
+                      display: false
+                  }
+
             }
           },
+          
           plugins: {
             legend: {
               position: 'bottom'
@@ -109,7 +114,7 @@ export default {
         }
       };
 
-      // Crear un nuevo gráfico con el canvas ajustado al tamaño de los datos
+
       this.chartInstance = new Chart(ctx, config);
     },
 

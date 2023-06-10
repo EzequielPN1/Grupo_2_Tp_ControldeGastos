@@ -76,8 +76,9 @@ export default {
       const categoria = this.categorias.find(categoria => categoria.id === gasto.idCategoria);
       const presupuesto = categoria.presupuesto
 
+      const mes = gasto.fecha.slice(5, 7);
 
-      const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id);
+      const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id && gasto.fecha.slice(5, 7) === mes);
 
       let sumaGastos = 0;
       gastosMismaCategoria.forEach(gasto => {
@@ -88,15 +89,15 @@ export default {
       console.log("la suma con el gasto nuevo incluido: " + sumaGastos);
       console.log("el presupuesto de la categoria base: " +presupuesto);
       
-     
-      if (presupuesto > sumaGastos) {
-        await gastosService.editarGasto(gasto);
-       
-        console.log("Gasto editado correctamente.");
-      } else {
-        alert("El gasto  supera el presupuesto");
-      }
+
+      await gastosService.editarGasto(gasto);
+      console.log("Gasto editado correctamente.");
       await this.actualizarGastos();
+
+      if (sumaGastos>presupuesto) {
+        alert("El gasto  supera el presupuesto");
+      } 
+
     } catch (error) {
       alert("Error al editar el gasto." + error.response.data);
     }

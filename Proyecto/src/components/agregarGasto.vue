@@ -56,36 +56,45 @@ export default {
 
 
     async agregarGasto() {
-    
+
       try {
         await tokenService.validarToken(this.usuario, this.$router)
 
         const categoria = this.categorias.find(categoria => categoria.id === this.gasto.idCategoria);
         const presupuesto = categoria.presupuesto
-        const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id);
 
+        const fechaIngreso = this.gasto.fecha
+
+        var mes = fechaIngreso.slice(5, 7);
+          
+        const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id && gasto.fecha.slice(5, 7) === mes);
+        
+  
         let sumaGastos = 0;
-        gastosMismaCategoria.forEach(gasto => {
-          sumaGastos += gasto.monto;
-        });
+
+        gastosMismaCategoria.forEach(gasto => { sumaGastos += gasto.monto;});
+
         const sumaTotal = sumaGastos + this.gasto.monto;
 
         console.log("la suma con el gasto nuevo incluido: " + sumaTotal);
-        console.log("el presupuesto de la categoria base: " +presupuesto);
-        
+        console.log("el presupuesto de la categoria base: " + presupuesto);
+
         this.gasto.email = this.usuario.email
-        if (presupuesto > sumaTotal) {
-          const response = await gastosService.agregarGasto(this.gasto)
-          console.log(this.gasto);
-          alert(response.data);
-          this.$refs.formulario.reset();
-        } else {
+
+        const response = await gastosService.agregarGasto(this.gasto)
+        console.log(this.gasto);
+        alert(response.data);
+        this.$refs.formulario.reset();
+
+        if (sumaTotal>presupuesto) {
           alert("El gasto  supera el presupuesto");
-        }
-        
+        } 
+
       } catch (error) {
         alert("Error al agregar el gasto." + error.response.data);
       }
+
+     
 
     },
 
