@@ -83,11 +83,13 @@ export default {
 
         const response = await gastosService.agregarGasto(this.gasto)
         console.log(this.gasto);
-        alert(response.data);
+       
         this.$refs.formulario.reset();
 
         if (sumaTotal>presupuesto) {
-          alert("El gasto  supera el presupuesto");
+          alert("Ingreso correcto,se supero el presupuesto mensual de la categoria");
+        }else{
+          alert(response.data);
         } 
 
       } catch (error) {

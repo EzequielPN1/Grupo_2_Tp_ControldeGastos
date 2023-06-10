@@ -119,11 +119,11 @@ export default {
         console.log("la suma con el gasto nuevo incluido: " + sumaGastos);
 
         await gastosService.editarGasto(gasto);
-        console.log("Gasto editado correctamente.");
+        console.log
         await this.actualizarGastos();
 
         if (sumaGastos > presupuesto) {
-          alert("El gasto  supera el presupuesto");
+          alert("Gasto editado correctamente, se supero el presupuesto mensual de la categoria");
         }
 
       } catch (error) {
