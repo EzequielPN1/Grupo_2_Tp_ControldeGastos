@@ -23,7 +23,6 @@ export const tokenService = {
       if (response.data) {
         context.usuario = response.data;
         localStorage.setItem('token', context.usuario.token);
-        console.log(context.usuario);
       }
     } catch (error) {
       router.push('/');

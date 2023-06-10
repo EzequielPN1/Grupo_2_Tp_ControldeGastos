@@ -1,4 +1,3 @@
-
 <script>
 import Chart from 'chart.js/auto';
 import { useUserStore } from "../stores/user";
@@ -44,10 +43,9 @@ export default {
       const store = useCategoriaStore();
       await store.obtenerCategorias(this.usuario.email);
       this.categorias = store.categorias;
+
     },
     async actualizarGastos() {
-
-
       const gastosStore = await useGastosStore();
       await gastosStore.obtenerGastos(this.usuario.email);
       const gastos = gastosStore.gastos;
@@ -64,7 +62,6 @@ export default {
     mostrarGrafico(gastos) {
       const ctx = this.$refs.myChart.getContext('2d');
 
-   
       if (this.chartInstance) {
         this.chartInstance.destroy();
       }
@@ -94,7 +91,6 @@ export default {
               ticks: {
                       display: false
                   }
-
             }
           },
           
@@ -113,7 +109,6 @@ export default {
           }
         }
       };
-
 
       this.chartInstance = new Chart(ctx, config);
     },
@@ -150,14 +145,9 @@ export default {
       this.mesSeleccionado = currentMonth;
       this.anioSeleccionado = currentYear;
     },
-
-
-
-
   }
 };
 </script>
-
 
 <template>
   <div>
