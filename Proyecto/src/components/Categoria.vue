@@ -4,8 +4,8 @@ import { categoriaService } from "../Services/categoriaServicie.js"
 import { useUserStore } from "../stores/user";
 import { useCategoriaStore } from "../stores/categorias.js"
 import { tokenService } from "../Services/tokenService.js"
-export default {
 
+export default {
   created() {
     tokenService.validarUsuarioRecarga(this, this.loadData)
   },
@@ -19,9 +19,9 @@ export default {
 
     return {
       usuario,
-
     }
   },
+
   data() {
     return {
       categoria: {
@@ -30,23 +30,30 @@ export default {
         nombre: '',
         presupuesto: 0
       },
-      categorias: []
-
+      categorias: [],
+      orden: 'asc' 
     };
   },
+
   methods: {
     async loadData() {
       await this.obtenerCategorias();
     },
+
     async obtenerCategorias() {
       const store = useCategoriaStore();
       await store.obtenerCategorias(this.usuario.email);
-      this.categorias = store.categorias;
+
+      this.categorias = store.categorias.sort((a, b) => {
+        if (this.orden === 'asc') {
+          return a.presupuesto - b.presupuesto;
+        } else {
+          return b.presupuesto - a.presupuesto;
+        }
+      });
     },
 
-
     async agregarCategoria() {
-
       this.categoria.email = this.usuario.email;
       try {
         await tokenService.validarToken(this.usuario,this.$router)
@@ -59,11 +66,14 @@ export default {
 
       this.categoria.nombre = '';
       this.categoria.presupuesto = 0;
-      this.obtenerCategorias()
+      this.obtenerCategorias();
     },
+
     editarCategoria(categoria) {
+      this.categorias.forEach((c) => (c.editando = false));
       categoria.editando = true;
     },
+
     async guardarCategoria(categoria) {
       try {
         await tokenService.validarToken(this.usuario,this.$router)
@@ -79,7 +89,6 @@ export default {
     },
 
     async eliminarCategoria(categoria) {
-
       try {
         await tokenService.validarToken(this.usuario,this.$router)
         await categoriaService.eliminarCategoria(categoria);
@@ -90,7 +99,6 @@ export default {
         console.log(error);
       }
     },
-
   }
 }
 </script>
@@ -111,6 +119,14 @@ export default {
     </form>
 
     <div>
+      <div>
+        <label for="orden">Ordenar por:</label>
+        <select v-model="orden" @change="obtenerCategorias()" id="orden">
+          <option value="asc">Menor a Mayor</option>
+          <option value="desc">Mayor a Menor</option>
+        </select>
+      </div>
+
       <table class="table">
         <thead>
           <tr>
@@ -173,7 +189,7 @@ export default {
   background-color: #f9f9f9;
 }
 
-/* Estilos para el formulario */
+
 .formulario-agregar {
   max-width: 400px;
   margin: 0 auto;

@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       gastos: [],
-      anios: [2020, 2021, 2022, 2023], // Actualiza los años según tus necesidades
+      anios: [2020, 2021, 2022, 2023], 
       anioSeleccionado: '',
       meses: [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',

@@ -64,7 +64,7 @@ export default {
     mostrarGrafico(gastos) {
       const ctx = this.$refs.myChart.getContext('2d');
 
-      // Eliminar el gráfico existente si lo hay
+   
       if (this.chartInstance) {
         this.chartInstance.destroy();
       }
