@@ -120,7 +120,7 @@ export default {
 
     <div>
       <div>
-        <label for="orden">Ordenar por:</label>
+        <label for="orden">Ordenar por presupuesto:</label>
         <select v-model="orden" @change="obtenerCategorias()" id="orden">
           <option value="asc">Menor a Mayor</option>
           <option value="desc">Mayor a Menor</option>

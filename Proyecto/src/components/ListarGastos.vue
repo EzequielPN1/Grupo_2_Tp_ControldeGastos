@@ -115,10 +115,8 @@ export default {
           sumaGastos += gasto.monto;
         });
 
-
-        console.log("la suma con el gasto nuevo incluido: " + sumaGastos);
         console.log("el presupuesto de la categoria base: " + presupuesto);
-
+        console.log("la suma con el gasto nuevo incluido: " + sumaGastos);
 
         await gastosService.editarGasto(gasto);
         console.log("Gasto editado correctamente.");
@@ -134,13 +132,6 @@ export default {
       gasto.editando = false;
 
     },
-
-
-
-
-
-
-
 
 
     async eliminarGasto(gasto) {
@@ -240,7 +231,7 @@ export default {
       <option value="31">31</option>
     </select>
 
-    <label for="orden">Ordenar:</label>
+    <label for="orden">Ordenar por fecha:</label>
     <select id="orden" v-model="orden">
       <option value="asc">Menor a mayor</option>
       <option value="desc">Mayor a menor</option>

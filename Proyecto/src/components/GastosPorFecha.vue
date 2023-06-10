@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       gastos: [],
-      anios: [2020, 2021, 2022, 2023], 
+      anios: [2020, 2021, 2022, 2023],
       anioSeleccionado: '',
       meses: [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -40,7 +40,7 @@ export default {
       this.gastos = gastosStore.gastos;
       const gastosFiltrados = this.gastos.filter(gasto => {
         const fecha = new Date(gasto.fecha);
-        const mes = fecha.getMonth() + 1;
+        const mes = Number(gasto.fecha.split('-')[1]);
         return fecha.getFullYear() === this.anioSeleccionado && mes === this.mesSeleccionado;
       });
       this.mostrarGrafico(gastosFiltrados);
@@ -91,24 +91,42 @@ export default {
 
       this.chartInstance = new Chart(ctx, config);
     },
-
     procesarDatosGastos(gastos) {
       const labels = [];
       const data = [];
 
-      gastos.forEach(gasto => {
-        const fecha = new Date(gasto.fecha);
-        const mes = fecha.getMonth() + 1;
-        const anio = fecha.getFullYear();
-        const fechaLabel = `${mes}/${anio}`;
+
+      gastos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+
+      const gastosAgrupados = gastos.reduce((acc, gasto) => {
+
+        let fecha = new Date(gasto.fecha);
+        fecha = new Date(fecha.getTime() + fecha.getTimezoneOffset() * 60 * 1000);
+
+        const dia = fecha.getDate();
         const monto = gasto.monto;
 
-        labels.push(fechaLabel);
+
+        if (acc[String(dia)]) {
+          acc[String(dia)] += monto;
+        } else {
+          acc[String(dia)] = monto;
+        }
+
+        return acc;
+      }, {});
+
+
+      for (const [dia, monto] of Object.entries(gastosAgrupados)) {
+        labels.push(dia);
         data.push(monto);
-      });
+      }
 
       return { labels, data };
     },
+
+
     setDefaultYear() {
       const currentDate = new Date();
       this.anioSeleccionado = currentDate.getFullYear();
