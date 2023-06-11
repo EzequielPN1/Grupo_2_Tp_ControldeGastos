@@ -30,46 +30,67 @@ export default {
       filtroMes: "",
       filtroDia: "",
       orden: "desc",
+      anios: Array.from({ length: 5 }, (_, i) => (2019 + i).toString()),
+      meses: [
+        { value: "01", label: "Enero" },
+        { value: "02", label: "Febrero" },
+        { value: "03", label: "Marzo" },
+        { value: "04", label: "Abril" },
+        { value: "05", label: "Mayo" },
+        { value: "06", label: "Junio" },
+        { value: "07", label: "Julio" },
+        { value: "08", label: "Agosto" },
+        { value: "09", label: "Septiembre" },
+        { value: "10", label: "Octubre" },
+        { value: "11", label: "Noviembre" },
+        { value: "12", label: "Diciembre" }
+      ],
+      diasMes: Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, "0"))
+
     };
   },
   computed: {
-    gastosFiltrados() {
-      let gastos = this.gastos;
+  gastosFiltrados() {
+    let gastos = this.gastos;
 
-      if (this.categoriaSeleccionada !== "") {
-        gastos = gastos.filter(
-          (gasto) => gasto.idCategoria === this.categoriaSeleccionada
-        );
-      }
+    if (this.categoriaSeleccionada !== "") {
+      gastos = gastos.filter(
+        (gasto) => gasto.idCategoria === this.categoriaSeleccionada
+      );
+    }
 
-      if (this.filtroAnio !== "") {
-        gastos = gastos.filter(
-          (gasto) => gasto.fecha.slice(0, 4) === this.filtroAnio
-        );
-      }
+    if (this.filtroAnio !== "") {
+      gastos = gastos.filter(
+        (gasto) => gasto.fecha.slice(0, 4) === this.filtroAnio
+      );
+    }
 
-      if (this.filtroMes !== "") {
-        gastos = gastos.filter(
-          (gasto) => gasto.fecha.slice(5, 7) === this.filtroMes
-        );
-      }
+    if (this.filtroMes !== "") {
+      gastos = gastos.filter(
+        (gasto) => gasto.fecha.slice(5, 7) === this.filtroMes
+      );
+    }
 
-      if (this.filtroDia !== "") {
-        gastos = gastos.filter(
-          (gasto) => gasto.fecha.slice(8, 10) === this.filtroDia
-        );
-      }
+    if (this.filtroDia !== "") {
+      gastos = gastos.filter(
+        (gasto) => gasto.fecha.slice(8, 10) === this.filtroDia
+      );
+    }
 
-      if (this.orden === "asc") {
-        gastos = gastos.sort((a, b) => a.fechaNumerica - b.fechaNumerica);
-      }
-      if (this.orden === "desc") {
-        gastos = gastos.sort((a, b) => b.fechaNumerica - a.fechaNumerica);
-      }
+    if (this.orden === "asc") {
+      gastos = gastos.sort((a, b) => a.fechaNumerica - b.fechaNumerica);
+    } else if (this.orden === "desc") {
+      gastos = gastos.sort((a, b) => b.fechaNumerica - a.fechaNumerica);
+    } else if (this.orden === "monto_asc") {
+      gastos = gastos.sort((a, b) => a.monto - b.monto);
+    } else if (this.orden === "monto_desc") {
+      gastos = gastos.sort((a, b) => b.monto - a.monto);
+    }
 
-      return gastos;
-    },
+    return gastos;
   },
+},
+
   methods: {
 
     async loadData() {
@@ -163,78 +184,36 @@ export default {
 <template>
   <Barra></Barra>
   <div>
-    <label for="categoria">Filtrar por categoría:</label>
+    <label for="categoria">Categoría</label>
     <select id="categoria" v-model="categoriaSeleccionada">
       <option value="">Todos</option>
       <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }}</option>
     </select>
 
-    <label for="anio">Filtrar por año:</label>
+    <label for="anio">Año</label>
     <select id="anio" v-model="filtroAnio">
       <option value="">Todos</option>
-      <option value="2020">2020</option>
-      <option value="2021">2021</option>
-      <option value="2022">2022</option>
-      <option value="2023">2023</option>
+      <option v-for="anio in anios" :value="anio">{{ anio }}</option>
     </select>
 
-    <label for="mes">Filtrar por mes:</label>
+    <label for="mes">Mes</label>
     <select id="mes" v-model="filtroMes">
       <option value="">Todos</option>
-      <option value="01">Enero</option>
-      <option value="02">Febrero</option>
-      <option value="03">Marzo</option>
-      <option value="04">Abril</option>
-      <option value="05">Mayo</option>
-      <option value="06">Junio</option>
-      <option value="07">Julio</option>
-      <option value="08">Agosto</option>
-      <option value="09">Septiembre</option>
-      <option value="10">Octubre</option>
-      <option value="11">Noviembre</option>
-      <option value="12">Diciembre</option>
+      <option v-for="mes in meses" :value="mes.value">{{ mes.label }}</option>
     </select>
 
-    <label for="dia">Filtrar por día:</label>
+    <label for="dia">día</label>
     <select id="dia" v-model="filtroDia">
       <option value="">Todos</option>
-      <option value="01">1</option>
-      <option value="02">2</option>
-      <option value="03">3</option>
-      <option value="04">4</option>
-      <option value="05">5</option>
-      <option value="06">6</option>
-      <option value="07">7</option>
-      <option value="08">8</option>
-      <option value="09">9</option>
-      <option value="10">10</option>
-      <option value="11">11</option>
-      <option value="12">12</option>
-      <option value="13">13</option>
-      <option value="14">14</option>
-      <option value="15">15</option>
-      <option value="16">16</option>
-      <option value="17">17</option>
-      <option value="18">18</option>
-      <option value="19">19</option>
-      <option value="20">20</option>
-      <option value="21">21</option>
-      <option value="22">22</option>
-      <option value="23">23</option>
-      <option value="24">24</option>
-      <option value="25">25</option>
-      <option value="26">26</option>
-      <option value="27">27</option>
-      <option value="28">28</option>
-      <option value="29">29</option>
-      <option value="30">30</option>
-      <option value="31">31</option>
+      <option v-for="dia in diasMes" :value="dia">{{ dia }}</option>
     </select>
 
-    <label for="orden">Ordenar por fecha:</label>
+    <label for="orden">Ordenar por:</label>
     <select id="orden" v-model="orden">
-      <option value="asc">Menor a mayor</option>
-      <option value="desc">Mayor a menor</option>
+      <option value="asc">Fecha ascendente</option>
+      <option value="desc">Fecha descendente</option>
+      <option value="monto_asc">Monto ascendente</option>
+      <option value="monto_desc">Monto descendente</option>
     </select>
 
     <table class="table">
