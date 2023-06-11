@@ -1,52 +1,41 @@
 <script>
-import { storeToRefs } from "pinia";
-import { useUserStore } from "../stores/user";
-import { RouterLink } from "vue-router";
-import Barra from "../components/NavBar.vue"
+  import { storeToRefs } from "pinia";
+  import { useUserStore } from "../stores/user";
+  import { RouterLink } from "vue-router";
+  import Barra from "../components/NavBar.vue"
 
-export default {
-  setup() {
+  export default {
+    setup() {
 
-    const store = useUserStore();
-    const { usuario } = storeToRefs(store);
+      const store = useUserStore();
+      const { usuario } = storeToRefs(store);
 
-    return {
-      usuario,
+      return {
+        usuario,
+      }
+    },
+    components: {
+      Barra,
     }
-  },
-  components: {
-    Barra,
-  },
-
-
-
-}
-
+  }
 </script>
 
 <template>
   <Barra></Barra>
   <div>
     <div class="profile-container">
-      <ul>
-        <li>
-          <span class="profile-label">Nombre:</span> {{ usuario.nombre }}
-        </li>
-        <li>
-          <span class="profile-label">Apellido:</span> {{ usuario.apellido }}
-        </li>
-        <li>
-          <span class="profile-label">DNI:</span> {{ usuario.dni }}
-        </li>
-        <li>
-          <span class="profile-label">Email:</span> {{ usuario.email }}
-        </li>
-        <li>
-          <span class="profile-label">Fecha de Nacimiento:</span> {{ usuario.fechaNac }}
-        </li>
-      </ul>
+      <h4>Nombre</h4>
+      <span>{{ usuario.nombre }}</span>
+      <h4>Apellido</h4>
+      <span>{{ usuario.apellido }}</span>
+      <h4>DNI</h4>
+      <span>{{ usuario.dni }}</span>
+      <h4>Email</h4>
+      <span>{{ usuario.email }}</span>
+      <h4>Fecha de nacimiento</h4>
+      <span>{{ usuario.fechaNac }}</span>
     </div>
-    <div class="button-container">
+    <div class="button-container-perfil">
       <RouterLink to="/EditarPerfil">
         <button class="btn btn-primary">Editar Perfil</button>
       </RouterLink>
@@ -55,16 +44,22 @@ export default {
 </template>
 
 <style>
-.profile-container {
-  margin-bottom: 20px;
-}
+  .profile-container {
+    text-align: center;
+    padding: 1em;
+  }
 
-.profile-label {
-  font-weight: bold;
-  margin-right: 5px;
-}
+  .profile-container h4 {
+    margin-top: .5em;
+  }
 
-.button-container {
-  margin-top: 10px;
-}
+  .profile-label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .button-container-perfil {
+    display: flex;
+    justify-content: center;
+  }
 </style>

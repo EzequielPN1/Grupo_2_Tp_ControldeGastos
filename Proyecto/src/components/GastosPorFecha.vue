@@ -139,7 +139,7 @@ export default {
 
 
 <template>
-  <div>
+  <div class="filtros-grafico-fechas">
     <div>
       <label for="anio">Año:</label>
       <select id="anio" v-model="anioSeleccionado" @change="actualizarGastos">
@@ -152,8 +152,29 @@ export default {
         <option v-for="(mes, index) in meses" :key="index" :value="index + 1">{{ mes }}</option>
       </select>
     </div>
-    <div>
-      <canvas ref="myChart"></canvas>
-    </div>
+  </div>
+  <div>
+    <canvas ref="myChart"></canvas>
   </div>
 </template>
+
+<style>
+
+  .filtros-grafico-fechas {
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: .4em auto;
+      gap: 1em;
+  }
+
+  .filtros-grafico-fechas select {
+    margin-left: .2em;
+    height: 2em;
+  }
+
+  .filtros-grafico-fechas label {
+    margin-bottom: 0;
+  }
+
+</style>
