@@ -1,5 +1,6 @@
 import ModelFactory from "../model/DAO/categoriasFactory.js"
 import config from "../config.js";
+import { validar } from "../validaciones/categoriasValidaciones.js"
 
 class ServicioCategoria {
 
@@ -8,7 +9,15 @@ class ServicioCategoria {
     }
 
     agregar = async categoria => {
-        return await this.model.agregar(categoria)
+        const res = validar(categoria)
+       
+        if(res.result) {
+            const categoriaGuardada = await this.model.agregar(categoria)
+            return categoriaGuardada
+        }
+        else {
+            throw res.error
+        }
     }
     
     editar = async (categoria) => {

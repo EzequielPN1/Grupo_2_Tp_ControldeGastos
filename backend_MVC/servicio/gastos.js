@@ -1,5 +1,6 @@
 import ModelFactory from "../model/DAO/gastosFactory.js"
 import config from "../config.js";
+import { validar } from '../validaciones/gastosValidaciones.js'
 
 class ServicioGasto {
 
@@ -8,7 +9,15 @@ class ServicioGasto {
     }
 
     agregar = async gasto => {
-        return await this.model.agregar(gasto)
+        const res = validar(gasto)
+       
+        if(res.result) {
+            const gastoGuardado = await this.model.agregar(gasto)
+            return gastoGuardado
+        }
+        else {
+            throw res.error
+        }
     }
     
     editar = async (gasto) => {
