@@ -24,7 +24,7 @@
           'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
         ],
-        anios: [2020, 2021, 2022, 2023],
+        anios: [2021, 2022, 2023],
         mesSeleccionado: '',
         anioSeleccionado: '',
         chartInstance: null

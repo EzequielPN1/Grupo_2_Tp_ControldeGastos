@@ -30,7 +30,7 @@
         filtroMes: "",
         filtroDia: "",
         orden: "desc",
-        anios: Array.from({ length: 5 }, (_, i) => (2019 + i).toString()),
+        anios:  ["2021", "2022", "2023"],
         meses: [
           { value: "01", label: "Enero" },
           { value: "02", label: "Febrero" },
