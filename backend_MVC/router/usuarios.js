@@ -9,6 +9,7 @@ class RouterUsuario {
     }
 
     start() {
+        
         this.router.get("/",this.controlador.inicio)
         this.router.post("/register", this.controlador.registro)
         this.router.post("/login", this.controlador.login)
@@ -17,7 +18,6 @@ class RouterUsuario {
         this.router.post("/enviarCorreoNuevaPass", this.controlador.enviarCorreoNuevaPass)
         this.router.post("/cambiarContrasenia", this.controlador.cambiarContrasenia)
         this.router.delete("/eliminarCuenta",this.controlador.eliminarCuenta)
-        
         this.router.post("/devolverUsuarioValidado",this.controlador.devolverUsuarioValidado)
         this.router.post("/validarToken",this.controlador.validarToken)
 
