@@ -1,184 +1,184 @@
 <script>
-import { useUserStore } from "../stores/user";
-import { useGastosStore } from "../stores/gastos.js";
-import Chart from 'chart.js/auto';
-import { tokenService } from "../Services/tokenService.js"
-import { useCategoriaStore } from "../stores/categorias.js";
+  import { useUserStore } from "../stores/user";
+  import { useGastosStore } from "../stores/gastos.js";
+  import Chart from 'chart.js/auto';
+  import { tokenService } from "../Services/tokenService.js"
+  import { useCategoriaStore } from "../stores/categorias.js";
 
-export default {
+  export default {
 
-  created() {
-    tokenService.validarUsuarioRecarga(this, this.loadData)
-  },
-
-  data() {
-    return {
-      gastos: [],
-      anios: [2020, 2021, 2022, 2023], 
-      anioSeleccionado: '',
-      categoriasSelect: [],
-      categoriaSeleccionada: '',
-      meses: [
-        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-      ],
-      chartInstance: null,
-      timerId: null
-    };
-  },
-
-  setup() {
-    const store = useUserStore();
-    const { usuario } = store;
-
-    return {
-      usuario,
-    };
-  },
-  methods: {
-
-    loadData() {
-      this.setDefaultYear();
-      this.actualizarGastos();
-      this.obtenerCategorias();
-    },
-    async obtenerCategorias() {
-      const store = useCategoriaStore();
-      await store.obtenerCategorias(this.usuario.email);
-      this.categorias = store.categorias;
-      this.categorias.map(cat => this.categoriasSelect.push(cat.nombre))
-      this.categoriaSeleccionada = this.categorias[0].nombre
-      return store.categorias
-    },
-    async obtenerNombreCategoria(id) {
-      const store = useCategoriaStore();
-      await store.obtenerCategorias(this.usuario.email);
-      this.categorias = store.categorias;
-      return store.categorias.find(e => e.id == id).nombre
-    },
-    async actualizarGastos() {
-
-      const gastosStore = useGastosStore();
-      await gastosStore.obtenerGastos(this.usuario.email);
-      const gastos = gastosStore.gastos;
-      const store = useCategoriaStore();
-      await store.obtenerCategorias(this.usuario.email);
-      const categorias = store.categorias;
-
-      const gastosFiltrados = gastos.filter(gasto => {
-        const fecha = new Date(gasto.fecha);
-        const nombreCat = categorias.find(e => e.id == gasto.idCategoria).nombre
-        return fecha.getFullYear() === this.anioSeleccionado && nombreCat == this.categoriaSeleccionada;
-      });
-
-      this.mostrarGrafico(gastosFiltrados);
-
+    created() {
+      tokenService.validarUsuarioRecarga(this, this.loadData)
     },
 
-    mostrarGrafico(gastos) {
-      const ctx = this.$refs.myChart.getContext('2d');
+    data() {
+      return {
+        gastos: [],
+        anios: [2020, 2021, 2022, 2023], 
+        anioSeleccionado: '',
+        categoriasSelect: [],
+        categoriaSeleccionada: '',
+        meses: [
+          'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ],
+        chartInstance: null,
+        timerId: null
+      };
+    },
 
-      if (this.chartInstance) {
-        this.chartInstance.destroy();
-      }
+    setup() {
+      const store = useUserStore();
+      const { usuario } = store;
 
-      const { labels, data } = this.procesarDatosGastos(gastos);
-      const config = {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Monto acumulado',
-            data: data,
-            borderWidth: 1,
-            backgroundColor: context => {
-              let valor = context.dataset.data[context.dataIndex];
-              let presupuesto;
+      return {
+        usuario,
+      };
+    },
+    methods: {
 
-              if(valor != undefined) {
-                presupuesto = this.categorias.find(pre => pre.nombre === this.categoriaSeleccionada).presupuesto
+      loadData() {
+        this.setDefaultYear();
+        this.actualizarGastos();
+        this.obtenerCategorias();
+      },
+      async obtenerCategorias() {
+        const store = useCategoriaStore();
+        await store.obtenerCategorias(this.usuario.email);
+        this.categorias = store.categorias;
+        this.categorias.map(cat => this.categoriasSelect.push(cat.nombre))
+        this.categoriaSeleccionada = this.categorias[0].nombre
+        return store.categorias
+      },
+      async obtenerNombreCategoria(id) {
+        const store = useCategoriaStore();
+        await store.obtenerCategorias(this.usuario.email);
+        this.categorias = store.categorias;
+        return store.categorias.find(e => e.id == id).nombre
+      },
+      async actualizarGastos() {
+
+        const gastosStore = useGastosStore();
+        await gastosStore.obtenerGastos(this.usuario.email);
+        const gastos = gastosStore.gastos;
+        const store = useCategoriaStore();
+        await store.obtenerCategorias(this.usuario.email);
+        const categorias = store.categorias;
+
+        const gastosFiltrados = gastos.filter(gasto => {
+          const fecha = new Date(gasto.fecha);
+          const nombreCat = categorias.find(e => e.id == gasto.idCategoria).nombre
+          return fecha.getFullYear() === this.anioSeleccionado && nombreCat == this.categoriaSeleccionada;
+        });
+
+        this.mostrarGrafico(gastosFiltrados);
+
+      },
+
+      mostrarGrafico(gastos) {
+        const ctx = this.$refs.myChart.getContext('2d');
+
+        if (this.chartInstance) {
+          this.chartInstance.destroy();
+        }
+
+        const { labels, data } = this.procesarDatosGastos(gastos);
+        const config = {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Monto acumulado',
+              data: data,
+              borderWidth: 1,
+              backgroundColor: context => {
+                let valor = context.dataset.data[context.dataIndex];
+                let presupuesto;
+
+                if(valor != undefined) {
+                  presupuesto = this.categorias.find(pre => pre.nombre === this.categoriaSeleccionada).presupuesto
+                }
+            
+                if (valor > presupuesto) {
+                  return 'rgba(255, 99, 132, 0.2)'; 
+                } else {
+                  return 'rgba(54, 162, 235, 0.2)'; 
+                }
+              },
+              borderColor: context => {
+                let valor = context.dataset.data[context.dataIndex];
+                let presupuesto;
+
+                if(valor != undefined) {
+                  presupuesto = this.categorias.find(pre => pre.nombre === this.categoriaSeleccionada).presupuesto
+                }
+                
+                if (valor > presupuesto) {
+                  return 'rgb(255, 99, 132)'; 
+                } else {
+                  return 'rgb(54, 162, 235)'; 
+                }
               }
-          
-              if (valor > presupuesto) {
-                return 'rgba(255, 99, 132, 0.2)'; 
-              } else {
-                return 'rgba(54, 162, 235, 0.2)'; 
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true
               }
             },
-            borderColor: context => {
-              let valor = context.dataset.data[context.dataIndex];
-              let presupuesto;
-
-              if(valor != undefined) {
-                presupuesto = this.categorias.find(pre => pre.nombre === this.categoriaSeleccionada).presupuesto
+            plugins: {
+              legend: {
+                position: 'bottom'
               }
-              
-              if (valor > presupuesto) {
-                return 'rgb(255, 99, 132)'; 
-              } else {
-                return 'rgb(54, 162, 235)'; 
+            },
+            layout: {
+              padding: {
+                top: 10,
+                bottom: 10,
+                left: 10,
+                right: 10
               }
-            }
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          },
-          plugins: {
-            legend: {
-              position: 'bottom'
-            }
-          },
-          layout: {
-            padding: {
-              top: 10,
-              bottom: 10,
-              left: 10,
-              right: 10
             }
           }
-        }
-      };
+        };
 
-      this.chartInstance = new Chart(ctx, config);
-    },
+        this.chartInstance = new Chart(ctx, config);
+      },
 
-    procesarDatosGastos(gastos) {
-      const acumulados = {};
+      procesarDatosGastos(gastos) {
+        const acumulados = {};
 
-      this.meses.forEach(mes => {
-        acumulados[mes] = 0;
-      });
+        this.meses.forEach(mes => {
+          acumulados[mes] = 0;
+        });
 
-      gastos.forEach(gasto => {
-        const fecha = new Date(gasto.fecha);
-        const mes = this.meses[fecha.getMonth()];
+        gastos.forEach(gasto => {
+          const fecha = new Date(gasto.fecha);
+          const mes = this.meses[fecha.getMonth()];
 
-        const monto = gasto.monto;
-        acumulados[mes] += monto;
-      });
+          const monto = gasto.monto;
+          acumulados[mes] += monto;
+        });
 
-      const labels = Object.keys(acumulados);
-      const data = Object.values(acumulados);
+        const labels = Object.keys(acumulados);
+        const data = Object.values(acumulados);
 
-      return { labels, data };
-    },
+        return { labels, data };
+      },
 
-    setDefaultYear() {
-      const currentDate = new Date();
-      this.anioSeleccionado = currentDate.getFullYear();
+      setDefaultYear() {
+        const currentDate = new Date();
+        this.anioSeleccionado = currentDate.getFullYear();
+      }
     }
-  }
-};
+  };
 </script>
 
 <template>
-  <div>
+  <div class="filtros-grafico-meses">
     <div>
       <label for="categoria">Categoria:</label>
       <select id="categoria" v-model="categoriaSeleccionada" @change="actualizarGastos">
@@ -191,8 +191,29 @@ export default {
         <option v-for="(anio, index) in anios" :key="index" :value="anio">{{ anio }}</option>
       </select>
     </div>
-    <div>
-      <canvas ref="myChart"></canvas>
-    </div>
+  </div>
+  <div>
+    <canvas ref="myChart"></canvas>
   </div>
 </template>
+
+<style>
+
+  .filtros-grafico-meses {
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: .4em auto;
+      gap: 1em;
+  }
+
+  .filtros-grafico-meses select {
+    margin-left: .2em;
+    height: 2em;
+  }
+
+  .filtros-grafico-meses label {
+    margin-bottom: 0;
+  }
+
+</style>

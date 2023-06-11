@@ -1,36 +1,42 @@
 <script>
-import Barra from "../components/NavBar.vue"
-import GastosPorCategoria from "../components/GastosPorCategoria.vue"
-import GastosPorMes from "../components/GastosPorMes.vue";
-import GastosPorFecha from "../components/GastosPorFecha.vue"
+  import Barra from "../components/NavBar.vue"
+  import GastosPorCategoria from "../components/GastosPorCategoria.vue"
+  import GastosPorMes from "../components/GastosPorMes.vue";
+  import GastosPorFecha from "../components/GastosPorFecha.vue"
 
-export default {
-  components: {
-    Barra,
-    GastosPorCategoria,
-    GastosPorMes,
-    GastosPorFecha,
-  },
-
-
-};
+  export default {
+    components: {
+      Barra,
+      GastosPorCategoria,
+      GastosPorMes,
+      GastosPorFecha,
+    },
+  };
 </script>
 
-
 <template>
-  <div>
-    <Barra></Barra>
-    <div class="component-container">
-      <GastosPorCategoria></GastosPorCategoria>
+  <Barra></Barra>
+  <div class="component-container">
+    <GastosPorCategoria></GastosPorCategoria>
+    <div class="grafico-por-mes">      
       <GastosPorMes></GastosPorMes>
-      <GastosPorFecha></GastosPorFecha>
     </div>
+    <GastosPorFecha></GastosPorFecha>
   </div>
 </template>
 
 <style>
-.component-container {
-  display: flex;
-  flex-direction: column;
-}
+
+  .component-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grafico-por-mes {
+    border-top: .2em solid rgba(161, 161, 161, 0.155);
+    border-bottom: .2em solid rgba(161, 161, 161, 0.155);
+    padding: .8em 0;
+    margin: 1em 0;
+  }
+
 </style>
