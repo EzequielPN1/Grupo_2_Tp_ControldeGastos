@@ -50,46 +50,51 @@ export default {
     };
   },
   computed: {
-  gastosFiltrados() {
-    let gastos = this.gastos;
+    gastosFiltrados() {
+      let gastos = this.gastos;
 
-    if (this.categoriaSeleccionada !== "") {
-      gastos = gastos.filter(
-        (gasto) => gasto.idCategoria === this.categoriaSeleccionada
-      );
-    }
+      if (this.categoriaSeleccionada !== "") {
+        gastos = gastos.filter(
+          (gasto) => gasto.idCategoria === this.categoriaSeleccionada
+        );
+      }
 
-    if (this.filtroAnio !== "") {
-      gastos = gastos.filter(
-        (gasto) => gasto.fecha.slice(0, 4) === this.filtroAnio
-      );
-    }
+      if (this.filtroAnio !== "") {
+        gastos = gastos.filter(
+          (gasto) => gasto.fecha.slice(0, 4) === this.filtroAnio
+        );
+      }
 
-    if (this.filtroMes !== "") {
-      gastos = gastos.filter(
-        (gasto) => gasto.fecha.slice(5, 7) === this.filtroMes
-      );
-    }
+      if (this.filtroMes !== "") {
+        gastos = gastos.filter(
+          (gasto) => gasto.fecha.slice(5, 7) === this.filtroMes
+        );
+      }
 
-    if (this.filtroDia !== "") {
-      gastos = gastos.filter(
-        (gasto) => gasto.fecha.slice(8, 10) === this.filtroDia
-      );
-    }
+      if (this.filtroDia !== "") {
+        gastos = gastos.filter(
+          (gasto) => gasto.fecha.slice(8, 10) === this.filtroDia
+        );
+      }
 
-    if (this.orden === "asc") {
-      gastos = gastos.sort((a, b) => a.fechaNumerica - b.fechaNumerica);
-    } else if (this.orden === "desc") {
-      gastos = gastos.sort((a, b) => b.fechaNumerica - a.fechaNumerica);
-    } else if (this.orden === "monto_asc") {
-      gastos = gastos.sort((a, b) => a.monto - b.monto);
-    } else if (this.orden === "monto_desc") {
-      gastos = gastos.sort((a, b) => b.monto - a.monto);
-    }
+      if (this.orden === "asc") {
+        gastos = gastos.sort((a, b) => a.fechaNumerica - b.fechaNumerica);
+      } else if (this.orden === "desc") {
+        gastos = gastos.sort((a, b) => b.fechaNumerica - a.fechaNumerica);
+      } else if (this.orden === "monto_asc") {
+        gastos = gastos.sort((a, b) => a.monto - b.monto);
+      } else if (this.orden === "monto_desc") {
+        gastos = gastos.sort((a, b) => b.monto - a.monto);
+      } else if (this.orden === "alfabetico asc") {
+        gastos = gastos.sort((a, b) => a.titulo.localeCompare(b.titulo));
+      } else if (this.orden === "alfabetico desc") {
+        gastos = gastos.sort((a, b) => b.titulo.localeCompare(a.titulo));
+      }
 
-    return gastos;
+
+      return gastos;
+    },
   },
-},
 
   methods: {
 
@@ -172,6 +177,10 @@ export default {
       return categoria ? categoria.nombre : "";
     },
 
+
+
+
+
   },
   components: {
     Barra,
@@ -208,12 +217,14 @@ export default {
       <option v-for="dia in diasMes" :value="dia">{{ dia }}</option>
     </select>
 
-    <label for="orden">Ordenar por:</label>
+    <label for="orden">Ordenar :</label>
     <select id="orden" v-model="orden">
       <option value="asc">Fecha ascendente</option>
       <option value="desc">Fecha descendente</option>
       <option value="monto_asc">Monto ascendente</option>
       <option value="monto_desc">Monto descendente</option>
+      <option value="alfabetico asc">Alfabéticamente asc</option>
+      <option value="alfabetico desc">Alfabéticamente desc</option>
     </select>
 
     <table class="table">

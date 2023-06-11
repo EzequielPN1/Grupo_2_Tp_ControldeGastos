@@ -77,6 +77,8 @@ const router = createRouter({
       name: 'ListarGastos',
       component: ListarGastos,
     },
+
+    //Categoria:
     {
       path: '/Categoria',
       name: 'Categoria',
