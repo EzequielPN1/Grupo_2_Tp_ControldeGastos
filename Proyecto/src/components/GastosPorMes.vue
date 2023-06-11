@@ -1,10 +1,9 @@
-
-
 <script>
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
 import Chart from 'chart.js/auto';
 import { tokenService } from "../Services/tokenService.js"
+import { useCategoriaStore } from "../stores/categorias.js";
 
 export default {
 
@@ -17,6 +16,8 @@ export default {
       gastos: [],
       anios: [2020, 2021, 2022, 2023], 
       anioSeleccionado: '',
+      categoriasSelect: [],
+      categoriaSeleccionada: '',
       meses: [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
@@ -34,34 +35,48 @@ export default {
       usuario,
     };
   },
-
   methods: {
 
     loadData() {
       this.setDefaultYear();
       this.actualizarGastos();
+      this.obtenerCategorias();
+    },
+    async obtenerCategorias() {
+      const store = useCategoriaStore();
+      await store.obtenerCategorias(this.usuario.email);
+      this.categorias = store.categorias;
+      this.categorias.map(cat => this.categoriasSelect.push(cat.nombre))
+      this.categoriaSeleccionada = this.categorias[0].nombre
+      return store.categorias
+    },
+    async obtenerNombreCategoria(id) {
+      const store = useCategoriaStore();
+      await store.obtenerCategorias(this.usuario.email);
+      this.categorias = store.categorias;
+      return store.categorias.find(e => e.id == id).nombre
     },
     async actualizarGastos() {
 
-
-      const gastosStore = await useGastosStore();
+      const gastosStore = useGastosStore();
       await gastosStore.obtenerGastos(this.usuario.email);
-      this.gastos = gastosStore.gastos;
+      const gastos = gastosStore.gastos;
+      const store = useCategoriaStore();
+      await store.obtenerCategorias(this.usuario.email);
+      const categorias = store.categorias;
 
-      const gastosFiltrados = this.gastos.filter(gasto => {
+      const gastosFiltrados = gastos.filter(gasto => {
         const fecha = new Date(gasto.fecha);
-        return fecha.getFullYear() === this.anioSeleccionado;
+        const nombreCat = categorias.find(e => e.id == gasto.idCategoria).nombre
+        return fecha.getFullYear() === this.anioSeleccionado && nombreCat == this.categoriaSeleccionada;
       });
-
 
       this.mostrarGrafico(gastosFiltrados);
 
     },
 
     mostrarGrafico(gastos) {
-
       const ctx = this.$refs.myChart.getContext('2d');
-
 
       if (this.chartInstance) {
         this.chartInstance.destroy();
@@ -75,7 +90,35 @@ export default {
           datasets: [{
             label: 'Monto acumulado',
             data: data,
-            borderWidth: 1
+            borderWidth: 1,
+            backgroundColor: context => {
+              let valor = context.dataset.data[context.dataIndex];
+              let presupuesto;
+
+              if(valor != undefined) {
+                presupuesto = this.categorias.find(pre => pre.nombre === this.categoriaSeleccionada).presupuesto
+              }
+          
+              if (valor > presupuesto) {
+                return 'rgba(255, 99, 132, 0.2)'; 
+              } else {
+                return 'rgba(54, 162, 235, 0.2)'; 
+              }
+            },
+            borderColor: context => {
+              let valor = context.dataset.data[context.dataIndex];
+              let presupuesto;
+
+              if(valor != undefined) {
+                presupuesto = this.categorias.find(pre => pre.nombre === this.categoriaSeleccionada).presupuesto
+              }
+              
+              if (valor > presupuesto) {
+                return 'rgb(255, 99, 132)'; 
+              } else {
+                return 'rgb(54, 162, 235)'; 
+              }
+            }
           }]
         },
         options: {
@@ -102,13 +145,11 @@ export default {
         }
       };
 
-
       this.chartInstance = new Chart(ctx, config);
     },
 
     procesarDatosGastos(gastos) {
       const acumulados = {};
-
 
       this.meses.forEach(mes => {
         acumulados[mes] = 0;
@@ -131,16 +172,19 @@ export default {
     setDefaultYear() {
       const currentDate = new Date();
       this.anioSeleccionado = currentDate.getFullYear();
-    },
-
-
-
+    }
   }
 };
 </script>
 
 <template>
   <div>
+    <div>
+      <label for="categoria">Categoria:</label>
+      <select id="categoria" v-model="categoriaSeleccionada" @change="actualizarGastos">
+        <option v-for="categoria in categoriasSelect" :key="categoria" :value="categoria">{{ categoria }}</option>
+      </select>
+    </div>
     <div>
       <label for="anio">Año:</label>
       <select id="anio" v-model="anioSeleccionado" @change="actualizarGastos">
