@@ -166,7 +166,7 @@
           alert("Gasto eliminado correctamente.");
         } catch (error) {
           console.log(error);
-          alert("Error al eliminar el gasto." + error.response.data);
+          alert("Error al eliminar el gasto." + error);
         }
       },
 
