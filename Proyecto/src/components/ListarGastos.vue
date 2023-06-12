@@ -132,18 +132,20 @@
 
           const mes = gasto.fecha.slice(5, 7);
 
-          const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id && gasto.fecha.slice(5, 7) === mes);
+          const anio = gasto.fecha.slice(0, 4);
+
+          const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id && gasto.fecha.slice(5, 7) === mes && gasto.fecha.slice(0, 4) ===anio );
 
           let sumaGastos = 0;
           gastosMismaCategoria.forEach(gasto => {
             sumaGastos += gasto.monto;
           });
 
-          console.log("el presupuesto de la categoria base: " + presupuesto);
+      
           console.log("la suma con el gasto nuevo incluido: " + sumaGastos);
+          console.log("el presupuesto de la categoria base: " + presupuesto);
 
           await gastosService.editarGasto(gasto);
-          console.log
           await this.actualizarGastos();
 
           if (sumaGastos > presupuesto) {

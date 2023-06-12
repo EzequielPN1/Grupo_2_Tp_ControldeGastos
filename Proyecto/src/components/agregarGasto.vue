@@ -58,8 +58,11 @@
           const categoria = this.categorias.find(categoria => categoria.id === this.gasto.idCategoria);
           const presupuesto = categoria.presupuesto
           const fechaIngreso = this.gasto.fecha
-          var mes = fechaIngreso.slice(5, 7);
-          const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id && gasto.fecha.slice(5, 7) === mes);
+          let mes = fechaIngreso.slice(5, 7);
+
+          let anio = fechaIngreso.slice(0, 4);
+
+          const gastosMismaCategoria = this.gastos.filter(gasto => gasto.idCategoria === categoria.id && gasto.fecha.slice(5, 7) && gasto.fecha.slice(0,4) === anio);
 
           let sumaGastos = 0;
           gastosMismaCategoria.forEach(gasto => { sumaGastos += gasto.monto;});
@@ -82,8 +85,10 @@
           } 
 
         } catch (error) {
-          alert("Error al agregar el gasto." + error.response.data);
+          alert("Error al agregar el gasto." + error );
         }
+
+        this.actualizarGastos();
       }
     },
     components: {
