@@ -1,7 +1,8 @@
 import ModelFactory from "../model/DAO/usuariosFactory.js"
-import bcrypt from 'bcrypt'; //libreria para importar el hash y salt
+import bcrypt from 'bcrypt';
 import config from "../config.js";
 import CalculadorEdad from "../servicio/calculadorEdad.js"
+import { validar } from '../validaciones/usuariosValidaciones.js'
 
 class ServicioUsuario {
 
@@ -9,28 +10,33 @@ class ServicioUsuario {
     this.model = ModelFactory.get(config.MODO_PERSISTENCIA)
   }
 
-  registro = async (email, celular, nombre, pass, apellido, fechaNac, dni) => {
+  registro = async (usuario) => {
     try {
-
-      let edad = CalculadorEdad.calcularEdad(fechaNac)
-
-      if (edad < 18) {
-        throw new Error("Edad no valida para registrarse");
+      const res = validar(usuario)
+      if (res.result) {
+        const { email, celular, nombre, pass, apellido, fechaNacimiento, dni } = usuario
+        let edad = CalculadorEdad.calcularEdad(fechaNacimiento)
+        if (edad < 18) {
+          throw new Error("Edad no valida para registrarse");
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(pass, salt);
+        const respuesta = await this.model.registro(email, celular, nombre, hash, apellido, fechaNacimiento, dni);
+        return respuesta;
       }
-
-      const salt = await bcrypt.genSalt(10); // generamos el salt de forma asincrónica
-      const hash = await bcrypt.hash(pass, salt); // generamos el hash de forma asincrónica
-      const respuesta = await this.model.registro(email, celular, nombre, hash, apellido, fechaNac, dni); // registramos el usuario con el hash
-      return respuesta;
+      else {
+        throw res.error
+      }
     } catch (error) {
       throw new Error(error);
     }
   };
 
+
   login = async (email, pass) => {
     try {
-      const usuario = await this.model.login(email); // Obtener el usuario de la base de datos
-      const match = await bcrypt.compare(pass, usuario.pass); // Comparar la contraseña ingresada con el hash almacenado
+      const usuario = await this.model.login(email);
+      const match = await bcrypt.compare(pass, usuario.pass);
       if (match) {
         if (usuario.registro == 0) {
           throw new Error("Cuenta no confirmada");
@@ -78,7 +84,7 @@ class ServicioUsuario {
 
   esValido = async (email) => {
     try {
-      await this.model.login(email); // Obtener el usuario de la base de datos
+      await this.model.login(email);
     } catch (error) {
       throw new Error(error);
     }
@@ -97,8 +103,8 @@ class ServicioUsuario {
 
   eliminarCuenta = async (pass, email) => {
     try {
-      const usuario = await this.model.login(email); // Obtener el usuario de la base de datos
-      const match = await bcrypt.compare(pass, usuario.pass); // Comparar la contraseña ingresada con el hash almacenado
+      const usuario = await this.model.login(email);
+      const match = await bcrypt.compare(pass, usuario.pass);
       if (match) {
         await this.model.eliminarCuenta(email);
       } else {
@@ -112,14 +118,16 @@ class ServicioUsuario {
 
 
 
-  devolverUsuarioValidado = async(email) => {
+  devolverUsuarioValidado = async (email) => {
     try {
-      const usuario = await this.model.login(email); 
+      const usuario = await this.model.login(email);
       return usuario;
     } catch (error) {
       throw new Error(error);
     }
   }
+
+  
 
 
 }

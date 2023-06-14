@@ -230,12 +230,12 @@ export default {
     <div class="filtro-gasto">
       <label for="orden">Ordenar:</label>
       <select id="orden" v-model="orden">
-        <option value="asc">Fecha ascendente</option>
-        <option value="desc">Fecha descendente</option>
-        <option value="monto_asc">Monto ascendente</option>
-        <option value="monto_desc">Monto descendente</option>
-        <option value="alfabetico asc">Alfabéticamente ascendente</option>
-        <option value="alfabetico desc">Alfabéticamente descendente</option>
+        <option value="asc">Fecha asc</option>
+        <option value="desc">Fecha des</option>
+        <option value="monto_asc">Monto asc</option>
+        <option value="monto_desc">Monto des</option>
+        <option value="alfabetico asc">A-Z</option>
+        <option value="alfabetico desc">Z-A</option>
       </select>
     </div>
   </div>

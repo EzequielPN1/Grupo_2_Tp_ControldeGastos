@@ -5,6 +5,7 @@ const MODO_PERSISTENCIA = SQLITE
 const WHATSAPP = false
 
 
+
 export default {
     PORT,
     MODO_PERSISTENCIA,

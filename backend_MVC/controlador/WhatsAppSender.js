@@ -37,7 +37,7 @@ class WhatsAppSender {
       console.log("Error al enviar el mensaje");
     }
   }
-  
+
 
   convertirEnNumeroWhatsApp(numero) {
     let numeroAdaptado = "549" + numero + "@c.us";
@@ -60,14 +60,14 @@ class WhatsAppSender {
     const mensajeIngresarCategoria = `3-Ingresar una Categoria`
 
 
-    
+
     this.enviarMensaje(whatsapp, mensajeBienvenida)
     this.enviarMensaje(whatsapp, mensajeMenu)
     this.enviarMensaje(whatsapp, mensajeInfo)
     this.enviarMensaje(whatsapp, mensajeIngresarGasto)
     this.enviarMensaje(whatsapp, mensajeIngresarCategoria)
 
- 
+
   }
 
 
@@ -157,13 +157,6 @@ class WhatsAppSender {
         this.guardarCategoria(message.from, categoria)
       }
 
-
-
-
-
-
-
-
     })
   }
 
@@ -174,9 +167,19 @@ class WhatsAppSender {
     try {
       let idCategoria = await this.categorias.devolverId(gasto.idCategoria, gasto.email);
 
-      const fechaActual = new Date('2023-06-03T22:59:18.142Z');
-      const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      const fechaFormateada = fechaActual.toLocaleDateString('es-ES', opciones);
+      const fechaActual = new Date();
+      const año = fechaActual.getFullYear();
+      let mes = fechaActual.getMonth() + 1;
+      if (mes < 10) {
+        mes = '0' + mes;
+      }
+      let dia = fechaActual.getDate();
+      if (dia < 10) {
+        dia = '0' + dia;
+      }
+
+      const fechaFormateada = `${año}-${mes}-${dia}`;
+
 
       gasto.idCategoria = idCategoria
       gasto.fecha = fechaFormateada;

@@ -24,11 +24,11 @@ class ControladorUsuario {
 
   registro = async (req, res) => {
     try {
-      const { nombre, apellido, email, fechaNacimiento, dni, pass, celular } = req.body
-      const respuesta = await this.servicio.registro(email, celular, nombre, pass, apellido, fechaNacimiento, dni);
-      const token = this.autentificador.generateTokenTiempo(email, '1h');
-      await this.correo.enviarCorreoConfirmacion(token, email);
-      console.log("Usuario a confirmar registro " + email)
+      const usuario = req.body
+      const respuesta = await this.servicio.registro(usuario);
+      const token = this.autentificador.generateTokenTiempo(usuario.email, '1h');
+      await this.correo.enviarCorreoConfirmacion(token, usuario.email);
+      console.log("Usuario a confirmar registro " + usuario.email)
       res.status(200).send(respuesta);
     } catch (error) {
       console.log(error.message)

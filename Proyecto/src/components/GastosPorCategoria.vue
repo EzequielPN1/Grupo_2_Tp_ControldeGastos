@@ -51,7 +51,8 @@
         const gastos = gastosStore.gastos;
 
         const gastosFiltrados = gastos.filter(gasto => {
-          const fecha = new Date(gasto.fecha);
+          let fecha = new Date(gasto.fecha);
+          fecha = new Date(fecha.getTime() + fecha.getTimezoneOffset() * 60 * 1000);
           return fecha.getMonth() === this.meses.indexOf(this.mesSeleccionado) &&
             fecha.getFullYear() === this.anioSeleccionado;
         });

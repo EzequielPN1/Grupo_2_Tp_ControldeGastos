@@ -44,11 +44,18 @@ export default {
     },
     async obtenerCategorias() {
       const store = useCategoriaStore();
-      await store.obtenerCategorias(this.usuario.email);
-      this.categorias = store.categorias;
-      this.categorias.map(cat => this.categoriasSelect.push(cat.nombre))
-      this.categoriaSeleccionada = this.categorias[0].nombre
-      return store.categorias
+
+      if (this.usuario.email !== '') {
+        await store.obtenerCategorias(this.usuario.email);
+        this.categorias = store.categorias;
+
+        if (this.categorias && this.categorias.length > 0) {
+          this.categorias.map(cat => this.categoriasSelect.push(cat.nombre));
+          this.categoriaSeleccionada = this.categorias[0].nombre;
+        }
+      }
+
+      return store.categorias;
     },
     async obtenerNombreCategoria(id) {
       const store = useCategoriaStore();
@@ -97,9 +104,13 @@ export default {
               let valor = context.dataset.data[context.dataIndex];
               let presupuesto;
 
-              if (valor != undefined) {
-                presupuesto = this.categorias.find(pre => pre.nombre === this.categoriaSeleccionada).presupuesto
+              if (valor !== undefined) {
+                const categoriaSeleccionada = this.categorias.find(cat => cat.nombre === this.categoriaSeleccionada);
+                if (categoriaSeleccionada && categoriaSeleccionada.presupuesto !== undefined) {
+                  presupuesto = categoriaSeleccionada.presupuesto;
+                }
               }
+
 
               if (valor > presupuesto) {
                 return 'rgba(255, 99, 132, 0.2)';
@@ -111,8 +122,13 @@ export default {
               let valor = context.dataset.data[context.dataIndex];
               let presupuesto;
 
-              if (valor != undefined) {
-                presupuesto = this.categorias.find(pre => pre.nombre === this.categoriaSeleccionada).presupuesto
+              if (valor !== undefined) {
+                const categoriaEncontrada = this.categorias.find(cat => cat.nombre === this.categoriaSeleccionada);
+                if (categoriaEncontrada && categoriaEncontrada.presupuesto !== undefined) {
+                  presupuesto = categoriaEncontrada.presupuesto;
+                } else {
+                  presupuesto = null; // O cualquier otro valor predeterminado deseado si no se encuentra una categoría o la propiedad 'presupuesto' no está definida
+                }
               }
 
               if (valor > presupuesto) {

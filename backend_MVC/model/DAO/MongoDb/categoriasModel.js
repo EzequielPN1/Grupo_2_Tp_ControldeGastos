@@ -32,7 +32,7 @@ class CategoriasMongoDb {
                 email: email,
                 nombre: nombre,
                 presupuesto: presupuesto,
-                id: new mongoose.Types.ObjectId() // Generaro un nuevo ObjectId 
+                id: new mongoose.Types.ObjectId() 
             };
 
             await this.categoriasCollection.insertOne(nuevaCategoria);
