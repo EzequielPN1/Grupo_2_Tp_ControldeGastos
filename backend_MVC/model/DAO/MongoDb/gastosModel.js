@@ -11,9 +11,7 @@ class GastosMongoDb {
 
   async init() {
     try {
-      const conexionMongo = new ConexionMongo();
-      await conexionMongo.connectToMongoDB();
-      this.gastosCollection =  conexionMongo.gastosColeccion()
+      this.gastosCollection =  ConexionMongo.gastosColeccion()
     } catch (error) {
       console.error(error);
     }

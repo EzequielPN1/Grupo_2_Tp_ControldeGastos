@@ -4,7 +4,7 @@ import Correo from './correo.js';
 import WhatsAppSender from './WhatsAppSender.js';
 import config from "../config.js";
 
-const timepoToken = '10m'
+const tiempoToken = '10m'
 
 class ControladorUsuario {
 
@@ -40,7 +40,7 @@ class ControladorUsuario {
     try {
       const { email, pass } = req.body
       const usuario = await this.servicio.login(email, pass);
-      const token = this.autentificador.generateTokenTiempo(email, timepoToken);
+      const token = this.autentificador.generateTokenTiempo(email, tiempoToken);
       usuario.token = token;
       res.status(200).json(usuario);
     } catch (error) {
@@ -100,7 +100,7 @@ class ControladorUsuario {
     try {
       const email = req.body.email;
       await this.servicio.esValido(email);
-      const token = this.autentificador.generateTokenTiempo(email, '10m');
+      const token = this.autentificador.generateTokenTiempo(email, tiempoToken);
       await this.correo.enviarCorreoCambioPass(email, token);
       console.log("solicitud cambio de pass enviado a " + email);
       res.status(200).json();
@@ -148,7 +148,7 @@ class ControladorUsuario {
       console.log("email valido : " + emailDecodificado);
 
       const usuario = await this.servicio.devolverUsuarioValidado(emailDecodificado)
-      const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, timepoToken);
+      const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, tiempoToken);
       usuario.token = tokenNuevo;
       console.log(usuario);
       res.status(200).json(usuario);
@@ -167,7 +167,7 @@ class ControladorUsuario {
       const decodedToken = this.autentificador.decodificarToken(token)
       const emailDecodificado = decodedToken.userId;
       console.log("email valido : " + emailDecodificado);
-      const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, timepoToken);
+      const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, tiempoToken);
       res.status(200).json(tokenNuevo);
      }catch (error) {
       res.status(500).send(error.message);

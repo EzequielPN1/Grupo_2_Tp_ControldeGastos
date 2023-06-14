@@ -8,9 +8,7 @@ class UsuarioMongoDb {
 
     async init() {
         try {
-            const conexionMongo = new ConexionMongo();
-            await conexionMongo.connectToMongoDB();
-            this.usuariosCollection = await conexionMongo.usuariosColeccion()
+            this.usuariosCollection =  ConexionMongo.usuariosColeccion()
         } catch (error) {
             console.error(error);
         }

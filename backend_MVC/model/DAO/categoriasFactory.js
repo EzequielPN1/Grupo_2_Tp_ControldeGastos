@@ -6,15 +6,12 @@ class ModelFactory {
 
         switch (tipo) {
             case 'SQLite':
-              
                 return new ModelSqlite()
                 
             case 'mongoDb':
-               
                 return new ModelMongodb()
 
             default:
-               
                 return new ModelSqlite()
         }
     }

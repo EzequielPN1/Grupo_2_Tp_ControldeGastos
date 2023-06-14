@@ -1,13 +1,17 @@
 <script>
 import Barra from "../components/NavBar.vue";
-import { categoriaService } from "../Services/categoriaServicie.js"
+import { categoriaService } from "../Services/categoriaServicie.js";
 import { useUserStore } from "../stores/user";
-import { useCategoriaStore } from "../stores/categorias.js"
-import { tokenService } from "../Services/tokenService.js"
+import { useCategoriaStore } from "../stores/categorias.js";
+import { tokenService } from "../Services/tokenService.js";
 
 export default {
   created() {
-    tokenService.validarUsuarioRecarga(this, this.loadData)
+    tokenService.validarUsuarioRecarga(this, this.loadData);
+    const ordenGuardado = localStorage.getItem('ordenCategorias');
+    if (ordenGuardado) {
+      this.orden = ordenGuardado;
+    }
   },
   components: {
     Barra,
@@ -19,7 +23,7 @@ export default {
 
     return {
       usuario,
-    }
+    };
   },
 
   data() {
@@ -55,13 +59,14 @@ export default {
           return b.nombre.localeCompare(a.nombre);
         }
       });
-    },
 
+      localStorage.setItem('ordenCategorias', this.orden);
+    },
 
     async agregarCategoria() {
       this.categoria.email = this.usuario.email;
       try {
-        await tokenService.validarToken(this.usuario, this.$router)
+        await tokenService.validarToken(this.usuario, this.$router);
         const response = await categoriaService.agregarCategoria(this.categoria);
         alert(response.data);
       } catch (error) {
@@ -81,7 +86,7 @@ export default {
 
     async guardarCategoria(categoria) {
       try {
-        await tokenService.validarToken(this.usuario, this.$router)
+        await tokenService.validarToken(this.usuario, this.$router);
         await categoriaService.editarCategoria(categoria);
         await this.obtenerCategorias();
         console.log("Categoría editada correctamente.");
@@ -95,7 +100,7 @@ export default {
 
     async eliminarCategoria(categoria) {
       try {
-        await tokenService.validarToken(this.usuario, this.$router)
+        await tokenService.validarToken(this.usuario, this.$router);
         await categoriaService.eliminarCategoria(categoria);
         await this.obtenerCategorias();
         alert("Categoría eliminada correctamente.");

@@ -11,6 +11,7 @@ import EliminarCuenta from '../views/EliminarCuenta.vue'
 import AgregarGasto from "../components/agregarGasto.vue";
 import ListarGastos from "../components/ListarGastos.vue";
 import Categoria from "../components/Categoria.vue";
+import Superados from "../components/Superados.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,7 +84,12 @@ const router = createRouter({
       path: '/Categoria',
       name: 'Categoria',
       component: Categoria,
-    }
+    },
+    {
+      path: '/Superados',
+      name: 'Superados',
+      component: Superados,
+    },
   ]
 });
 

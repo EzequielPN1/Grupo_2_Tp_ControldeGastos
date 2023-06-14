@@ -6,15 +6,15 @@ class ModelFactory {
 
         switch (tipo) {
             case 'SQLite':
-                console.log("Usando la base de datos sqlite.");
+                console.log('**** Persistiendo en Sqlite ****')
                 return new ModelSqlite()
                 
             case 'mongoDb':
-                console.log("Usando la base de datos MongoDb.");
+                console.log('**** Persistiendo en MongoDb ****')
                 return new ModelMongodb()
 
-            default:
-                console.log("Usando la base de datos sqlite.(Default)");
+            default:  
+            console.log('**** Persistiendo en Sqlite(default) ****')            
                 return new ModelSqlite()
         }
     }

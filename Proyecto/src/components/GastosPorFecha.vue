@@ -2,11 +2,12 @@
 import { useUserStore } from "../stores/user";
 import { useGastosStore } from "../stores/gastos.js";
 import Chart from 'chart.js/auto';
-import { tokenService } from "../Services/tokenService.js"
+import { tokenService } from "../Services/tokenService.js";
 
 export default {
-  created() {
-    tokenService.validarUsuarioRecarga(this, this.loadData)
+  mounted() {
+    this.loadLocalStorageValues(); 
+    tokenService.validarUsuarioRecarga(this, this.loadData);
   },
   data() {
     return {
@@ -95,18 +96,14 @@ export default {
       const labels = [];
       const data = [];
 
-
       gastos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
-
       const gastosAgrupados = gastos.reduce((acc, gasto) => {
-
         let fecha = new Date(gasto.fecha);
         fecha = new Date(fecha.getTime() + fecha.getTimezoneOffset() * 60 * 1000);
 
         const dia = fecha.getDate();
         const monto = gasto.monto;
-
 
         if (acc[String(dia)]) {
           acc[String(dia)] += monto;
@@ -117,7 +114,6 @@ export default {
         return acc;
       }, {});
 
-
       for (const [dia, monto] of Object.entries(gastosAgrupados)) {
         labels.push(dia);
         data.push(monto);
@@ -126,17 +122,44 @@ export default {
       return { labels, data };
     },
 
-
     setDefaultYear() {
       const currentDate = new Date();
       this.anioSeleccionado = currentDate.getFullYear();
     },
 
+    // Cargar los valores guardados en el local storage
+    loadLocalStorageValues() {
+      const anioSeleccionado = localStorage.getItem('anioSeleccionado');
+      const mesSeleccionado = localStorage.getItem('mesSeleccionado');
 
-  }
+      if (anioSeleccionado && mesSeleccionado) {
+        this.anioSeleccionado = parseInt(anioSeleccionado);
+        this.mesSeleccionado = parseInt(mesSeleccionado);
+      }
+    },
+
+    // Guardar los valores seleccionados en el local storage
+    saveLocalStorageValues() {
+      localStorage.setItem('anioSeleccionado', this.anioSeleccionado.toString());
+      localStorage.setItem('mesSeleccionado', this.mesSeleccionado.toString());
+    },
+
+    // Actualizar gastos y guardar los valores seleccionados en el local storage
+    async actualizarGastos() {
+      const gastosStore = await useGastosStore();
+      await gastosStore.obtenerGastos(this.usuario.email);
+      this.gastos = gastosStore.gastos;
+      const gastosFiltrados = this.gastos.filter(gasto => {
+        const fecha = new Date(gasto.fecha);
+        const mes = Number(gasto.fecha.split('-')[1]);
+        return fecha.getFullYear() === this.anioSeleccionado && mes === this.mesSeleccionado;
+      });
+      this.mostrarGrafico(gastosFiltrados);
+      this.saveLocalStorageValues(); // Guardar los valores seleccionados en el local storage
+    },
+  },
 };
 </script>
-
 
 <template>
   <div class="filtros-grafico-fechas">
@@ -159,13 +182,12 @@ export default {
 </template>
 
 <style>
-
   .filtros-grafico-fechas {
     display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: .4em auto;
-      gap: 1em;
+    justify-content: center;
+    align-items: center;
+    margin: .4em auto;
+    gap: 1em;
   }
 
   .filtros-grafico-fechas select {
@@ -176,5 +198,4 @@ export default {
   .filtros-grafico-fechas label {
     margin-bottom: 0;
   }
-
 </style>

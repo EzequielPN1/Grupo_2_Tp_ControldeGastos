@@ -8,9 +8,29 @@ import { tokenService } from "../Services/tokenService.js"
 
 export default {
 
-  created() {
-    tokenService.validarUsuarioRecarga(this, this.loadData)
+  mounted() {
+    tokenService.validarUsuarioRecarga(this, this.loadData);
   },
+
+  watch: {
+    categoriaSeleccionada(value) {
+      localStorage.setItem("categoriaSeleccionada", value);
+    },
+    filtroAnio(value) {
+      localStorage.setItem("filtroAnio", value);
+    },
+    filtroMes(value) {
+      localStorage.setItem("filtroMes", value);
+    },
+    filtroDia(value) {
+      localStorage.setItem("filtroDia", value);
+    },
+    orden(value) {
+      localStorage.setItem("orden", value);
+    }
+  },
+
+
 
   setup() {
     const { usuario } = useUserStore();
@@ -52,10 +72,23 @@ export default {
   computed: {
     gastosFiltrados() {
       let gastos = this.gastos;
+     
+      const categoriaSeleccionada = localStorage.getItem("categoriaSeleccionada");
+      const filtroAnio = localStorage.getItem("filtroAnio");
+      const filtroMes = localStorage.getItem("filtroMes");
+      const filtroDia = localStorage.getItem("filtroDia");
+      const orden = localStorage.getItem("orden");
+
+     
+      this.categoriaSeleccionada = categoriaSeleccionada || "";
+      this.filtroAnio = filtroAnio || "";
+      this.filtroMes = filtroMes || "";
+      this.filtroDia = filtroDia || "";
+      this.orden = orden || "desc";
 
       if (this.categoriaSeleccionada !== "") {
         gastos = gastos.filter(
-          (gasto) => gasto.idCategoria === this.categoriaSeleccionada
+          (gasto) => gasto.idCategoria == this.categoriaSeleccionada
         );
       }
 
@@ -132,7 +165,7 @@ export default {
 
         console.log("el presupuesto de la categoría base: " + categoria.presupuesto);
         console.log("la suma con el gasto nuevo incluido: " + sumaGastos);
-        
+
         await gastosService.editarGasto(gasto);
         await this.actualizarGastos();
 

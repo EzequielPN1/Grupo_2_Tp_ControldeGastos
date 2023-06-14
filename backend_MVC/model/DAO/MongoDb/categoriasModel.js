@@ -11,9 +11,7 @@ class CategoriasMongoDb {
 
     async init() {
         try {
-            const conexionMongo = new ConexionMongo();
-            await conexionMongo.connectToMongoDB();
-            this.categoriasCollection = await conexionMongo.categoriasColeccion()
+            this.categoriasCollection =  ConexionMongo.categoriasColeccion()
         } catch (error) {
             console.error(error);
         }

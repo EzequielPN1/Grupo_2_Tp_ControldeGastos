@@ -24,6 +24,16 @@
       async salir() {
         this.store.borrarStore()
         localStorage.removeItem('token');
+        localStorage.removeItem('filtroMesDona');
+        localStorage.removeItem('filtroAnioDona');
+        localStorage.removeItem('ordenCategorias');
+        localStorage.removeItem('categoriaSeleccionada');
+        localStorage.removeItem('filtroAnio');
+        localStorage.removeItem('filtroMes');
+        localStorage.removeItem('filtroDia');
+        localStorage.removeItem('orden');
+        localStorage.removeItem('anioSeleccionado');
+        localStorage.removeItem('mesSeleccionado');
         this.$router.push('/');
       }
     }
@@ -48,6 +58,9 @@
     </li>
     <li>
       <RouterLink to="/Categoria">Categoria</RouterLink>
+    </li>
+    <li>
+      <RouterLink to="/Superados">Superados</RouterLink>
     </li>
     <button v-if="usuario.nombre !== ''" @click="salir" class="nav-link btn btn-outline-danger">Salir</button>
   </ul>
