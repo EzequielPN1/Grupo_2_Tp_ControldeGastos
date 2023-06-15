@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     loadData() {
-      this.setDefaultYear();
+      this.definirMesAnio();
       this.actualizarGastos();
     },
     async actualizarGastos() {
@@ -121,8 +121,8 @@ export default {
       return { labels, data };
     },
 
-    setDefaultYear() {
-     
+    definirMesAnio() {
+
       const currentDate = new Date();
       const anioSeleccionado = localStorage.getItem('anioSeleccionadoLineal');
       const mesSeleccionado = localStorage.getItem('mesSeleccionadoLineal');
@@ -130,22 +130,15 @@ export default {
       if (anioSeleccionado && mesSeleccionado) {
         this.anioSeleccionado = parseInt(anioSeleccionado);
         this.mesSeleccionado = parseInt(mesSeleccionado);
-      }else{
+      } else {
         this.anioSeleccionado = currentDate.getFullYear();
         this.mesSeleccionado = currentDate.getMonth();
       }
 
-       
+
 
     },
 
-    // Guardar los valores seleccionados en el local storage
-    saveLocalStorageValues() {
-      localStorage.setItem('anioSeleccionadoLineal', this.anioSeleccionado.toString());
-      localStorage.setItem('mesSeleccionadoLineal', this.mesSeleccionado.toString());
-    },
-
-    // Actualizar gastos y guardar los valores seleccionados en el local storage
     async actualizarGastos() {
       const gastosStore = await useGastosStore();
       await gastosStore.obtenerGastos(this.usuario.email);
@@ -156,7 +149,8 @@ export default {
         return fecha.getFullYear() === this.anioSeleccionado && mes === this.mesSeleccionado;
       });
       this.mostrarGrafico(gastosFiltrados);
-      this.saveLocalStorageValues(); // Guardar los valores seleccionados en el local storage
+      localStorage.setItem('anioSeleccionadoLineal', this.anioSeleccionado.toString());
+      localStorage.setItem('mesSeleccionadoLineal', this.mesSeleccionado.toString());
     },
   },
 };
@@ -183,20 +177,20 @@ export default {
 </template>
 
 <style>
-  .filtros-grafico-fechas {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: .4em auto;
-    gap: 1em;
-  }
+.filtros-grafico-fechas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: .4em auto;
+  gap: 1em;
+}
 
-  .filtros-grafico-fechas select {
-    margin-left: .2em;
-    height: 2em;
-  }
+.filtros-grafico-fechas select {
+  margin-left: .2em;
+  height: 2em;
+}
 
-  .filtros-grafico-fechas label {
-    margin-bottom: 0;
-  }
+.filtros-grafico-fechas label {
+  margin-bottom: 0;
+}
 </style>
