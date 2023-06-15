@@ -5,7 +5,7 @@ export const validar = (email, celular, nombre, pass, apellido, fechaNac, dni) =
 
     const usuarioSchema = Joi.object({
         email: Joi.string().email().required(),
-        celular: Joi.string().length(10).required(),
+        celular: Joi.string().min(8).required(),
         nombre: Joi.string().required(),
         pass: Joi.string().alphanum().required(),
         apellido: Joi.string().required(),

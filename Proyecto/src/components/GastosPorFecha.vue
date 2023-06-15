@@ -6,7 +6,6 @@ import { tokenService } from "../Services/tokenService.js";
 
 export default {
   mounted() {
-    this.loadLocalStorageValues(); 
     tokenService.validarUsuarioRecarga(this, this.loadData);
   },
   data() {
@@ -123,25 +122,27 @@ export default {
     },
 
     setDefaultYear() {
+     
       const currentDate = new Date();
-      this.anioSeleccionado = currentDate.getFullYear();
-    },
-
-    // Cargar los valores guardados en el local storage
-    loadLocalStorageValues() {
-      const anioSeleccionado = localStorage.getItem('anioSeleccionado');
-      const mesSeleccionado = localStorage.getItem('mesSeleccionado');
+      const anioSeleccionado = localStorage.getItem('anioSeleccionadoLineal');
+      const mesSeleccionado = localStorage.getItem('mesSeleccionadoLineal');
 
       if (anioSeleccionado && mesSeleccionado) {
         this.anioSeleccionado = parseInt(anioSeleccionado);
         this.mesSeleccionado = parseInt(mesSeleccionado);
+      }else{
+        this.anioSeleccionado = currentDate.getFullYear();
+        this.mesSeleccionado = currentDate.getMonth();
       }
+
+       
+
     },
 
     // Guardar los valores seleccionados en el local storage
     saveLocalStorageValues() {
-      localStorage.setItem('anioSeleccionado', this.anioSeleccionado.toString());
-      localStorage.setItem('mesSeleccionado', this.mesSeleccionado.toString());
+      localStorage.setItem('anioSeleccionadoLineal', this.anioSeleccionado.toString());
+      localStorage.setItem('mesSeleccionadoLineal', this.mesSeleccionado.toString());
     },
 
     // Actualizar gastos y guardar los valores seleccionados en el local storage

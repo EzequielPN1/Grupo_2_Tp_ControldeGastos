@@ -32,8 +32,10 @@
         localStorage.removeItem('filtroMes');
         localStorage.removeItem('filtroDia');
         localStorage.removeItem('orden');
-        localStorage.removeItem('anioSeleccionado');
-        localStorage.removeItem('mesSeleccionado');
+        localStorage.removeItem('anioSeleccionadoLineal');
+        localStorage.removeItem('mesSeleccionadoLineal');
+        localStorage.removeItem('categoriaSeleccionadaColumna');
+        localStorage.removeItem('anioSeleccionadoColumna');
         this.$router.push('/');
       }
     }

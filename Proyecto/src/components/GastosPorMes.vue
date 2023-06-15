@@ -38,20 +38,23 @@ export default {
   methods: {
 
     loadData() {
-      this.setDefaultYear();
+      this.definirAnio();
       this.actualizarGastos();
       this.obtenerCategorias();
     },
     async obtenerCategorias() {
       const store = useCategoriaStore();
-
       if (this.usuario.email !== '') {
         await store.obtenerCategorias(this.usuario.email);
         this.categorias = store.categorias;
-
         if (this.categorias && this.categorias.length > 0) {
           this.categorias.map(cat => this.categoriasSelect.push(cat.nombre));
-          this.categoriaSeleccionada = this.categorias[0].nombre;
+          const categoriaGuardada = localStorage.getItem('categoriaSeleccionadaColumna');
+          if (categoriaGuardada) {
+            this.categoriaSeleccionada = categoriaGuardada;
+          } else {
+            this.categoriaSeleccionada = this.categorias[0].nombre;
+          }
         }
       }
 
@@ -81,6 +84,9 @@ export default {
       });
 
       this.mostrarGrafico(gastosFiltrados);
+
+      localStorage.setItem('anioSeleccionadoColumna', this.anioSeleccionado.toString());
+      localStorage.setItem('categoriaSeleccionadaColumna', this.categoriaSeleccionada);
 
     },
 
@@ -127,7 +133,7 @@ export default {
                 if (categoriaEncontrada && categoriaEncontrada.presupuesto !== undefined) {
                   presupuesto = categoriaEncontrada.presupuesto;
                 } else {
-                  presupuesto = null; // O cualquier otro valor predeterminado deseado si no se encuentra una categoría o la propiedad 'presupuesto' no está definida
+                  presupuesto = null;
                 }
               }
 
@@ -188,9 +194,17 @@ export default {
       return { labels, data };
     },
 
-    setDefaultYear() {
-      const currentDate = new Date();
-      this.anioSeleccionado = currentDate.getFullYear();
+
+
+    definirAnio() {
+      const anioGuardado = localStorage.getItem('anioSeleccionadoColumna');
+
+      if (anioGuardado) {
+        this.anioSeleccionado = parseInt(anioGuardado);
+      } else {
+        const anioActual = new Date();
+        this.anioSeleccionado = anioActual.getFullYear();
+      }
     }
   }
 };
