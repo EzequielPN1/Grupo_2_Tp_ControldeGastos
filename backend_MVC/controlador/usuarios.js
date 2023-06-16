@@ -3,6 +3,7 @@ import Autentificador from './autentificador.js'
 import Correo from './correo.js';
 import WhatsAppSender from './WhatsAppSender.js';
 import config from "../config.js";
+import validaciones from '../validaciones/usuariosValidaciones.js'
 
 const tiempoToken = '10m'
 
@@ -12,10 +13,10 @@ class ControladorUsuario {
     this.servicio = new ServicioUsuario()
     this.autentificador = new Autentificador()
     this.correo = new Correo()
-    if(config.WHATSAPP){
+    if (config.WHATSAPP) {
       this.WhatsAppSender = new WhatsAppSender()
     }
-   
+
   }
 
   inicio = async (req, res) => {
@@ -25,11 +26,17 @@ class ControladorUsuario {
   registro = async (req, res) => {
     try {
       const usuario = req.body
-      const respuesta = await this.servicio.registro(usuario);
-      const token = this.autentificador.generateTokenTiempo(usuario.email, '1h');
-      await this.correo.enviarCorreoConfirmacion(token, usuario.email);
-      console.log("Usuario a confirmar registro " + usuario.email)
-      res.status(200).send(respuesta);
+      const validado = validaciones.validar(usuario)
+      if (validado.result) {
+        const respuesta = await this.servicio.registro(usuario);
+        const token = this.autentificador.generateTokenTiempo(usuario.email, '1h');
+        await this.correo.enviarCorreoConfirmacion(token, usuario.email);
+        console.log("Usuario a confirmar registro " + usuario.email)
+        res.status(200).send(respuesta);
+      }
+      else {
+        throw validado.error;
+      }
     } catch (error) {
       console.log(error.message)
       res.status(500).send(error.message);
@@ -49,13 +56,19 @@ class ControladorUsuario {
     }
   };
 
-  
+
   editarUsuario = async (req, res) => {
     try {
       const { email, celular, nombre, apellido } = req.body
-      const usuario = await this.servicio.editarUsuario(email, celular, nombre, apellido);
-      console.log("Usuario " + email + " editado correctamente")
-      res.status(200).json(usuario);
+      const validado = validaciones.validarEdicion(celular, nombre, apellido)
+      if (validado.result) {
+        const usuario = await this.servicio.editarUsuario(email, celular, nombre, apellido);
+        console.log("Usuario " + email + " editado correctamente")
+        res.status(200).json(usuario);
+      }
+      else {
+        throw validado.error;
+      }
     } catch (error) {
       console.error(error.message);
       res.status(500).send(error.message);
@@ -77,7 +90,7 @@ class ControladorUsuario {
         if (confirmado) {
           const usuario = await this.servicio.confirmarRegistro(emailDecodificado);
           res.status(200).send('<div style="background-color: #f3f3f3; padding: 20px; text-align: center;"><h1 style="color: #333;">¡Registro confirmado!</h1></div>');
-          if(config.WHATSAPP){
+          if (config.WHATSAPP) {
             let whatsapp = this.WhatsAppSender.convertirEnNumeroWhatsApp(usuario.celular)
             this.WhatsAppSender.enviarBootPresentacion(whatsapp)
           }
@@ -139,9 +152,9 @@ class ControladorUsuario {
 
 
 
-  devolverUsuarioValidado = async(req,res)=> {
-    try{
-      const token = req.body.token 
+  devolverUsuarioValidado = async (req, res) => {
+    try {
+      const token = req.body.token
       this.autentificador.autentificarToken(token);
       const decodedToken = this.autentificador.decodificarToken(token)
       const emailDecodificado = decodedToken.userId;
@@ -152,7 +165,7 @@ class ControladorUsuario {
       usuario.token = tokenNuevo;
       console.log(usuario);
       res.status(200).json(usuario);
-     }catch (error) {
+    } catch (error) {
       res.status(500).send(error.message);
     }
 
@@ -160,16 +173,16 @@ class ControladorUsuario {
 
 
 
-  validarToken = async(req,res)=> {
-    try{
-      const token = req.body.token 
+  validarToken = async (req, res) => {
+    try {
+      const token = req.body.token
       this.autentificador.autentificarToken(token);
       const decodedToken = this.autentificador.decodificarToken(token)
       const emailDecodificado = decodedToken.userId;
       console.log("email valido : " + emailDecodificado);
       const tokenNuevo = this.autentificador.generateTokenTiempo(emailDecodificado, tiempoToken);
       res.status(200).json(tokenNuevo);
-     }catch (error) {
+    } catch (error) {
       res.status(500).send(error.message);
     }
 

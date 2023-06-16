@@ -2,7 +2,7 @@ import ModelFactory from "../model/DAO/usuariosFactory.js"
 import bcrypt from 'bcrypt';
 import config from "../config.js";
 import CalculadorEdad from "../servicio/calculadorEdad.js"
-import { validar } from '../validaciones/usuariosValidaciones.js'
+
 
 class ServicioUsuario {
 
@@ -12,21 +12,15 @@ class ServicioUsuario {
 
   registro = async (usuario) => {
     try {
-      const res = validar(usuario)
-      if (res.result) {
-        const { email, celular, nombre, pass, apellido, fechaNacimiento, dni } = usuario
-        let edad = CalculadorEdad.calcularEdad(fechaNacimiento)
-        if (edad < 18) {
-          throw new Error("Edad no valida para registrarse");
-        }
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(pass, salt);
-        const respuesta = await this.model.registro(email, celular, nombre, hash, apellido, fechaNacimiento, dni);
-        return respuesta;
+      const { email, celular, nombre, pass, apellido, fechaNacimiento, dni } = usuario
+      let edad = CalculadorEdad.calcularEdad(fechaNacimiento)
+      if (edad < 18) {
+        throw new Error("Edad no valida para registrarse");
       }
-      else {
-        throw res.error
-      }
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(pass, salt);
+      const respuesta = await this.model.registro(email, celular, nombre, hash, apellido, fechaNacimiento, dni);
+      return respuesta;
     } catch (error) {
       throw new Error(error);
     }
@@ -127,7 +121,7 @@ class ServicioUsuario {
     }
   }
 
-  
+
 
 
 }

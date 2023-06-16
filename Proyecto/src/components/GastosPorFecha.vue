@@ -17,7 +17,7 @@ export default {
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
       ],
-      mesSeleccionado: '',
+      mesSeleccionado: new Date().getMonth() + 1,
       chartInstance: null,
       timerId: null
     };

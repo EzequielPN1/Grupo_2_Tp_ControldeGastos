@@ -93,6 +93,7 @@ export default {
       } catch (error) {
         alert("Error al editar la categoría." + error.response.data);
         console.log(error);
+        this.loadData();
       }
 
       categoria.editando = false;

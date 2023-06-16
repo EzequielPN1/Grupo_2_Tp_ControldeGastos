@@ -173,7 +173,8 @@ export default {
           alert("Gasto editado correctamente, se superó el presupuesto mensual de la categoría");
         }
       } catch (error) {
-        alert("Error al editar el gasto: " + error);
+        alert(error.response.data);
+        this.loadData();
       }
       gasto.editando = false;
     },

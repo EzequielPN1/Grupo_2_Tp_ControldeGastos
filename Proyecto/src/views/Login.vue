@@ -32,7 +32,7 @@ async loguear(user) {
     this.$router.push("/Home");
   } catch (error) {
     console.log(error);
-    alert(error.response.data);
+    alert("Error en el logueo: "+error.response.data);
   }
 },
 

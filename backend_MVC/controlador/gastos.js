@@ -1,4 +1,5 @@
 import ServicioGasto from '../servicio/gastos.js'
+import validaciones from '../validaciones/gastosValidaciones.js'
 
 class ControladorGasto {
 
@@ -9,26 +10,39 @@ class ControladorGasto {
     agregar = async (req, res) => {
         try {
             let gasto = req.body
-            console.log(gasto);
-            await this.gastos.agregar(gasto)
-            res.status(200).send("Gasto ingresado correctamente");
-            console.log(req.body);
+            const validado = validaciones.validar(gasto)
+            if (validado.result) {
+                console.log(gasto);
+                await this.gastos.agregar(gasto)
+                res.status(200).send("Gasto ingresado correctamente");
+                console.log(req.body);
+            }
+            else {
+                throw validado.error;
+            }
         }
-        catch (e) {
-            res.status(500).send("Error al agregar gasto: ", e);
-        }
+        catch (error) {
+            console.log(error.message)
+            res.status(500).send(error.message);
+          }
     }
 
     editar = async (req, res) => {
         try {
-            let gasto = req.body
+          let gasto = req.body 
+          const validado = validaciones.validarGastoEditado(gasto.titulo, gasto.monto, gasto.fecha, gasto.descripcion)
+          if (validado.result) {
             await this.gastos.editar(gasto)
             res.status(200).send("Gasto editado correctamente");
+          } else {
+            throw validado.error;
+          }
+        } catch (error) {
+          console.log(error.message)
+          res.status(500).send(error.message);
         }
-        catch (e) {
-            res.status(500).send("Error al editar gasto: ", e);
-        }
-    }
+      }
+      
 
     eliminar = async (req, res) => {
         try {
@@ -43,14 +57,14 @@ class ControladorGasto {
 
     listar = async (req, res) => {
         try {
-          let email = req.params.email;
-          const gastos = await this.gastos.listar(email);
-          res.status(200).json(gastos);
+            let email = req.params.email;
+            const gastos = await this.gastos.listar(email);
+            res.status(200).json(gastos);
         } catch (error) {
-          res.status(500).send("Error al listar.");
+            res.status(500).send("Error al listar.");
         }
-      };
-      
+    };
+
 }
 
 export default ControladorGasto

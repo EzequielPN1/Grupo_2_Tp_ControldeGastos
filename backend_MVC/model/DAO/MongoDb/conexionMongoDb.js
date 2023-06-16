@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import config from '../../../config.js'
 
 class ConexionMongo {
-  static uri = 'mongodb://127.0.0.1:27017';
+  static uri = config.STRING_DE_CONECCION_MONGODB;
   static dbName = 'Usuario';
   static isConnected = false;
 

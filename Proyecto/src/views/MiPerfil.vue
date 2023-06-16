@@ -34,6 +34,8 @@
       <span>{{ usuario.email }}</span>
       <h4>Fecha de nacimiento</h4>
       <span>{{ usuario.fechaNac }}</span>
+      <h4>Telefono</h4>
+      <span>{{ usuario.celular }}</span>
     </div>
     <div class="button-container-perfil">
       <RouterLink to="/EditarPerfil">

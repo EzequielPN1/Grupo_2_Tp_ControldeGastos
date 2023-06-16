@@ -40,8 +40,7 @@
           this.usuario = response.data;
           vue.$router.push("/Home");
         } catch (error) {
-          alert(error.response.data);
-          vue.$router.push("/Login");
+          alert("Error al edital Perfil: " + error.response.data);
         }
       }
 

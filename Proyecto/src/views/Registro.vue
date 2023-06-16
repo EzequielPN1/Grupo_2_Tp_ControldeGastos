@@ -28,7 +28,7 @@ export default {
         vue.$router.push("/");
       } catch (error) {
         console.log(error.response.data);
-        alert(error.response.data);
+        alert("Error al registrarse: " + error.response.data);
       }
     }
 

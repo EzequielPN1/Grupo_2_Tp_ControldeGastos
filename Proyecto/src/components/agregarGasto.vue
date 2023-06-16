@@ -72,7 +72,7 @@ export default {
           alert(response.data);
         }
       } catch (error) {
-        alert("Error al agregar el gasto: " + error);
+        alert("Error al agregar el gasto: " + error.response.data);
       }
 
       this.actualizarGastos();
