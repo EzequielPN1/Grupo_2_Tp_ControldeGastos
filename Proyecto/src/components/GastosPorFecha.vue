@@ -17,7 +17,7 @@ export default {
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
       ],
-      mesSeleccionado: new Date().getMonth() + 1,
+      mesSeleccionado: '',
       chartInstance: null,
       timerId: null
     };
@@ -132,7 +132,7 @@ export default {
         this.mesSeleccionado = parseInt(mesSeleccionado);
       } else {
         this.anioSeleccionado = currentDate.getFullYear();
-        this.mesSeleccionado = currentDate.getMonth();
+        this.mesSeleccionado = currentDate.getMonth()+1;
       }
 
 
