@@ -116,130 +116,142 @@ export default {
 
 <template>
   <Barra></Barra>
-  <form @submit.prevent="agregarCategoria()" class="formulario-agregar">
-    <div class="form-group">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" v-model="categoria.nombre" required class="form-control">
+  <div class="categorias-container">
+    <form @submit.prevent="agregarCategoria()" class="formulario-agregar">
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" v-model="categoria.nombre" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="presupuesto">Presupuesto:</label>
+        <input type="number" id="presupuesto" v-model="categoria.presupuesto" required class="form-control" placeholder="$">
+      </div>
+      <button type="submit" class="btn btn-primary">Agregar</button>
+    </form>
+    <div class="filtros-container">
+      <label for="orden">Ordenar por presupuesto:</label>
+      <select v-model="orden" @change="obtenerCategorias()" id="orden">
+        <option value="asc">Menor a Mayor</option>
+        <option value="desc">Mayor a Menor</option>
+        <option value="asc_alpha">A-Z</option>
+        <option value="desc_alpha">Z-A</option>
+      </select>
     </div>
-    <div class="form-group">
-      <label for="presupuesto">Presupuesto:</label>
-      <input type="number" id="presupuesto" v-model="categoria.presupuesto" required class="form-control" placeholder="$">
-    </div>
-    <button type="submit" class="btn btn-primary">Agregar</button>
-  </form>
-  <div class="filtros-container">
-    <label for="orden">Ordenar por presupuesto:</label>
-    <select v-model="orden" @change="obtenerCategorias()" id="orden">
-      <option value="asc">Menor a Mayor</option>
-      <option value="desc">Mayor a Menor</option>
-      <option value="asc_alpha">A-Z</option>
-      <option value="desc_alpha">Z-A</option>
-    </select>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Presupuesto</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="categoria in categorias" :key="categoria.id">
+          <td>
+            <template v-if="!categoria.editando">
+              {{ categoria.nombre }}
+            </template>
+            <template v-else>
+              <input type="text" v-model="categoria.nombre" required class="form-control">
+            </template>
+          </td>
+          <td>
+            <template v-if="!categoria.editando">
+              ${{ categoria.presupuesto }}
+            </template>
+            <template v-else>
+              <input type="number" v-model="categoria.presupuesto" required class="form-control">
+            </template>
+          </td>
+          <td class="botones-edicion-categorias">
+            <template v-if="!categoria.editando">
+              <button @click="editarCategoria(categoria)" class="btn btn-primary">Editar</button>
+            </template>
+            <template v-else>
+              <button @click="guardarCategoria(categoria)" class="btn btn-success">Guardar</button>
+            </template>
+            <button @click="eliminarCategoria(categoria)" class="btn btn-danger">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Presupuesto</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="categoria in categorias" :key="categoria.id">
-        <td>
-          <template v-if="!categoria.editando">
-            {{ categoria.nombre }}
-          </template>
-          <template v-else>
-            <input type="text" v-model="categoria.nombre" required class="form-control">
-          </template>
-        </td>
-        <td>
-          <template v-if="!categoria.editando">
-            ${{ categoria.presupuesto }}
-          </template>
-          <template v-else>
-            <input type="number" v-model="categoria.presupuesto" required class="form-control">
-          </template>
-        </td>
-        <td class="botones-edicion-categorias">
-          <template v-if="!categoria.editando">
-            <button @click="editarCategoria(categoria)" class="btn btn-primary">Editar</button>
-          </template>
-          <template v-else>
-            <button @click="guardarCategoria(categoria)" class="btn btn-success">Guardar</button>
-          </template>
-          <button @click="eliminarCategoria(categoria)" class="btn btn-danger">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </template>
 
 <style>
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
 
-.table th,
-.table td {
-  border: 1px solid #ccc;
-  padding: 8px;
-}
+  .categorias-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 76em;
+  }
 
-.table th {
-  background-color: #f2f2f2;
-}
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
 
-.table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
+  .table th,
+  .table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
 
-.formulario-agregar {
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+  .table th {
+    background-color: #f2f2f2;
+  }
 
-.form-group {
-  margin-bottom: 15px;
-}
+  .table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
 
-.filtros-container {
-  margin: 1em auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: .2em;
-  flex-direction: column;
-}
+  .formulario-agregar {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
 
-.filtros-container label {
-  margin: 0;
-}
+  .form-group {
+    margin-bottom: 15px;
+  }
 
-.filtros-container select {
-  height: 2em;
-}
+  .filtros-container {
+    margin: 1em auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .2em;
+    flex-direction: column;
+  }
 
-.form-control {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+  .filtros-container label {
+    margin: 0;
+  }
 
-.btn {
-  margin-top: 10px;
-}
+  .filtros-container select {
+    height: 2em;
+  }
 
-.botones-edicion-categorias {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: .8em;
-}
+  .form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .btn {
+    margin-top: 10px;
+  }
+
+  .botones-edicion-categorias {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .8em;
+  }
+  
 </style>
