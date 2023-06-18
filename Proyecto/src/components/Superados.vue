@@ -5,6 +5,7 @@
       <option value="asc">A-Z</option>
       <option value="desc">Z-A</option>
     </select>
+    <div v-if="categoriasExcedidas.length === 0">No hay gastos superados</div>
     <div v-for="categoriaExcedida in categoriasExcedidas" :key="categoriaExcedida.id" class="categoria">
       <div class="nombre" @click="categoriasDesplegadas[categoriaExcedida.id] = !categoriasDesplegadas[categoriaExcedida.id]">
         {{ categoriaExcedida.nombre }}

@@ -62,7 +62,7 @@
       <RouterLink to="/Categoria">Categoria</RouterLink>
     </li>
     <li>
-      <RouterLink to="/Superados">Superados</RouterLink>
+      <RouterLink to="/Superados">Gastos superados</RouterLink>
     </li>
     <button v-if="usuario.nombre !== ''" @click="salir" class="nav-link btn btn-outline-danger">Salir</button>
   </ul>

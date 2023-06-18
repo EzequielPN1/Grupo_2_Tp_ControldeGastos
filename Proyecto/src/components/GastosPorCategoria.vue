@@ -14,7 +14,7 @@
     </div>
   </div>
   <div>
-    <canvas ref="myChart"></canvas>
+   <canvas ref="myChart"></canvas>
   </div>
 </template>
 
@@ -64,8 +64,8 @@ export default {
   methods: {
     loadData() {
       this.definirMesAnio();
-      this.actualizarGastos();
       this.obtenerCategorias();
+      this.actualizarGastos();
     },
 
     async obtenerCategorias() {
@@ -93,8 +93,9 @@ export default {
     },
 
     mostrarGrafico(gastos) {
+      
       const ctx = this.$refs.myChart.getContext('2d');
-
+     
       if (this.chartInstance) {
         this.chartInstance.destroy();
       }
