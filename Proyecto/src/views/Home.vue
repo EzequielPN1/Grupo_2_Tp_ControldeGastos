@@ -16,16 +16,26 @@
 
 <template>
   <Barra></Barra>
-  <div class="component-container">
-    <GastosPorCategoria></GastosPorCategoria>
-    <div class="grafico-por-mes">      
-      <GastosPorMes></GastosPorMes>
+  <div class="home-container">
+    <div class="component-container">
+      <GastosPorCategoria></GastosPorCategoria>
+      <div class="grafico-por-mes">      
+        <GastosPorMes></GastosPorMes>
+      </div>
+      <GastosPorFecha></GastosPorFecha>
     </div>
-    <GastosPorFecha></GastosPorFecha>
   </div>
 </template>
 
 <style>
+
+  .home-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 76em;
+  }
 
   .component-container {
     display: flex;

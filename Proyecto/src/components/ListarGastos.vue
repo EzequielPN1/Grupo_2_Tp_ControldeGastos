@@ -228,158 +228,171 @@ export default {
 
 <template>
   <Barra></Barra>
-  <div class="filtros-gastos-container">
-    <div class="filtro-gasto">
-      <label for="categoria">Categoría:</label>
-      <select id="categoria" v-model="categoriaSeleccionada">
-        <option value="">Todos</option>
-        <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }}</option>
-      </select>
+  <div class="listar-gastos-container">
+    <div class="filtros-gastos-container">
+      <div class="filtro-gasto">
+        <label for="categoria">Categoría:</label>
+        <select id="categoria" v-model="categoriaSeleccionada">
+          <option value="">Todos</option>
+          <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }}</option>
+        </select>
+      </div>
+  
+      <div class="filtro-gasto">
+        <label for="anio">Año:</label>
+        <select id="anio" v-model="filtroAnio">
+          <option value="">Todos</option>
+          <option v-for="anio in anios" :value="anio">{{ anio }}</option>
+        </select>
+      </div>
+  
+      <div class="filtro-gasto">
+        <label for="mes">Mes:</label>
+        <select id="mes" v-model="filtroMes">
+          <option value="">Todos</option>
+          <option v-for="mes in meses" :value="mes.value">{{ mes.label }}</option>
+        </select>
+      </div>
+  
+      <div class="filtro-gasto">
+        <label for="dia">Día:</label>
+        <select id="dia" v-model="filtroDia">
+          <option value="">Todos</option>
+          <option v-for="dia in diasMes" :value="dia">{{ dia }}</option>
+        </select>
+      </div>
+  
+      <div class="filtro-gasto">
+        <label for="orden">Ordenar:</label>
+        <select id="orden" v-model="orden">
+          <option value="asc">Fecha asc</option>
+          <option value="desc">Fecha des</option>
+          <option value="monto_asc">Monto asc</option>
+          <option value="monto_desc">Monto des</option>
+          <option value="alfabetico asc">A-Z</option>
+          <option value="alfabetico desc">Z-A</option>
+        </select>
+      </div>
     </div>
-
-    <div class="filtro-gasto">
-      <label for="anio">Año:</label>
-      <select id="anio" v-model="filtroAnio">
-        <option value="">Todos</option>
-        <option v-for="anio in anios" :value="anio">{{ anio }}</option>
-      </select>
-    </div>
-
-    <div class="filtro-gasto">
-      <label for="mes">Mes:</label>
-      <select id="mes" v-model="filtroMes">
-        <option value="">Todos</option>
-        <option v-for="mes in meses" :value="mes.value">{{ mes.label }}</option>
-      </select>
-    </div>
-
-    <div class="filtro-gasto">
-      <label for="dia">Día:</label>
-      <select id="dia" v-model="filtroDia">
-        <option value="">Todos</option>
-        <option v-for="dia in diasMes" :value="dia">{{ dia }}</option>
-      </select>
-    </div>
-
-    <div class="filtro-gasto">
-      <label for="orden">Ordenar:</label>
-      <select id="orden" v-model="orden">
-        <option value="asc">Fecha asc</option>
-        <option value="desc">Fecha des</option>
-        <option value="monto_asc">Monto asc</option>
-        <option value="monto_desc">Monto des</option>
-        <option value="alfabetico asc">A-Z</option>
-        <option value="alfabetico desc">Z-A</option>
-      </select>
-    </div>
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Monto</th>
+          <th>Fecha</th>
+          <th>Categoría</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(gasto, index) in gastosFiltrados" :key="index">
+          <td>
+            <template v-if="!gasto.editando">
+              {{ gasto.titulo }}
+            </template>
+            <template v-else>
+              <input v-model="gasto.titulo" type="text">
+            </template>
+          </td>
+          <td>
+            <template v-if="!gasto.editando">
+              ${{ gasto.monto }}
+            </template>
+            <template v-else>
+              <input v-model="gasto.monto" type="number">
+            </template>
+          </td>
+          <td>
+            <template v-if="!gasto.editando">
+              {{ gasto.fecha }}
+            </template>
+            <template v-else>
+              <input v-model="gasto.fecha" type="text">
+            </template>
+          </td>
+          <td>
+            <template v-if="!gasto.editando">
+              {{ getCategoriaNombre(gasto.idCategoria) }}
+            </template>
+            <template v-else>
+              <select v-model="gasto.idCategoria">
+                <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }}</option>
+              </select>
+            </template>
+          </td>
+          <td>
+            <template v-if="!gasto.editando">
+              {{ gasto.descripcion }}
+            </template>
+            <template v-else>
+              <input v-model="gasto.descripcion" type="text">
+            </template>
+          </td>
+          <td class="botones-edicion-gastos">
+            <template v-if="!gasto.editando">
+              <button @click="editarGasto(gasto)" class="btn btn-primary">Editar</button>
+            </template>
+            <template v-else>
+              <button @click="guardarGasto(gasto)" class="btn btn-success">Guardar</button>
+            </template>
+            <button @click="eliminarGasto(gasto)" class="btn btn-danger">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Título</th>
-        <th>Monto</th>
-        <th>Fecha</th>
-        <th>Categoría</th>
-        <th>Descripción</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(gasto, index) in gastosFiltrados" :key="index">
-        <td>
-          <template v-if="!gasto.editando">
-            {{ gasto.titulo }}
-          </template>
-          <template v-else>
-            <input v-model="gasto.titulo" type="text">
-          </template>
-        </td>
-        <td>
-          <template v-if="!gasto.editando">
-            ${{ gasto.monto }}
-          </template>
-          <template v-else>
-            <input v-model="gasto.monto" type="number">
-          </template>
-        </td>
-        <td>
-          <template v-if="!gasto.editando">
-            {{ gasto.fecha }}
-          </template>
-          <template v-else>
-            <input v-model="gasto.fecha" type="text">
-          </template>
-        </td>
-        <td>
-          <template v-if="!gasto.editando">
-            {{ getCategoriaNombre(gasto.idCategoria) }}
-          </template>
-          <template v-else>
-            <select v-model="gasto.idCategoria">
-              <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.nombre }}</option>
-            </select>
-          </template>
-        </td>
-        <td>
-          <template v-if="!gasto.editando">
-            {{ gasto.descripcion }}
-          </template>
-          <template v-else>
-            <input v-model="gasto.descripcion" type="text">
-          </template>
-        </td>
-        <td class="botones-edicion-gastos">
-          <template v-if="!gasto.editando">
-            <button @click="editarGasto(gasto)" class="btn btn-primary">Editar</button>
-          </template>
-          <template v-else>
-            <button @click="guardarGasto(gasto)" class="btn btn-success">Guardar</button>
-          </template>
-          <button @click="eliminarGasto(gasto)" class="btn btn-danger">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </template>
 
 <style>
-.filtros-gastos-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: .4em auto;
-  padding: .3em 0;
-}
 
-.filtro-gasto select {
-  margin-left: .2em;
-  height: 2em;
-}
+  .listar-gastos-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 76em;
+  }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
+  .filtros-gastos-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    margin: .4em auto;
+    padding: .3em 0;
+  }
 
-.table th,
-.table td {
-  border: 1px solid #ccc;
-  padding: 8px;
-}
+  .filtro-gasto select {
+    margin-left: .2em;
+    height: 2em;
+  }
 
-.table th {
-  background-color: #f2f2f2;
-}
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
 
-.table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
+  .table th,
+  .table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
 
-.botones-edicion-gastos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: .8em;
-}
+  .table th {
+    background-color: #f2f2f2;
+  }
+
+  .table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .botones-edicion-gastos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .8em;
+  }
+  
 </style>
