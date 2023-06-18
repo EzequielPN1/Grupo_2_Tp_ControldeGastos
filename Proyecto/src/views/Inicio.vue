@@ -32,15 +32,16 @@
     width: 100vw;
     height: 100vh;
     display: flex;
-    max-width: 76em;
   }
 
   .botones-texto {
-    padding: 3em;
+    padding: 1em;
     width: 40vw;
+    max-width: 31em;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    margin: auto;
   }
 
   .botones-texto h1 {
@@ -73,6 +74,7 @@
 
   .imagen-fondo {
     width: 60vw;
+    max-width: 46em;
     margin: auto;
     text-align: center;
   }
