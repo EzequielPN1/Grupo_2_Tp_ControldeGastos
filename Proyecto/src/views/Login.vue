@@ -23,22 +23,18 @@ export default {
     };
   },
   methods: {
-async loguear(user) {
-  try {
-    const response = await userService.login(user);
-    this.usuario = response.data;
-    localStorage.setItem('token', this.usuario.token);
-    console.log(this.usuario.token);
-    this.$router.push("/Home");
-  } catch (error) {
-    console.log(error);
-    alert("Error en el logueo: "+error.response.data);
-  }
-},
-
-
-
-
+    async loguear(user) {
+      try {
+        const response = await userService.login(user);
+        this.usuario = response.data;
+        localStorage.setItem('token', this.usuario.token);
+        console.log(this.usuario.token);
+        this.$router.push("/Home");
+      } catch (error) {
+        console.log(error);
+        alert("Error en el logueo: "+error.response.data);
+      }
+    },
   },
 };
 </script>
