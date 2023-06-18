@@ -53,7 +53,7 @@
 
 <template>
   <Barra></Barra>
-  <div class="edit-profile">
+  <div class="editar-perfil-container">
     <form @submit.prevent="guardarPerfil(vue)">
       <div class="form-group">
         <label for="nombre">Nombre:</label>
@@ -81,6 +81,14 @@
 </template>
 
 <style>
+
+  .editar-perfil-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 76em;
+  }
 
   .button-container {
     display: flex;

@@ -140,44 +140,44 @@ export default {
 </template>
 
 <style>
-.form {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: .5em;
-  width: 80%;
-  margin: auto;
-  padding-top: 1em;
-}
+  .form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: .5em;
+    width: 80%;
+    margin: auto;
+    padding-top: 1em;
+  }
 
-.form button {
-  width: 50%;
-  margin: auto;
-}
+  .form button {
+    width: 50%;
+    margin: auto;
+  }
 
-.form-group label {
-  font-size: large;
-}
+  .form-group label {
+    font-size: large;
+  }
 
-.agregar-fecha-categoria {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.2em;
-}
+  .agregar-fecha-categoria {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2em;
+  }
 
-.agregar-fecha-categoria label {
-  font-size: large;
-  margin: 0;
-}
+  .agregar-fecha-categoria label {
+    font-size: large;
+    margin: 0;
+  }
 
-.agregar-fecha-categoria select {
-  height: 2em;
-  margin-left: .2em;
-}
+  .agregar-fecha-categoria select {
+    height: 2em;
+    margin-left: .2em;
+  }
 
-.agregar-fecha-categoria input {
-  height: 2em;
-  margin-left: .2em;
-}
+  .agregar-fecha-categoria input {
+    height: 2em;
+    margin-left: .2em;
+  }
 </style>
