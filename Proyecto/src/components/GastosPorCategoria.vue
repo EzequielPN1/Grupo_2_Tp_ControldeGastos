@@ -63,10 +63,10 @@ export default {
   },
 
   methods: {
-    loadData() {
+  async  loadData() {
       this.definirMesAnio();
-      this.actualizarGastos();
-      this.obtenerCategorias();
+     await this.obtenerCategorias();
+     await this.actualizarGastos();
     },
 
     async obtenerCategorias() {
