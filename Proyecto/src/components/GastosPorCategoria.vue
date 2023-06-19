@@ -48,7 +48,8 @@ export default {
       anios: [2021, 2022, 2023],
       mesSeleccionado: '',
       anioSeleccionado: '',
-      chartInstance: null
+      chartInstance: null,
+      categorias: []
     };
   },
 
@@ -142,7 +143,11 @@ export default {
         }
       };
 
-      this.chartInstance = new Chart(ctx, config);
+      try {
+        this.chartInstance = new Chart(ctx, config);
+      } catch (error) {
+        console.log("El gráfico se ha congelado:", error);
+      }
     },
 
     procesarDatosGastos(gastos) {
