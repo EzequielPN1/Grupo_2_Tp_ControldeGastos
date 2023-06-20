@@ -28,6 +28,7 @@ import { tokenService } from "../Services/tokenService.js";
 export default {
   created() {
     tokenService.validarUsuarioRecarga(this, this.loadData);
+    this.chartInstance = null;
   },
 
   setup() {
@@ -48,7 +49,6 @@ export default {
       anios: [2021, 2022, 2023],
       mesSeleccionado: '',
       anioSeleccionado: '',
-      chartInstance: null,
       categorias: []
     };
   },
@@ -92,6 +92,7 @@ export default {
 
       this.mostrarGrafico(gastosFiltrados);
     },
+
 
     mostrarGrafico(gastos) {
       const ctx = this.$refs.myChart.getContext('2d');
@@ -143,11 +144,9 @@ export default {
         }
       };
 
-      try {
+ 
         this.chartInstance = new Chart(ctx, config);
-      } catch (error) {
-        console.log("El gráfico se ha congelado:", error);
-      }
+ 
     },
 
     procesarDatosGastos(gastos) {

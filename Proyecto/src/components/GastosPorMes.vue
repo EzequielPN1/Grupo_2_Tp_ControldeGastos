@@ -8,7 +8,8 @@ import { useCategoriaStore } from "../stores/categorias.js";
 export default {
 
   created() {
-    tokenService.validarUsuarioRecarga(this, this.loadData)
+    tokenService.validarUsuarioRecarga(this, this.loadData);
+    this.chartInstance = null;
   },
 
   data() {
@@ -22,7 +23,6 @@ export default {
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
       ],
-      chartInstance: null,
       timerId: null
     };
   },

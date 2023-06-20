@@ -7,6 +7,7 @@ import { tokenService } from "../Services/tokenService.js";
 export default {
   mounted() {
     tokenService.validarUsuarioRecarga(this, this.loadData);
+    this.chartInstance = null;
   },
   data() {
     return {
@@ -18,7 +19,6 @@ export default {
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
       ],
       mesSeleccionado: new Date().getMonth() + 1,
-      chartInstance: null,
       timerId: null
     };
   },
