@@ -69,6 +69,7 @@ export default {
     flex-direction: column;
     margin: auto;
     max-width: 76em;
+    padding-top: 1em;
   }
 
   .login-container h1 {
