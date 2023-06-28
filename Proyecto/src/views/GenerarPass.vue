@@ -26,9 +26,9 @@ export default {
 
 
 <template>
-  <div>
+  <div  class="enviarCorreoNuevaPass-container">
     <form @submit.prevent="enviarCorreoNuevaPass(vue)">
-      <label for="email">Ingrese su correo electrónico para reestablecer su Contraseña:</label>
+      <label for="email">Ingrese su correo electrónico para restablecer su Contraseña:</label>
       <input type="email" v-model="email" class="form-control" id="exampleInputPassword1" required />
       <div class="d-flex justify-content-between align-items-center">
       <button type="submit" class="btn btn-primary">Enviar correo</button>
@@ -37,4 +37,21 @@ export default {
     </form>
   </div>
 </template>
+
+<style>
+
+  .enviarCorreoNuevaPass-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 76em;
+    padding: 1em 0;
+  }
+
+  .enviarCorreoNuevaPass-container h1 {
+    text-align: center;
+  }
+
+</style>
 

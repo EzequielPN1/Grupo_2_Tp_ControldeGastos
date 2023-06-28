@@ -45,7 +45,7 @@ export default {
 
 
 <template>
-  <div>
+  <div class="cambiarContrasenia-container" >
     <form @submit.prevent="cambiarContrasenia()">
       <label>Nueva contraseña:</label>
       <input type="password" v-model="nuevaContrasenia" class="form-control" id="exampleInputPassword1" required>
@@ -53,3 +53,21 @@ export default {
     </form>
   </div>
 </template>
+
+
+<style>
+
+  .cambiarContrasenia-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 76em;
+    padding: 1em 0;
+  }
+
+  .cambiarContrasenia-container h1 {
+    text-align: center;
+  }
+
+</style>
